@@ -12,6 +12,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         Toast.makeText(this, "sadasgsdfdfhdh", Toast.LENGTH_LONG).show();
-        Log.e("dd", "dd");
+        Log.e("dd", "d11");
     }
 }
