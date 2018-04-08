@@ -1,10 +1,10 @@
-package com.miaxis.escort.present;
+package com.miaxis.escort.presenter;
 
 import android.content.Context;
 
 import com.miaxis.escort.model.ILoginModel;
 import com.miaxis.escort.model.LoginModelImpl;
-import com.miaxis.escort.view.ILoginView;
+import com.miaxis.escort.view.viewer.ILoginView;
 
 /**
  * Created by 一非 on 2018/4/8.
@@ -21,8 +21,4 @@ public class LoginPresenterImpl extends BasePresenter implements ILoginPresenter
         this.loginModel = new LoginModelImpl(this);
     }
 
-    @Override
-    public void doDestroy() {
-        super.doDestroy();
-    }
 }

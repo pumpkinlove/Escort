@@ -1,4 +1,4 @@
-package com.miaxis.escort.present;
+package com.miaxis.escort.presenter;
 
 import android.content.Context;
 

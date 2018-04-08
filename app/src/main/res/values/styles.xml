@@ -12,4 +12,9 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="my_style_input">
+        <item name="colorControlNormal">@android:color/white</item>
+        <item name="colorControlActivated">@android:color/holo_blue_dark</item>
+    </style>
+
 </resources>

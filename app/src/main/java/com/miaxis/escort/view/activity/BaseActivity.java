@@ -3,7 +3,6 @@ package com.miaxis.escort.view.activity;
 import android.content.Context;
 import android.os.Bundle;
 
-import com.miaxis.escort.view.ILoginView;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 import butterknife.ButterKnife;
