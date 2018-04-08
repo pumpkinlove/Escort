@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Escort</string>
+    <string name="version">浙江中正智能有限公司  版本号：</string>
+    <string name="login">登陆</string>
 </resources>
