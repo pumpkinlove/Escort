@@ -82,7 +82,7 @@ public class ConfigFragment extends BaseFragment implements IConfigView{
 
     @Override
     protected void initData() {
-        configPresenter = new ConfigPresenterImpl(context, this);
+        configPresenter = new ConfigPresenterImpl(this, this);
         configPresenter.loadConfig();
     }
 
@@ -156,7 +156,6 @@ public class ConfigFragment extends BaseFragment implements IConfigView{
     @Override
     public void onDestroy() {
         super.onDestroy();
-        configPresenter.doDestroy();
     }
 
     public interface OnConfigClickListener {

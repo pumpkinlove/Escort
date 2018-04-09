@@ -14,13 +14,11 @@ import butterknife.Unbinder;
 
 public abstract class BaseActivity extends RxAppCompatActivity{
 
-    protected Context context;
     private Unbinder bind;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = this;
         setContentView(setContentView());
         bind = ButterKnife.bind(this);
         initData();

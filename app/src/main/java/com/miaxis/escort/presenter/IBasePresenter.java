@@ -5,5 +5,5 @@ package com.miaxis.escort.presenter;
  */
 
 public interface IBasePresenter {
-    void doDestroy();
+
 }

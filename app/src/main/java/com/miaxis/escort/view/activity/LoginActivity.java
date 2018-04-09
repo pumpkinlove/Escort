@@ -47,7 +47,7 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
 
     @Override
     protected void initData() {
-        loginPresenter = new LoginPresenterImpl(context,this);
+        loginPresenter = new LoginPresenterImpl(this,this);
         loginPresenter.getPermissions(this);
 
     }
@@ -83,7 +83,6 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        loginPresenter.doDestroy();
     }
 
     @Override

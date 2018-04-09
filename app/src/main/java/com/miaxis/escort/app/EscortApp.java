@@ -30,6 +30,9 @@ public class EscortApp extends Application{
         return escortApp;
     }
 
+    /**
+     * 由于运行时权限依赖于LoginActivity，数据库初始化在拿到权限后进行
+     */
     public void initDbHelp() {
         helper = new DaoMaster.DevOpenHelper(new GreenDaoContext(this), "Escort.db", null);
         db = helper.getWritableDatabase();

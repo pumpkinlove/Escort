@@ -8,5 +8,5 @@ import com.miaxis.escort.model.entity.Config;
 
 public interface IConfigModel {
     void saveConfig(Config config);
-    void loadConfig();
+    Config loadConfig();
 }

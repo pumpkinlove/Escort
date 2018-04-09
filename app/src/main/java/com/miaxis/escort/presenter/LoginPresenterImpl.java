@@ -2,28 +2,29 @@ package com.miaxis.escort.presenter;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 
 import com.miaxis.escort.model.ILoginModel;
 import com.miaxis.escort.model.LoginModelImpl;
-import com.miaxis.escort.view.activity.LoginActivity;
 import com.miaxis.escort.view.viewer.ILoginView;
 import com.tbruyelle.rxpermissions2.Permission;
 import com.tbruyelle.rxpermissions2.RxPermissions;
+import com.trello.rxlifecycle2.LifecycleProvider;
+import com.trello.rxlifecycle2.android.ActivityEvent;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 
 /**
  * Created by 一非 on 2018/4/8.
  */
 
-public class LoginPresenterImpl extends BasePresenter implements ILoginPresenter {
+public class LoginPresenterImpl extends BaseActivityPresenter implements ILoginPresenter {
 
     private ILoginView loginView;
     private ILoginModel loginModel;
 
-    public LoginPresenterImpl(Context context, ILoginView loginView) {
-        super(context);
+    public LoginPresenterImpl(LifecycleProvider<ActivityEvent> provider, ILoginView loginView) {
+        super(provider);
         this.loginView = loginView;
         this.loginModel = new LoginModelImpl(this);
     }
@@ -34,6 +35,8 @@ public class LoginPresenterImpl extends BasePresenter implements ILoginPresenter
         rxPermission
                 .requestEach(Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .compose(getProvider().<Permission>bindUntilEvent(ActivityEvent.DESTROY))
                 .subscribe(new Consumer<Permission>() {
                     @Override
                     public void accept(Permission permission) throws Exception {

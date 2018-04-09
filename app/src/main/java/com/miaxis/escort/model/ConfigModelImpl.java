@@ -43,27 +43,7 @@ public class ConfigModelImpl implements IConfigModel{
     }
 
     @Override
-    public void loadConfig() {
-        Observable.create(new ObservableOnSubscribe<Config>() {
-            @Override
-            public void subscribe(ObservableEmitter<Config> e) throws Exception {
-                Config config = EscortApp.getInstance().getDaoSession().getConfigDao().load(1L);
-                e.onNext(config);
-            }
-        })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Config>() {
-                               @Override
-                               public void accept(Config config) throws Exception {
-                                   configPresenter.fetchConfig(config);
-                               }
-                           },
-                        new Consumer<Throwable>() {
-                            @Override
-                            public void accept(Throwable throwable) throws Exception {
-
-                            }
-                        });
+    public Config loadConfig() {
+        return EscortApp.getInstance().getDaoSession().getConfigDao().load(1L);
     }
 }

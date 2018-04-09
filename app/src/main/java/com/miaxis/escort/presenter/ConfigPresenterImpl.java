@@ -1,12 +1,15 @@
 package com.miaxis.escort.presenter;
 
-import android.content.Context;
 import com.miaxis.escort.model.ConfigModelImpl;
 import com.miaxis.escort.model.IConfigModel;
 import com.miaxis.escort.model.entity.Config;
 import com.miaxis.escort.view.viewer.IConfigView;
+import com.trello.rxlifecycle2.LifecycleProvider;
+import com.trello.rxlifecycle2.android.FragmentEvent;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
@@ -15,13 +18,13 @@ import io.reactivex.schedulers.Schedulers;
  * Created by 一非 on 2018/4/8.
  */
 
-public class ConfigPresenterImpl extends BasePresenter implements IConfigPresenter{
+public class ConfigPresenterImpl extends BaseFragmentPresenter implements IConfigPresenter{
 
     private IConfigView configView;
     private IConfigModel configModel;
 
-    public ConfigPresenterImpl(Context context, IConfigView configView) {
-        super(context);
+    public ConfigPresenterImpl(LifecycleProvider<FragmentEvent> provider, IConfigView configView) {
+        super(provider);
         this.configView = configView;
         this.configModel = new ConfigModelImpl(this);
     }
@@ -43,7 +46,22 @@ public class ConfigPresenterImpl extends BasePresenter implements IConfigPresent
 
     @Override
     public void loadConfig() {
-        configModel.loadConfig();
+        Observable.create(new ObservableOnSubscribe<Config>() {
+            @Override
+            public void subscribe(ObservableEmitter<Config> e) throws Exception {
+                Config config = configModel.loadConfig();
+                e.onNext(config);
+            }
+        })
+                .subscribeOn(Schedulers.io())
+                .compose(getProvider().<Config>bindUntilEvent(FragmentEvent.DESTROY))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Config>() {
+                    @Override
+                    public void accept(Config config) throws Exception {
+                        configView.fetchConfig(config);
+                    }
+                });
     }
 
     @Override
