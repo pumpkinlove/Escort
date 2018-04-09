@@ -8,9 +8,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jakewharton.rxbinding2.view.RxView;
 import com.miaxis.escort.R;
+import com.miaxis.escort.app.EscortApp;
 import com.miaxis.escort.presenter.ILoginPresenter;
 import com.miaxis.escort.presenter.LoginPresenterImpl;
 import com.miaxis.escort.view.fragment.ConfigFragment;
@@ -46,6 +48,8 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
     @Override
     protected void initData() {
         loginPresenter = new LoginPresenterImpl(context,this);
+        loginPresenter.getPermissions(this);
+
     }
 
     @Override
@@ -70,7 +74,7 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
 
     @Override
     public void showConfigView() {
-        ivConfig.setVisibility(View.GONE);
+        ivConfig.setVisibility(View.INVISIBLE);
         llLogin.setVisibility(View.GONE);
         flConfig.setVisibility(View.VISIBLE);
         getSupportFragmentManager().beginTransaction().replace(R.id.fl_config, ConfigFragment.newInstance()).commit();
@@ -84,11 +88,23 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
 
     @Override
     public void onConfigSave() {
-
+        showLoginView();
+        //TODO:登陆页面显示相关信息
     }
 
     @Override
     public void onConfigCancel() {
         showLoginView();
+    }
+
+    @Override
+    public void getPermissionsSuccess() {
+        EscortApp.getInstance().initDbHelp();
+    }
+
+    @Override
+    public void getPermissionsFailed() {
+        Toast.makeText(this, "拒绝权限将无法正常运行", Toast.LENGTH_LONG).show();
+        finish();
     }
 }

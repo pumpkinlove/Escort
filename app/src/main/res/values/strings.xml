@@ -2,7 +2,4 @@
     <string name="app_name">Escort</string>
     <string name="version">浙江中正智能有限公司  版本号：</string>
     <string name="login">登陆</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

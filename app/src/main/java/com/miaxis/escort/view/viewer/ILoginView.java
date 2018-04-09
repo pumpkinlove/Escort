@@ -7,4 +7,6 @@ package com.miaxis.escort.view.viewer;
 public interface ILoginView extends IBaseView {
     void showLoginView();
     void showConfigView();
+    void getPermissionsSuccess();
+    void getPermissionsFailed();
 }

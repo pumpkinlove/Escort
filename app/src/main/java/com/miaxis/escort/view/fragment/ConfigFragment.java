@@ -1,18 +1,24 @@
 package com.miaxis.escort.view.fragment;
 
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jakewharton.rxbinding2.view.RxView;
+import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.miaxis.escort.R;
+import com.miaxis.escort.app.EscortApp;
+import com.miaxis.escort.model.entity.Config;
 import com.miaxis.escort.presenter.ConfigPresenterImpl;
 import com.miaxis.escort.presenter.IConfigPresenter;
 import com.miaxis.escort.view.viewer.IConfigView;
@@ -20,8 +26,14 @@ import com.miaxis.escort.view.viewer.IConfigView;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.functions.Function3;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,6 +42,8 @@ public class ConfigFragment extends BaseFragment implements IConfigView{
 
     private IConfigPresenter configPresenter;
     private OnConfigClickListener mListener;
+
+    private ProgressDialog pdSaveConfig;
 
     @BindView(R.id.et_ip)
     EditText etIp;
@@ -69,10 +83,13 @@ public class ConfigFragment extends BaseFragment implements IConfigView{
     @Override
     protected void initData() {
         configPresenter = new ConfigPresenterImpl(context, this);
+        configPresenter.loadConfig();
     }
 
     @Override
     protected void initView() {
+        pdSaveConfig = new ProgressDialog(getActivity());
+        pdSaveConfig.setCancelable(false);
         RxView.clicks(btnCancel)
                 .throttleFirst(2, TimeUnit.SECONDS)
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -82,15 +99,58 @@ public class ConfigFragment extends BaseFragment implements IConfigView{
                         mListener.onConfigCancel();
                     }
                 });
+        Observable<CharSequence> observableIp = RxTextView.textChanges(etIp);
+        Observable<CharSequence> observablePort = RxTextView.textChanges(etPort);
+        Observable<CharSequence> observableOrgCode = RxTextView.textChanges(etOrgCode);
+        Observable.combineLatest(observableIp, observablePort, observableOrgCode, new Function3<CharSequence, CharSequence, CharSequence, Boolean>() {
+            @Override
+            public Boolean apply(CharSequence ip, CharSequence port, CharSequence orgCode) throws Exception {
+                return !ip.toString().isEmpty() && !port.toString().isEmpty() && !orgCode.toString().isEmpty();
+            }
+        })
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Boolean>() {
+                    @Override
+                    public void accept(Boolean b) throws Exception {
+                        if (b != null) {
+                            btnConfirm.setEnabled(b.booleanValue());
+                        }
+                    }
+                });
         RxView.clicks(btnConfirm)
                 .throttleFirst(2, TimeUnit.SECONDS)
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
-                        mListener.onConfigSave();
+                        pdSaveConfig.setMessage("保存中");
+                        pdSaveConfig.show();
+                        configPresenter.configSave(etIp.getText().toString(),
+                                etPort.getText().toString(),
+                                etOrgCode.getText().toString());
                     }
                 });
+    }
+
+    @Override
+    public void configSaveSuccess() {
+        pdSaveConfig.dismiss();
+        mListener.onConfigSave();
+    }
+
+    @Override
+    public void configSaveFailed() {
+        pdSaveConfig.dismiss();
+    }
+
+    @Override
+    public void fetchConfig(Config config) {
+        if (config == null) {
+            return;
+        }
+        etIp.setText(config.getIp());
+        etPort.setText(config.getPort());
+        etOrgCode.setText(config.getOrgCode());
     }
 
     @Override
