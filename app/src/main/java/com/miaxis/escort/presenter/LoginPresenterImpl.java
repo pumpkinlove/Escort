@@ -2,6 +2,8 @@ package com.miaxis.escort.presenter;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 
 import com.miaxis.escort.model.ILoginModel;
 import com.miaxis.escort.model.LoginModelImpl;

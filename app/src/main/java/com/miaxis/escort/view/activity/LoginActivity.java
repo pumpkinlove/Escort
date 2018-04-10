@@ -1,6 +1,8 @@
 package com.miaxis.escort.view.activity;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -22,6 +24,7 @@ import com.miaxis.escort.view.viewer.ILoginView;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
+import es.dmoral.toasty.Toasty;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
@@ -55,6 +58,7 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
 
     @Override
     protected void initView() {
+        tvVersion.setText(tvVersion.getText() + getVersion());
         RxView.clicks(ivConfig)
                 .throttleFirst(2, TimeUnit.SECONDS)
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -77,6 +81,20 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
                         startActivity(intent);
                     }
                 });
+    }
+
+    private String getVersion() {
+        // 得到系统的包管理器。已经得到了apk的面向对象的包装
+        PackageManager pm = this.getPackageManager();
+        try {
+            // 参数一：当前应用程序的包名 参数二：可选的附加消息，这里我们用不到 ，可以定义为0
+            PackageInfo info = pm.getPackageInfo(getPackageName(), 0);
+            // 返回当前应用程序的版本号
+            return info.versionName;
+        } catch (Exception e) {// 包名未找到的异常，理论上， 该异常不可能会发生
+            e.printStackTrace();
+            return "";
+        }
     }
 
     @Override
@@ -118,7 +136,7 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
 
     @Override
     public void getPermissionsFailed() {
-        Toast.makeText(this, "拒绝权限将无法正常运行", Toast.LENGTH_LONG).show();
+        Toasty.error(this, "拒绝权限将无法正常运行", Toast.LENGTH_LONG, true).show();
         finish();
     }
 }

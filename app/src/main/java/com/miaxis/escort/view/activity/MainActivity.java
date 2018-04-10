@@ -68,7 +68,7 @@ public class MainActivity extends BaseActivity implements UpTaskFragment.OnFragm
     @Override
     protected void initView() {
         vpMain.setAdapter(adapter);
-        vpMain.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tlMain));
+        vpMain.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tlMain));
         tlMain.setupWithViewPager(vpMain, true);
         vpMain.setOffscreenPageLimit(20);
         initTabLayout();
@@ -82,15 +82,23 @@ public class MainActivity extends BaseActivity implements UpTaskFragment.OnFragm
             TabLayout.Tab tab = tlMain.getTabAt(i);
             if (tab != null) {
                 tab.setIcon(normalIconList.get(i));
+                tab.setText(TITLES[i]);
             }
         }
-        tlMain.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        tlMain.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 int position = tab.getPosition();
-                toolbar.setVisibility(View.VISIBLE);
-                tab.setIcon(pressedIconList.get(position));
-                toolbar.setTitle(TITLES[position]);
+                if (position == 2) {
+                    toolbar.setVisibility(View.GONE);
+                    tab.setIcon(pressedIconList.get(position));
+                    tab.setText(TITLES[position]);
+                } else {
+                    toolbar.setVisibility(View.VISIBLE);
+                    tab.setIcon(pressedIconList.get(position));
+                    toolbar.setTitle(TITLES[position]);
+                    tab.setText(TITLES[position]);
+                }
             }
 
             @Override

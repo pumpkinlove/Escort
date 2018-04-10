@@ -30,9 +30,10 @@
             app:tabGravity="fill"
             app:tabIndicatorColor="@null"
             app:tabIndicatorHeight="0dp"
+            app:tabPaddingTop="5dp"
             android:id="@+id/tl_main"
             android:layout_width="match_parent"
-            android:layout_height="50dp">
+            android:layout_height="60dp">
 
         </android.support.design.widget.TabLayout>
 

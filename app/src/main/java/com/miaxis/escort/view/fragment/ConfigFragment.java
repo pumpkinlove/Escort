@@ -21,6 +21,8 @@ import com.miaxis.escort.app.EscortApp;
 import com.miaxis.escort.model.entity.Config;
 import com.miaxis.escort.presenter.ConfigPresenterImpl;
 import com.miaxis.escort.presenter.IConfigPresenter;
+import com.miaxis.escort.view.activity.ConfigActivity;
+import com.miaxis.escort.view.activity.LoginActivity;
 import com.miaxis.escort.view.viewer.IConfigView;
 
 import java.util.concurrent.TimeUnit;
@@ -77,6 +79,9 @@ public class ConfigFragment extends BaseFragment implements IConfigView{
 
     @Override
     protected int setContentView() {
+        if (getActivity() instanceof ConfigActivity) {
+            return R.layout.fragment_config_black;
+        }
         return R.layout.fragment_config;
     }
 

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical" >
+        <EditText
+            android:id="@+id/et_ip"
+            style="@style/style_input"
+            android:layout_width="match_parent"
+            android:clickable="true"
+            android:hint="请填写ip地址"
+            android:inputType="number"
+            android:digits="1234567890."
+            android:maxLength="20"
+            android:singleLine="true" />
+
+        <EditText
+            android:id="@+id/et_port"
+            style="@style/style_input"
+            android:layout_width="match_parent"
+            android:clickable="true"
+            android:gravity="center_vertical|left"
+            android:hint="请填写端口号"
+            android:inputType="number"
+            android:singleLine="true" />
+
+        <EditText
+            android:id="@+id/et_orgCode"
+            style="@style/style_input"
+            android:layout_width="fill_parent"
+            android:clickable="true"
+            android:hint="请填写机构编号"
+            android:maxLength="10"
+            android:inputType="number"
+            android:digits="0123456789"
+            android:singleLine="true" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:layout_marginEnd="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:id="@+id/btn_confirm"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/blue_btn_bg"
+                android:gravity="center"
+                android:text="保存并退出"
+                android:textColor="#ffffff"
+                android:textSize="15sp"
+                style="?android:attr/borderlessButtonStyle"/>
+            <Button
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:id="@+id/btn_cancel"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/blue_btn_bg"
+                android:gravity="center"
+                android:text="取消"
+                android:textColor="#ffffff"
+                android:textSize="15sp"
+                style="?android:attr/borderlessButtonStyle" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

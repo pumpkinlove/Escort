@@ -31,7 +31,8 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".view.activity.MainActivity"></activity>
+        <activity android:name=".view.activity.MainActivity" />
+        <activity android:name=".view.activity.ConfigActivity"></activity>
     </application>
 
 </manifest>

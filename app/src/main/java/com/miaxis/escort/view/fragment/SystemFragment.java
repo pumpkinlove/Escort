@@ -1,16 +1,41 @@
 package com.miaxis.escort.view.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 
+import com.jakewharton.rxbinding2.view.RxView;
 import com.miaxis.escort.R;
+import com.miaxis.escort.view.activity.ConfigActivity;
+
+import java.util.concurrent.TimeUnit;
+
+import butterknife.BindView;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class SystemFragment extends BaseFragment {
+
+    @BindView(R.id.ll_query)
+    LinearLayout llQuery;
+    @BindView(R.id.ll_worker_manage)
+    LinearLayout llWorkerManage;
+    @BindView(R.id.ll_config)
+    LinearLayout llConfig;
+    @BindView(R.id.ll_clear_all)
+    LinearLayout llClearAll;
+    @BindView(R.id.ll_update)
+    LinearLayout llUpdate;
+    @BindView(R.id.btn_logout)
+    Button btnLogout;
 
     private OnFragmentInteractionListener mListener;
 
@@ -35,7 +60,17 @@ public class SystemFragment extends BaseFragment {
 
     @Override
     protected void initView() {
-
+        RxView.clicks(llConfig)
+                .throttleFirst(2, TimeUnit.SECONDS)
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .compose(this.bindToLifecycle())
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        Intent intent = new Intent(SystemFragment.this.getActivity(), ConfigActivity.class);
+                        startActivity(intent);
+                    }
+                });
     }
 
     @Override
