@@ -93,6 +93,7 @@ public class ConfigFragment extends BaseFragment implements IConfigView{
         RxView.clicks(btnCancel)
                 .throttleFirst(2, TimeUnit.SECONDS)
                 .subscribeOn(AndroidSchedulers.mainThread())
+                .compose(this.bindToLifecycle())
                 .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
@@ -120,6 +121,7 @@ public class ConfigFragment extends BaseFragment implements IConfigView{
         RxView.clicks(btnConfirm)
                 .throttleFirst(2, TimeUnit.SECONDS)
                 .subscribeOn(AndroidSchedulers.mainThread())
+                .compose(this.bindToLifecycle())
                 .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
@@ -156,6 +158,7 @@ public class ConfigFragment extends BaseFragment implements IConfigView{
     @Override
     public void onDestroy() {
         super.onDestroy();
+        configPresenter.doDestroy();
     }
 
     public interface OnConfigClickListener {

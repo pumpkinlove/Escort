@@ -1,5 +1,6 @@
 package com.miaxis.escort.view.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -57,10 +58,23 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
         RxView.clicks(ivConfig)
                 .throttleFirst(2, TimeUnit.SECONDS)
                 .subscribeOn(AndroidSchedulers.mainThread())
+                .compose(this.bindToLifecycle())
                 .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
                         showConfigView();
+                    }
+                });
+        RxView.clicks(btnLogin)
+                .throttleFirst(2, TimeUnit.SECONDS)
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .compose(this.bindToLifecycle())
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        //TODO:登陆指纹验证
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        startActivity(intent);
                     }
                 });
     }
@@ -83,6 +97,7 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        loginPresenter.doDestroy();
     }
 
     @Override

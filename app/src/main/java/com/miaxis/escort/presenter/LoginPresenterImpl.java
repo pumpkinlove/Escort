@@ -53,4 +53,9 @@ public class LoginPresenterImpl extends BaseActivityPresenter implements ILoginP
                     }
                 });
     }
+
+    @Override
+    public void doDestroy() {
+        loginView = null;
+    }
 }

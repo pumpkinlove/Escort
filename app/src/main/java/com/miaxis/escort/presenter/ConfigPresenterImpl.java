@@ -68,4 +68,9 @@ public class ConfigPresenterImpl extends BaseFragmentPresenter implements IConfi
     public void fetchConfig(Config config) {
         configView.fetchConfig(config);
     }
+
+    @Override
+    public void doDestroy() {
+        configView = null;
+    }
 }
