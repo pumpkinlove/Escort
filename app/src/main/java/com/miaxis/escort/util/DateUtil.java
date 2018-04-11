@@ -73,4 +73,23 @@ public class DateUtil {
         return day;
     }
 
+    public static boolean isYesterday(String date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar today = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance();
+        try {
+            today.setTime(sdf.parse(getToday()));
+            calendar.setTime(sdf.parse(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return today.after(calendar);
+    }
+
+    public static int getYear() {
+        Calendar date = Calendar.getInstance();
+        date.setTime(new Date());
+        return date.get(Calendar.YEAR);
+    }
+
 }
