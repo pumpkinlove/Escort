@@ -115,6 +115,7 @@ public class ConfigFragment extends BaseFragment implements IConfigView{
             }
         })
                 .subscribeOn(AndroidSchedulers.mainThread())
+                .compose(this.<Boolean>bindToLifecycle())
                 .subscribe(new Consumer<Boolean>() {
                     @Override
                     public void accept(Boolean b) throws Exception {

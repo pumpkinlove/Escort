@@ -24,30 +24,23 @@
             android:layout_height="match_parent" />
 
         <ImageButton
-            android:id="@+id/btn_last_day"
-            android:src="@mipmap/opsearch"
+            android:id="@+id/ib_last_day"
+            android:src="@drawable/date_change_selector"
             android:layout_gravity="center"
             android:scaleType="fitCenter"
+            android:background="#00ffffff"
             android:layout_width="0dp"
-            android:layout_weight="0.3"
+            android:layout_weight="0.5"
             android:layout_height="match_parent" />
 
         <ImageButton
-            android:id="@+id/btn_today"
-            android:src="@mipmap/opsearch"
+            android:id="@+id/ib_next_day"
+            android:src="@drawable/ic_expand_more_black_24dp"
             android:layout_gravity="center"
             android:scaleType="fitCenter"
+            android:background="#00ffffff"
             android:layout_width="0dp"
-            android:layout_weight="0.3"
-            android:layout_height="match_parent" />
-
-        <ImageButton
-            android:id="@+id/btn_next_day"
-            android:src="@mipmap/opsearch"
-            android:layout_gravity="center"
-            android:scaleType="fitCenter"
-            android:layout_width="0dp"
-            android:layout_weight="0.3"
+            android:layout_weight="0.5"
             android:layout_height="match_parent" />
 
     </LinearLayout>
