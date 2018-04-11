@@ -88,22 +88,25 @@ public class MainActivity extends BaseActivity implements UpTaskFragment.OnFragm
         tlMain.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                for (int i = 0; i < tlMain.getTabCount(); i++) {
+                    TabLayout.Tab mTab = tlMain.getTabAt(i);
+                    if (mTab != null) {
+                        mTab.setIcon(normalIconList.get(i));
+                    }
+                }
                 int position = tab.getPosition();
+                toolbar.setVisibility(View.VISIBLE);
+                tab.setIcon(pressedIconList.get(position));
+                toolbar.setTitle(TITLES[position]);
+                tab.setText(TITLES[position]);
                 if (position == 2) {
                     toolbar.setVisibility(View.GONE);
-                    tab.setIcon(pressedIconList.get(position));
-                    tab.setText(TITLES[position]);
-                } else {
-                    toolbar.setVisibility(View.VISIBLE);
-                    tab.setIcon(pressedIconList.get(position));
-                    toolbar.setTitle(TITLES[position]);
-                    tab.setText(TITLES[position]);
                 }
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-                tab.setIcon(normalIconList.get(tab.getPosition()));
+
             }
 
             @Override

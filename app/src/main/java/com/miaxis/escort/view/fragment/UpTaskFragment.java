@@ -179,9 +179,9 @@ public class UpTaskFragment extends BaseFragment {
             GridLayout.Spec rowSpec = GridLayout.spec(i / 3, 1f);
             GridLayout.Spec columnSpec = GridLayout.spec(i % 3, 1f);
             GridLayout.LayoutParams params = new GridLayout.LayoutParams(rowSpec, columnSpec);
-            params.height = 100;
+            params.height = 120;
             params.width = 0;
-            params.setMargins(10, 0, 10, 10);
+            params.setMargins(10, 0, 10, 15);
             tv.setLayoutParams(params);
             tv.setBackground(this.getActivity().getDrawable(R.drawable.orange_check_bg));
             glBox.addView(tv);

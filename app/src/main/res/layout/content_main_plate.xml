@@ -32,6 +32,8 @@
             app:tabIndicatorHeight="0dp"
             app:tabPaddingTop="5dp"
             android:id="@+id/tl_main"
+            app:tabTextColor="@color/darkgray"
+            app:tabSelectedTextColor="@color/colorPrimary"
             android:layout_width="match_parent"
             android:layout_height="60dp">
 
