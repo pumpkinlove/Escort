@@ -1,6 +1,7 @@
 package com.miaxis.escort.view.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,8 @@ import android.view.ViewGroup;
 
 import com.miaxis.escort.R;
 import com.miaxis.escort.adapter.TaskAdapter;
+import com.miaxis.escort.adapter.VerifyBoxAdapter;
+import com.miaxis.escort.view.activity.VerifyBoxActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +57,7 @@ public class MyTaskFragment extends BaseFragment {
 
     @Override
     protected void initView() {
-        List<String> dataList = new ArrayList<>();
+        final List<String> dataList = new ArrayList<>();
         dataList.add("任务1");
         dataList.add("任务2");
         dataList.add("任务3");
@@ -64,6 +67,14 @@ public class MyTaskFragment extends BaseFragment {
         taskAdapter = new TaskAdapter(getActivity(), dataList);
         rvTask.setAdapter(taskAdapter);
         rvTask.setLayoutManager(new LinearLayoutManager(getActivity()));
+        taskAdapter.setOnItemClickListener(new TaskAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Intent intent = new Intent(MyTaskFragment.this.getActivity(), VerifyBoxActivity.class);
+                intent.putExtra("task", dataList.get(position));
+                startActivity(intent);
+            }
+        });
         srlTask.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

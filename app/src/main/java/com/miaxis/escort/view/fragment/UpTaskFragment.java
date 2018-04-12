@@ -181,6 +181,21 @@ public class UpTaskFragment extends BaseFragment {
         rvBox.setAdapter(boxAdapter);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this.getActivity(), 3);
         rvBox.setLayoutManager(gridLayoutManager);
+        boxAdapter.setOnItemClickListener(new BoxAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                TextView textView = (TextView) view;
+                if(textView.isSelected()) {
+                    textView.setSelected(false);
+                    String box = boxAdapter.getData(position);
+                    boxAdapter.removeSelectedBox(box);
+                } else {
+                    textView.setSelected(true);
+                    String box = boxAdapter.getData(position);
+                    boxAdapter.addSelectedBox(box);
+                }
+            }
+        });
         RxView.clicks(btnUpTask)
                 .throttleFirst(500, TimeUnit.MILLISECONDS)
                 .subscribeOn(AndroidSchedulers.mainThread())

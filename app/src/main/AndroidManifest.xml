@@ -32,7 +32,8 @@
         </provider>
 
         <activity android:name=".view.activity.MainActivity" />
-        <activity android:name=".view.activity.ConfigActivity"></activity>
+        <activity android:name=".view.activity.ConfigActivity" />
+        <activity android:name=".view.activity.VerifyBoxActivity"></activity>
     </application>
 
 </manifest>

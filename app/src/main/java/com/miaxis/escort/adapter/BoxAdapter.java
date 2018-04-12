@@ -28,6 +28,7 @@ public class BoxAdapter extends RecyclerView.Adapter<BoxAdapter.MyViewHolder> {
     private List<String> selectedList;
 
     private LayoutInflater layoutInflater;
+    private OnItemClickListener mOnItemClickListener;
 
     public BoxAdapter(Context context, List<String> dataList) {
         this.dataList = dataList;
@@ -42,20 +43,30 @@ public class BoxAdapter extends RecyclerView.Adapter<BoxAdapter.MyViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, final int position) {
+    public void onBindViewHolder(final MyViewHolder holder, int position) {
         holder.tvBoxId.setText(dataList.get(position));
         holder.tvBoxId.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (holder.tvBoxId.isSelected()) {
-                    holder.tvBoxId.setSelected(false);
-                    selectedList.remove(dataList.get(position));
-                } else {
-                    holder.tvBoxId.setSelected(true);
-                    selectedList.add(dataList.get(position));
-                }
+                mOnItemClickListener.onItemClick(holder.tvBoxId, holder.getLayoutPosition());
             }
         });
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        mOnItemClickListener = onItemClickListener;
+    }
+
+    public void addSelectedBox(String box) {
+        selectedList.add(box);
+    }
+
+    public void removeSelectedBox(String box) {
+        selectedList.remove(box);
+    }
+
+    public String getData(int position) {
+        return dataList.get(position);
     }
 
     public int getSelectedSize() {
@@ -77,6 +88,10 @@ public class BoxAdapter extends RecyclerView.Adapter<BoxAdapter.MyViewHolder> {
     @Override
     public int getItemCount() {
         return dataList.size();
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
