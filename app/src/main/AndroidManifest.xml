@@ -33,7 +33,8 @@
 
         <activity android:name=".view.activity.MainActivity" />
         <activity android:name=".view.activity.ConfigActivity" />
-        <activity android:name=".view.activity.VerifyBoxActivity"></activity>
+        <activity android:name=".view.activity.VerifyBoxActivity" />
+        <activity android:name=".view.activity.WorkerManageActivity"></activity>
     </application>
 
 </manifest>
