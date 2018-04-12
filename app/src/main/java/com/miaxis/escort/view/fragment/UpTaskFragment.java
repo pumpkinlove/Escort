@@ -2,19 +2,21 @@ package com.miaxis.escort.view.fragment;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
-import android.view.Gravity;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.GridLayout;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.bruce.pickerview.popwindow.DatePickerPopWin;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.miaxis.escort.R;
+import com.miaxis.escort.adapter.BoxAdapter;
 import com.miaxis.escort.util.DateUtil;
 
 import java.util.ArrayList;
@@ -42,14 +44,19 @@ public class UpTaskFragment extends BaseFragment {
     TextView tvReceiveTemporary;
     @BindView(R.id.tv_send_temporary)
     TextView tvSendTemporary;
-    @BindView(R.id.gl_box)
-    GridLayout glBox;
+    @BindView(R.id.et_temporary_bank)
+    EditText etTemporaryBank;
+    @BindView(R.id.rv_box)
+    RecyclerView rvBox;
+    @BindView(R.id.btn_up_task)
+    Button btnUpTask;
 
     private List<TextView> textViews;
-    private List<TextView> boxTextViews;
     private List<String> boxList;
+    private BoxAdapter boxAdapter;
     private DatePickerPopWin datePickerPopWin;
     private OnFragmentInteractionListener mListener;
+    private String selectedType = "";
 
     public UpTaskFragment() {
         // Required empty public constructor
@@ -154,6 +161,12 @@ public class UpTaskFragment extends BaseFragment {
                                 tv.setSelected(false);
                             }
                             textView.setSelected(true);
+                            selectedType = textView.getText().toString();
+                            if (textView.equals(tvReceiveTemporary) || textView.equals(tvSendTemporary)) {
+                                etTemporaryBank.setVisibility(View.VISIBLE);
+                            } else {
+                                etTemporaryBank.setVisibility(View.GONE);
+                            }
                         }
                     });
         }
@@ -164,42 +177,35 @@ public class UpTaskFragment extends BaseFragment {
         boxList.add("XJBX04");
         boxList.add("XJBX05");
         boxList.add("XJBX06");
-        boxTextViews = new ArrayList<>();
-        WindowManager manager = this.getActivity().getWindowManager();
-        DisplayMetrics outMetrics = new DisplayMetrics();
-        manager.getDefaultDisplay().getMetrics(outMetrics);
-        for (int i = 0; i < boxList.size(); i++) {
-            String type = boxList.get(i);
-            TextView tv = new TextView(this.getActivity());
-            tv.setText(type);
-            tv.setTextColor(getResources().getColor(R.color.darkgray));
-            tv.setGravity(Gravity.CENTER);
-            tv.setFocusable(true);
-            tv.setClickable(true);
-            GridLayout.Spec rowSpec = GridLayout.spec(i / 3, 1f);
-            GridLayout.Spec columnSpec = GridLayout.spec(i % 3, 1f);
-            GridLayout.LayoutParams params = new GridLayout.LayoutParams(rowSpec, columnSpec);
-            params.height = 120;
-            params.width = 0;
-            params.setMargins(10, 0, 10, 15);
-            tv.setLayoutParams(params);
-            tv.setBackground(this.getActivity().getDrawable(R.drawable.orange_check_bg));
-            glBox.addView(tv);
-            tv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    TextView tv = ((TextView) view);
-                    if (tv.isSelected()) {
-                        tv.setTextColor(getResources().getColor(R.color.darkgray));
-                        tv.setSelected(false);
-                    } else {
-                        tv.setTextColor(getResources().getColor(R.color.black));
-                        tv.setSelected(true);
+        boxAdapter = new BoxAdapter(this.getActivity(), boxList);
+        rvBox.setAdapter(boxAdapter);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this.getActivity(), 3);
+        rvBox.setLayoutManager(gridLayoutManager);
+        RxView.clicks(btnUpTask)
+                .throttleFirst(500, TimeUnit.MILLISECONDS)
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .compose(this.bindToLifecycle())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        String temporaryId = "";
+                        if ("临时网点接箱".equals(selectedType) || "临时网点送箱".equals(selectedType)) {
+                            temporaryId = "(" + etTemporaryBank.getText().toString() + ")";
+                        }
+                        StringBuilder builder = new StringBuilder();
+                        builder.append("任务清单：" + "\n")
+                                .append("    " + tvDate.getText().toString() + "\n")
+                                .append("    " + selectedType + temporaryId + "\n")
+                                .append(boxAdapter.makeSelectedText());
+                        new MaterialDialog.Builder(UpTaskFragment.this.getActivity())
+                                .title("确认任务清单")
+                                .content(builder.toString())
+                                .negativeText("取消")
+                                .positiveText("确认")
+                                .show();
                     }
-                }
-            });
-            boxTextViews.add(tv);
-        }
+                });
     }
 
     @Override

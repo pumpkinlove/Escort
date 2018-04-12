@@ -27,6 +27,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
 }
 
 dependencies {
@@ -57,6 +58,7 @@ dependencies {
     implementation 'com.github.GrenderG:Toasty:1.2.8'
     compile 'de.hdodenhof:circleimageview:2.2.0'
     compile 'com.brucetoo.pickview:library:1.2.3'
+    implementation 'com.afollestad.material-dialogs:commons:0.9.6.0'
 }
 
 greendao {

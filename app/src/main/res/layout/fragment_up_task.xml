@@ -8,9 +8,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="30px"
-        android:paddingTop="30px"
-        android:paddingRight="30px"
+        android:paddingLeft="15dp"
+        android:paddingTop="15dp"
+        android:paddingRight="15dp"
         android:orientation="horizontal">
 
         <TextView
@@ -21,7 +21,7 @@
             android:background="@drawable/textview_shape"
             android:layout_width="0dp"
             android:layout_weight="2"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content" />
 
         <ImageButton
             android:id="@+id/ib_last_day"
@@ -48,9 +48,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="30px"
-        android:paddingTop="30px"
-        android:paddingRight="30px"
+        android:paddingLeft="15dp"
+        android:paddingTop="8dp"
+        android:paddingRight="15dp"
         android:orientation="horizontal">
 
         <TextView
@@ -88,9 +88,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="30px"
-        android:paddingTop="30px"
-        android:paddingRight="30px"
+        android:paddingLeft="15dp"
+        android:paddingTop="15dp"
+        android:paddingRight="15dp"
         android:orientation="horizontal">
 
         <TextView
@@ -125,29 +125,40 @@
 
     </LinearLayout>
 
+    <EditText
+        android:id="@+id/et_temporary_bank"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="15dp"
+        android:background="@drawable/textview_shape"
+        android:hint="临时网点编号"
+        android:inputType="number"
+        android:digits="1234567890."
+        android:maxLength="20"
+        android:singleLine="true"/>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="2px"
-        android:layout_marginTop="15px"
+        android:layout_marginTop="8dp"
         android:background="@color/lightgray"/>
 
-    <ScrollView
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_box"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:paddingLeft="20px"
-        android:paddingTop="15px"
-        android:paddingRight="20px">
+        android:paddingTop="8dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
 
-        <GridLayout
-            android:id="@+id/gl_box"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        </GridLayout>
-    </ScrollView>
+    </android.support.v7.widget.RecyclerView>
 
     <Button
+        android:id="@+id/btn_up_task"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
