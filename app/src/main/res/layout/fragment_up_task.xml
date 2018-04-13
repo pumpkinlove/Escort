@@ -16,12 +16,12 @@
         <TextView
             android:id="@+id/tv_date"
             android:text="2000-00-00  天数"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:gravity="center"
             android:background="@drawable/textview_shape"
             android:layout_width="0dp"
             android:layout_weight="2"
-            android:layout_height="wrap_content" />
+            android:layout_height="38dp" />
 
         <ImageButton
             android:id="@+id/ib_last_day"
@@ -127,18 +127,20 @@
 
     <EditText
         android:id="@+id/et_temporary_bank"
-        android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginRight="15dp"
+        android:layout_height="38dp"
         android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/textview_shape"
+        android:digits="1234567890."
         android:hint="临时网点编号"
         android:inputType="number"
-        android:digits="1234567890."
         android:maxLength="20"
-        android:singleLine="true"/>
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp"
+        android:singleLine="true"
+        android:visibility="gone" />
 
     <View
         android:layout_width="match_parent"
@@ -164,6 +166,7 @@
         android:layout_gravity="bottom"
         android:background="@drawable/blue_btn_bg"
         android:textColor="@color/white"
+        android:textSize="16sp"
         android:text="申报"/>
 
 </LinearLayout>

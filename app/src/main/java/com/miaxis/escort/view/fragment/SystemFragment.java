@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import android.widget.LinearLayout;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.miaxis.escort.R;
 import com.miaxis.escort.view.activity.ConfigActivity;
+import com.miaxis.escort.view.activity.WorkerManageActivity;
 
 import java.util.concurrent.TimeUnit;
 
@@ -68,6 +70,17 @@ public class SystemFragment extends BaseFragment {
                     @Override
                     public void accept(Object o) throws Exception {
                         Intent intent = new Intent(SystemFragment.this.getActivity(), ConfigActivity.class);
+                        startActivity(intent);
+                    }
+                });
+        RxView.clicks(llWorkerManage)
+                .throttleFirst(2, TimeUnit.SECONDS)
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .compose(this.bindToLifecycle())
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        Intent intent = new Intent(SystemFragment.this.getActivity(), WorkerManageActivity.class);
                         startActivity(intent);
                     }
                 });

@@ -38,7 +38,7 @@
             android:id="@+id/btn_add_worker"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:text="新增员工"
+            android:text="新增操作员"
             android:textColor="@color/white"
             android:background="@drawable/blue_btn_bg"/>
 

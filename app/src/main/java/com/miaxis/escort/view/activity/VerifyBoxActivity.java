@@ -3,6 +3,7 @@ package com.miaxis.escort.view.activity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -44,6 +45,8 @@ public class VerifyBoxActivity extends BaseActivity {
     @Override
     protected void initView() {
         toolbar.setTitle(getIntent().getStringExtra("task"));
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         List<String> dataList = new ArrayList<>();
         dataList.add("箱子1");
         dataList.add("箱子2");
@@ -75,6 +78,16 @@ public class VerifyBoxActivity extends BaseActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
