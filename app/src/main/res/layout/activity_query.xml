@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/query_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <View
+        android:background="@color/lightgray"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+
+    <LinearLayout
+        android:id="@+id/ll_escort_query"
+        android:orientation="horizontal"
+        style="@style/l_personal_item">
+
+        <ImageView
+            android:src="@mipmap/opsearch"
+            android:layout_gravity="center_vertical"
+            android:scaleType="fitCenter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            style="@style/tv_personal_item"
+            android:text="押运员查询"/>
+
+        <ImageView
+            android:src="@mipmap/zicon_arrow"
+            android:layout_gravity="end|center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <View
+        android:background="@color/lightgray"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+
+    <LinearLayout
+        android:id="@+id/ll_task_query"
+        android:orientation="horizontal"
+        style="@style/l_personal_item">
+
+        <ImageView
+            android:src="@mipmap/opsearch"
+            android:layout_gravity="center_vertical"
+            android:scaleType="fitCenter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            style="@style/tv_personal_item"
+            android:text="任务查询"/>
+
+        <ImageView
+            android:src="@mipmap/zicon_arrow"
+            android:layout_gravity="end|center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <View
+        android:background="@color/lightgray"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+
+    <LinearLayout
+        android:id="@+id/ll_box_query"
+        android:orientation="horizontal"
+        style="@style/l_personal_item">
+
+        <ImageView
+            android:src="@mipmap/opsearch"
+            android:layout_gravity="center_vertical"
+            android:scaleType="fitCenter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            style="@style/tv_personal_item"
+            android:text="箱包查询"/>
+
+        <ImageView
+            android:src="@mipmap/zicon_arrow"
+            android:layout_gravity="end|center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <View
+        android:background="@color/lightgray"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+
+</LinearLayout>

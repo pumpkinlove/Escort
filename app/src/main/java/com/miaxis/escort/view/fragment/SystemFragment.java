@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.miaxis.escort.R;
 import com.miaxis.escort.view.activity.ConfigActivity;
+import com.miaxis.escort.view.activity.QueryActivity;
 import com.miaxis.escort.view.activity.WorkerManageActivity;
 
 import java.util.concurrent.TimeUnit;
@@ -62,14 +63,14 @@ public class SystemFragment extends BaseFragment {
 
     @Override
     protected void initView() {
-        RxView.clicks(llConfig)
+        RxView.clicks(llQuery)
                 .throttleFirst(2, TimeUnit.SECONDS)
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .compose(this.bindToLifecycle())
                 .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
-                        Intent intent = new Intent(SystemFragment.this.getActivity(), ConfigActivity.class);
+                        Intent intent = new Intent(SystemFragment.this.getActivity(), QueryActivity.class);
                         startActivity(intent);
                     }
                 });
@@ -81,6 +82,17 @@ public class SystemFragment extends BaseFragment {
                     @Override
                     public void accept(Object o) throws Exception {
                         Intent intent = new Intent(SystemFragment.this.getActivity(), WorkerManageActivity.class);
+                        startActivity(intent);
+                    }
+                });
+        RxView.clicks(llConfig)
+                .throttleFirst(2, TimeUnit.SECONDS)
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .compose(this.bindToLifecycle())
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        Intent intent = new Intent(SystemFragment.this.getActivity(), ConfigActivity.class);
                         startActivity(intent);
                     }
                 });

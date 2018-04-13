@@ -81,6 +81,7 @@ public class MyTaskFragment extends BaseFragment {
                 Observable.just(0)
                         .delay(2000, TimeUnit.MILLISECONDS)
                         .subscribeOn(AndroidSchedulers.mainThread())
+                        .compose(MyTaskFragment.this.<Integer>bindToLifecycle())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Consumer<Integer>() {
                             @Override

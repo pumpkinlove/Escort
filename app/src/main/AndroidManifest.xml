@@ -31,12 +31,18 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".view.activity.MainActivity"
-            android:windowSoftInputMode="adjustPan|stateHidden"/>
+        <activity
+            android:name=".view.activity.MainActivity"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity android:name=".view.activity.ConfigActivity" />
         <activity android:name=".view.activity.VerifyBoxActivity" />
         <activity android:name=".view.activity.WorkerManageActivity" />
-        <activity android:name=".view.activity.WorkerDetailActivity"></activity>
+        <activity android:name=".view.activity.WorkerDetailActivity" />
+        <activity android:name=".view.activity.QueryActivity" />
+        <activity android:name=".view.activity.SearchEscortActivity" />
+        <activity android:name=".view.activity.SearchTaskActivity" />
+        <activity android:name=".view.activity.SearchBoxActivity" />
+        <activity android:name=".view.activity.TaskDetailActivity"></activity>
     </application>
 
 </manifest>

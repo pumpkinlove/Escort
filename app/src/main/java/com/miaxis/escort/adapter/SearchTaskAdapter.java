@@ -9,41 +9,40 @@ import android.widget.TextView;
 
 import com.miaxis.escort.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Created by 一非 on 2018/4/12.
+ * Created by 一非 on 2018/4/13.
  */
 
-public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> {
+public class SearchTaskAdapter extends RecyclerView.Adapter<SearchTaskAdapter.MyViewHolder> {
 
     private List<String> dataList;
 
     private LayoutInflater layoutInflater;
     private OnItemClickListener mOnItemClickListener;
 
-    public TaskAdapter(Context context, List<String> dataList) {
+    public SearchTaskAdapter(Context context, List<String> dataList) {
         this.dataList = dataList;
         layoutInflater = LayoutInflater.from(context);
     }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = layoutInflater.inflate(R.layout.item_task, parent, false);
+        View itemView = layoutInflater.inflate(R.layout.item_search_task, parent, false);
         return new MyViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        holder.tvTaskName.setText(dataList.get(position));
+        holder.tvSearchTask.setText(dataList.get(position));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOnItemClickListener.onItemClick(holder.tvTaskName, holder.getLayoutPosition());
+                mOnItemClickListener.onItemClick(holder.itemView, holder.getLayoutPosition());
             }
         });
     }
@@ -63,8 +62,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
 
     class MyViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.tv_task_name)
-        TextView tvTaskName;
+        @BindView(R.id.tv_search_task)
+        TextView tvSearchTask;
 
         MyViewHolder(View itemView) {
             super(itemView);

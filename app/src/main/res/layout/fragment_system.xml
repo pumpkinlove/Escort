@@ -112,7 +112,7 @@
     <View
         android:background="@color/lightgray"
         android:layout_width="match_parent"
-        android:layout_height="30px"/>
+        android:layout_height="1px"/>
 
     <LinearLayout
         android:id="@+id/ll_config"

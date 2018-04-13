@@ -45,7 +45,7 @@ public class BoxAdapter extends RecyclerView.Adapter<BoxAdapter.MyViewHolder> {
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         holder.tvBoxId.setText(dataList.get(position));
-        holder.tvBoxId.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mOnItemClickListener.onItemClick(holder.tvBoxId, holder.getLayoutPosition());
