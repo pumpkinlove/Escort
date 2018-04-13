@@ -61,6 +61,11 @@ public class ConfigPresenterImpl extends BaseFragmentPresenter implements IConfi
                     public void accept(Config config) throws Exception {
                         configView.fetchConfig(config);
                     }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                    }
                 });
     }
 

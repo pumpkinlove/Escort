@@ -36,7 +36,7 @@
             android:background="@color/lightgray"
             android:gravity="center"
             android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:layout_height="match_parent" />
 
         <View
@@ -47,7 +47,7 @@
         <TextView
             android:gravity="center"
             android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_weight="3"
             android:layout_height="match_parent" />
 
         <View
@@ -60,18 +60,73 @@
             android:background="@color/lightgray"
             android:gravity="center"
             android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:layout_height="match_parent" />
 
         <View
-            android:layout_width="4px"
+            android:layout_width="2px"
             android:layout_height="30dp"
             android:background="@color/black"/>
 
         <TextView
             android:gravity="center"
             android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_weight="3"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="2px"
+        android:background="@color/black"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="押运员"
+            android:background="@color/lightgray"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="match_parent" />
+
+        <View
+            android:layout_width="2px"
+            android:layout_height="30dp"
+            android:background="@color/black"/>
+
+        <TextView
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="match_parent" />
+
+        <View
+            android:layout_width="2px"
+            android:layout_height="30dp"
+            android:background="@color/black"/>
+
+        <TextView
+            android:text="车辆"
+            android:background="@color/lightgray"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="match_parent" />
+
+        <View
+            android:layout_width="2px"
+            android:layout_height="30dp"
+            android:background="@color/black"/>
+
+        <TextView
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="3"
             android:layout_height="match_parent" />
 
     </LinearLayout>
@@ -91,48 +146,6 @@
             android:background="@color/lightgray"
             android:gravity="center"
             android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent" />
-
-        <View
-            android:layout_width="2px"
-            android:layout_height="30dp"
-            android:background="@color/black"/>
-
-        <TextView
-            android:gravity="center"
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:layout_height="match_parent" />
-
-    </LinearLayout>
-
-    <View
-    android:layout_width="wrap_content"
-    android:layout_height="2px"
-    android:background="@color/black"/>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:text="押运员"
-            android:background="@color/lightgray"
-            android:gravity="center"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent" />
-
-        <View
-            android:layout_width="2px"
-            android:layout_height="30dp"
-            android:background="@color/black"/>
-
-        <TextView
-            android:gravity="center"
-            android:layout_width="0dp"
             android:layout_weight="2"
             android:layout_height="match_parent" />
 
@@ -142,42 +155,22 @@
             android:background="@color/black"/>
 
         <TextView
-            android:text="车辆"
-            android:background="@color/lightgray"
             android:gravity="center"
             android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_weight="3"
             android:layout_height="match_parent" />
 
         <View
             android:layout_width="2px"
             android:layout_height="30dp"
             android:background="@color/black"/>
-
-        <TextView
-            android:gravity="center"
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:layout_height="match_parent" />
-
-    </LinearLayout>
-
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="2px"
-        android:background="@color/black"/>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
 
         <TextView
             android:text="日期"
             android:background="@color/lightgray"
             android:gravity="center"
             android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:layout_height="match_parent" />
 
         <View

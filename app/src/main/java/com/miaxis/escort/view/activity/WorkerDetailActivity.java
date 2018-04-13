@@ -62,6 +62,30 @@ public class WorkerDetailActivity extends BaseActivity {
                                 .show();
                     }
                 });
+        RxView.clicks(llFirstFingerPrint)
+                .throttleFirst(2, TimeUnit.SECONDS)
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .compose(this.bindToLifecycle())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        Intent intent = new Intent(WorkerDetailActivity.this, FingerActivity.class);
+                        startActivity(intent);
+                    }
+                });
+        RxView.clicks(llSecondFingerPrint)
+                .throttleFirst(2, TimeUnit.SECONDS)
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .compose(this.bindToLifecycle())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        Intent intent = new Intent(WorkerDetailActivity.this, FingerActivity.class);
+                        startActivity(intent);
+                    }
+                });
     }
 
     @Override
