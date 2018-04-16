@@ -10,4 +10,5 @@ public interface IConfigView extends IBaseView{
     void configSaveSuccess();
     void configSaveFailed();
     void fetchConfig(Config config);
+    void setProgressDialogMessage(String message);
 }

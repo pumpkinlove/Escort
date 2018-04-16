@@ -121,6 +121,7 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
     @Override
     public void onConfigSave() {
         showLoginView();
+        Toasty.success(this, "信息下载成功", 0, true).show();
         //TODO:登陆页面显示相关信息
     }
 

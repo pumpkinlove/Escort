@@ -17,7 +17,11 @@ import com.jakewharton.rxbinding2.view.RxView;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.miaxis.escort.R;
 import com.miaxis.escort.adapter.BoxAdapter;
+import com.miaxis.escort.model.entity.BoxBean;
+import com.miaxis.escort.presenter.IUpTaskPresenter;
+import com.miaxis.escort.presenter.UpTaskPresenterImpl;
 import com.miaxis.escort.util.DateUtil;
+import com.miaxis.escort.view.viewer.IUpTaskView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +32,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-public class UpTaskFragment extends BaseFragment {
+public class UpTaskFragment extends BaseFragment implements IUpTaskView{
 
     @BindView(R.id.tv_date)
     TextView tvDate;
@@ -52,10 +56,10 @@ public class UpTaskFragment extends BaseFragment {
     Button btnUpTask;
 
     private List<TextView> textViews;
-    private List<String> boxList;
     private BoxAdapter boxAdapter;
     private DatePickerPopWin datePickerPopWin;
     private OnFragmentInteractionListener mListener;
+    private IUpTaskPresenter upTaskPresenter;
     private String selectedType = "";
 
     public UpTaskFragment() {
@@ -74,7 +78,7 @@ public class UpTaskFragment extends BaseFragment {
 
     @Override
     protected void initData() {
-
+        upTaskPresenter = new UpTaskPresenterImpl(this, this);
     }
 
     @Override
@@ -170,14 +174,8 @@ public class UpTaskFragment extends BaseFragment {
                         }
                     });
         }
-        boxList = new ArrayList<>();
-        boxList.add("XJBX01");
-        boxList.add("XJBX02");
-        boxList.add("XJBX03");
-        boxList.add("XJBX04");
-        boxList.add("XJBX05");
-        boxList.add("XJBX06");
-        boxAdapter = new BoxAdapter(this.getActivity(), boxList);
+        boxAdapter = new BoxAdapter(this.getActivity(), new ArrayList<BoxBean>());
+        upTaskPresenter.loadBox();
         rvBox.setAdapter(boxAdapter);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this.getActivity(), 3);
         rvBox.setLayoutManager(gridLayoutManager);
@@ -187,7 +185,7 @@ public class UpTaskFragment extends BaseFragment {
                 TextView textView = (TextView) view;
                 if(textView.isSelected()) {
                     textView.setSelected(false);
-                    String box = boxAdapter.getData(position);
+                    BoxBean box = boxAdapter.getData(position);
                     boxAdapter.removeSelectedBox(box);
                 } else {
                     textView.setSelected(true);
@@ -221,6 +219,11 @@ public class UpTaskFragment extends BaseFragment {
                                 .show();
                     }
                 });
+    }
+
+    @Override
+    public void updateBox(List<BoxBean> boxBeanList) {
+
     }
 
     @Override

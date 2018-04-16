@@ -148,7 +148,7 @@ public class ConfigFragment extends BaseFragment implements IConfigView{
 
     @Override
     public void configSaveFailed() {
-        pdSaveConfig.dismiss();
+        pdSaveConfig.setCancelable(true);
     }
 
     @Override
@@ -159,6 +159,11 @@ public class ConfigFragment extends BaseFragment implements IConfigView{
         etIp.setText(config.getIp());
         etPort.setText(config.getPort());
         etOrgCode.setText(config.getOrgCode());
+    }
+
+    @Override
+    public void setProgressDialogMessage(String message) {
+        pdSaveConfig.setMessage(message);
     }
 
     @Override

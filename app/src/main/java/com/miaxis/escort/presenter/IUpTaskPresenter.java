@@ -5,5 +5,5 @@ package com.miaxis.escort.presenter;
  */
 
 public interface IUpTaskPresenter extends IBasePresenter{
-
+    void loadBox();
 }

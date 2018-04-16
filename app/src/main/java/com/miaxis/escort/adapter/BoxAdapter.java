@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.miaxis.escort.R;
+import com.miaxis.escort.model.entity.BoxBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,13 +25,13 @@ import butterknife.OnClick;
 
 public class BoxAdapter extends RecyclerView.Adapter<BoxAdapter.MyViewHolder> {
 
-    private List<String> dataList;
+    private List<BoxBean> dataList;
     private List<String> selectedList;
 
     private LayoutInflater layoutInflater;
     private OnItemClickListener mOnItemClickListener;
 
-    public BoxAdapter(Context context, List<String> dataList) {
+    public BoxAdapter(Context context, List<BoxBean> dataList) {
         this.dataList = dataList;
         selectedList = new ArrayList<>();
         layoutInflater = LayoutInflater.from(context);
@@ -44,13 +45,17 @@ public class BoxAdapter extends RecyclerView.Adapter<BoxAdapter.MyViewHolder> {
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        holder.tvBoxId.setText(dataList.get(position));
+        holder.tvBoxId.setText(dataList.get(position).getBoxname());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mOnItemClickListener.onItemClick(holder.tvBoxId, holder.getLayoutPosition());
             }
         });
+    }
+
+    public void setDataList(List<BoxBean> boxBeanList) {
+        this.dataList = boxBeanList;
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -65,7 +70,7 @@ public class BoxAdapter extends RecyclerView.Adapter<BoxAdapter.MyViewHolder> {
         selectedList.remove(box);
     }
 
-    public String getData(int position) {
+    public BoxBean getData(int position) {
         return dataList.get(position);
     }
 
