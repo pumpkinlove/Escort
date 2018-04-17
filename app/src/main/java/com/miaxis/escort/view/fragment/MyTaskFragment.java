@@ -12,21 +12,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.miaxis.escort.R;
 import com.miaxis.escort.adapter.TaskAdapter;
 import com.miaxis.escort.adapter.VerifyBoxAdapter;
+import com.miaxis.escort.app.EscortApp;
+import com.miaxis.escort.model.entity.TaskBean;
+import com.miaxis.escort.presenter.IMyTaskPresenter;
+import com.miaxis.escort.presenter.MyTaskPresenterImpl;
 import com.miaxis.escort.view.activity.VerifyBoxActivity;
+import com.miaxis.escort.view.viewer.IMyTaskView;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
+import es.dmoral.toasty.Toasty;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 
-public class MyTaskFragment extends BaseFragment {
+public class MyTaskFragment extends BaseFragment implements IMyTaskView{
 
     @BindView(R.id.rv_task)
     RecyclerView rvTask;
@@ -35,6 +42,8 @@ public class MyTaskFragment extends BaseFragment {
 
     private TaskAdapter taskAdapter;
     private OnFragmentInteractionListener mListener;
+    private IMyTaskPresenter myTaskPresenter;
+    private MaterialDialog materialDialog;
 
     public MyTaskFragment() {
         // Required empty public constructor
@@ -52,50 +61,82 @@ public class MyTaskFragment extends BaseFragment {
 
     @Override
     protected void initData() {
-
+        myTaskPresenter = new MyTaskPresenterImpl(this, this);
     }
 
     @Override
     protected void initView() {
-        final List<String> dataList = new ArrayList<>();
-        dataList.add("任务1");
-        dataList.add("任务2");
-        dataList.add("任务3");
-        dataList.add("任务4");
-        dataList.add("任务5");
-        dataList.add("任务6");
-        taskAdapter = new TaskAdapter(getActivity(), dataList);
+        taskAdapter = new TaskAdapter(getActivity(), new ArrayList<TaskBean>());
         rvTask.setAdapter(taskAdapter);
         rvTask.setLayoutManager(new LinearLayoutManager(getActivity()));
         taskAdapter.setOnItemClickListener(new TaskAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 Intent intent = new Intent(MyTaskFragment.this.getActivity(), VerifyBoxActivity.class);
-                intent.putExtra("task", dataList.get(position));
+                intent.putExtra("task", taskAdapter.getDataList().get(position).getTaskcode());
                 startActivity(intent);
             }
         });
         srlTask.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Observable.just(0)
-                        .delay(2000, TimeUnit.MILLISECONDS)
-                        .subscribeOn(AndroidSchedulers.mainThread())
-                        .compose(MyTaskFragment.this.<Integer>bindToLifecycle())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Consumer<Integer>() {
-                            @Override
-                            public void accept(Integer integer) throws Exception {
-                                srlTask.setRefreshing(false);
-                            }
-                        });
+                srlTask.setRefreshing(true);
+                myTaskPresenter.downTask();
             }
         });
+        materialDialog = new MaterialDialog.Builder(this.getActivity())
+                .title("请稍后...")
+                .content("正在更新任务...")
+                .progress(true, 100)
+                .cancelable(false)
+                .show();
+        myTaskPresenter.downTask();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        myTaskPresenter.loadTask();
+    }
+
+    @Override
+    public void setDialogMessage(String message) {
+        materialDialog.setContent(message);
+    }
+
+    @Override
+    public void downTaskSuccess() {
+        if (materialDialog.isShowing()) {
+            materialDialog.dismiss();
+        }
+        if (srlTask.isRefreshing()) {
+            srlTask.setRefreshing(false);
+        }
+        Toasty.success(this.getActivity(), "更新成功",0, true).show();
+        myTaskPresenter.loadTask();
+    }
+
+    @Override
+    public void downTaskFailed() {
+        if (materialDialog.isShowing()) {
+            materialDialog.dismiss();
+        }
+        if (srlTask.isRefreshing()) {
+            srlTask.setRefreshing(false);
+        }
+        Toasty.error(this.getActivity(), "更新失败",0, true).show();
+    }
+
+    @Override
+    public void updateData(List<TaskBean> taskBeanList) {
+        taskAdapter.setDataList(taskBeanList);
+        taskAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        myTaskPresenter.doDestroy();
     }
 
     public void onButtonPressed() {
@@ -119,6 +160,7 @@ public class MyTaskFragment extends BaseFragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        myTaskPresenter.doDestroy();
     }
 
     public interface OnFragmentInteractionListener {

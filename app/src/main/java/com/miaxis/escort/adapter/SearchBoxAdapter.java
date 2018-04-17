@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.miaxis.escort.R;
+import com.miaxis.escort.model.entity.BoxBean;
 
 import java.util.List;
 
@@ -20,12 +21,12 @@ import butterknife.ButterKnife;
 
 public class SearchBoxAdapter extends RecyclerView.Adapter<SearchBoxAdapter.MyViewHolder> {
 
-    private List<String> dataList;
+    private List<BoxBean> dataList;
 
     private LayoutInflater layoutInflater;
     private OnItemClickListener mOnItemClickListener;
 
-    public SearchBoxAdapter(Context context, List<String> dataList) {
+    public SearchBoxAdapter(Context context, List<BoxBean> dataList) {
         this.dataList = dataList;
         layoutInflater = LayoutInflater.from(context);
     }
@@ -38,7 +39,7 @@ public class SearchBoxAdapter extends RecyclerView.Adapter<SearchBoxAdapter.MyVi
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        holder.tvSearchBoxId.setText(dataList.get(position));
+        holder.tvSearchBoxId.setText(dataList.get(position).getBoxname());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -49,6 +50,10 @@ public class SearchBoxAdapter extends RecyclerView.Adapter<SearchBoxAdapter.MyVi
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         mOnItemClickListener = onItemClickListener;
+    }
+
+    public void setDataList(List<BoxBean> boxBeans) {
+        this.dataList = boxBeans;
     }
 
     @Override

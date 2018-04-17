@@ -13,11 +13,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.miaxis.escort.R;
 import com.miaxis.escort.app.EscortApp;
 import com.miaxis.escort.presenter.ILoginPresenter;
 import com.miaxis.escort.presenter.LoginPresenterImpl;
+import com.miaxis.escort.util.StaticVariable;
 import com.miaxis.escort.view.fragment.ConfigFragment;
 import com.miaxis.escort.view.viewer.ILoginView;
 
@@ -44,6 +46,8 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
     @BindView(R.id.tv_version)
     TextView tvVersion;
 
+    private MaterialDialog materialDialog;
+
     @Override
     protected int setContentView() {
         return R.layout.activity_login;
@@ -59,6 +63,11 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
     @Override
     protected void initView() {
         tvVersion.setText(tvVersion.getText() + getVersion());
+        materialDialog = new MaterialDialog.Builder(this)
+                .content("")
+                .progress(true, 100)
+                .cancelable(false)
+                .build();
         RxView.clicks(ivConfig)
                 .throttleFirst(2, TimeUnit.SECONDS)
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -77,10 +86,20 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
                     @Override
                     public void accept(Object o) throws Exception {
                         //TODO:登陆指纹验证
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        startActivity(intent);
+                        loginPresenter.initAppData();
                     }
                 });
+    }
+
+    @Override
+    public void loginSuccess() {
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void loginFailed() {
+        Toasty.error(this, "登录失败",0, true).show();
     }
 
     private String getVersion() {
@@ -110,6 +129,11 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
         llLogin.setVisibility(View.GONE);
         flConfig.setVisibility(View.VISIBLE);
         getSupportFragmentManager().beginTransaction().replace(R.id.fl_config, ConfigFragment.newInstance()).commit();
+    }
+
+    @Override
+    public void setDialogMessage(String message) {
+        materialDialog.setContent(message);
     }
 
     @Override

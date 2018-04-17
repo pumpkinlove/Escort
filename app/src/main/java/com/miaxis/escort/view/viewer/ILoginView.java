@@ -9,4 +9,7 @@ public interface ILoginView extends IBaseView {
     void showConfigView();
     void getPermissionsSuccess();
     void getPermissionsFailed();
+    void loginSuccess();
+    void loginFailed();
+    void setDialogMessage(String message);
 }

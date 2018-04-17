@@ -26,7 +26,7 @@ import butterknife.OnClick;
 public class BoxAdapter extends RecyclerView.Adapter<BoxAdapter.MyViewHolder> {
 
     private List<BoxBean> dataList;
-    private List<String> selectedList;
+    private List<BoxBean> selectedList;
 
     private LayoutInflater layoutInflater;
     private OnItemClickListener mOnItemClickListener;
@@ -62,11 +62,11 @@ public class BoxAdapter extends RecyclerView.Adapter<BoxAdapter.MyViewHolder> {
         mOnItemClickListener = onItemClickListener;
     }
 
-    public void addSelectedBox(String box) {
+    public void addSelectedBox(BoxBean box) {
         selectedList.add(box);
     }
 
-    public void removeSelectedBox(String box) {
+    public void removeSelectedBox(BoxBean box) {
         selectedList.remove(box);
     }
 
@@ -78,14 +78,18 @@ public class BoxAdapter extends RecyclerView.Adapter<BoxAdapter.MyViewHolder> {
         return selectedList.size();
     }
 
-    public List<String> getSelectedItem() {
+    public List<BoxBean> getSelectedItem() {
         return selectedList;
+    }
+
+    public void clearSelected() {
+        selectedList = new ArrayList<>();
     }
 
     public String makeSelectedText() {
         StringBuilder stringBuilder = new StringBuilder();
-        for (String str : selectedList) {
-            stringBuilder.append("    " + str + "\n");
+        for (BoxBean box : selectedList) {
+            stringBuilder.append("    " + box.getBoxname() + "\n");
         }
         return stringBuilder.toString();
     }

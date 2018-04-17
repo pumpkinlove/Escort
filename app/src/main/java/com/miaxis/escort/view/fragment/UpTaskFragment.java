@@ -175,7 +175,6 @@ public class UpTaskFragment extends BaseFragment implements IUpTaskView{
                     });
         }
         boxAdapter = new BoxAdapter(this.getActivity(), new ArrayList<BoxBean>());
-        upTaskPresenter.loadBox();
         rvBox.setAdapter(boxAdapter);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this.getActivity(), 3);
         rvBox.setLayoutManager(gridLayoutManager);
@@ -189,7 +188,7 @@ public class UpTaskFragment extends BaseFragment implements IUpTaskView{
                     boxAdapter.removeSelectedBox(box);
                 } else {
                     textView.setSelected(true);
-                    String box = boxAdapter.getData(position);
+                    BoxBean box = boxAdapter.getData(position);
                     boxAdapter.addSelectedBox(box);
                 }
             }
@@ -222,8 +221,16 @@ public class UpTaskFragment extends BaseFragment implements IUpTaskView{
     }
 
     @Override
-    public void updateBox(List<BoxBean> boxBeanList) {
+    public void onResume() {
+        super.onResume();
+        upTaskPresenter.loadBox();
+    }
 
+    @Override
+    public void updateBox(List<BoxBean> boxBeanList) {
+        boxAdapter.setDataList(boxBeanList);
+        boxAdapter.clearSelected();
+        boxAdapter.notifyDataSetChanged();
     }
 
     @Override

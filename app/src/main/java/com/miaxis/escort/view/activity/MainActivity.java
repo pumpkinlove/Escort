@@ -73,7 +73,7 @@ public class MainActivity extends BaseActivity implements UpTaskFragment.OnFragm
         vpMain.setOffscreenPageLimit(20);
         initTabLayout();
         vpMain.setCurrentItem(1);
-        tlMain.getTabAt(0).select();
+        tlMain.getTabAt(1).select();
     }
 
     private void initTabLayout() {

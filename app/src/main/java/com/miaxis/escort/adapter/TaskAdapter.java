@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.miaxis.escort.R;
+import com.miaxis.escort.model.entity.TaskBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,12 +22,12 @@ import butterknife.ButterKnife;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> {
 
-    private List<String> dataList;
+    private List<TaskBean> dataList;
 
     private LayoutInflater layoutInflater;
     private OnItemClickListener mOnItemClickListener;
 
-    public TaskAdapter(Context context, List<String> dataList) {
+    public TaskAdapter(Context context, List<TaskBean> dataList) {
         this.dataList = dataList;
         layoutInflater = LayoutInflater.from(context);
     }
@@ -39,7 +40,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        holder.tvTaskName.setText(dataList.get(position));
+        holder.tvTaskName.setText(dataList.get(position).getTaskcode());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -50,6 +51,14 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         mOnItemClickListener = onItemClickListener;
+    }
+
+    public List<TaskBean> getDataList() {
+        return dataList;
+    }
+
+    public void setDataList(List<TaskBean> dataList) {
+        this.dataList = dataList;
     }
 
     @Override

@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.miaxis.escort.R;
@@ -45,7 +46,7 @@ public class ConfigFragment extends BaseFragment implements IConfigView{
     private IConfigPresenter configPresenter;
     private OnConfigClickListener mListener;
 
-    private ProgressDialog pdSaveConfig;
+    private MaterialDialog pdSaveConfig;
 
     @BindView(R.id.et_ip)
     EditText etIp;
@@ -93,8 +94,12 @@ public class ConfigFragment extends BaseFragment implements IConfigView{
 
     @Override
     protected void initView() {
-        pdSaveConfig = new ProgressDialog(getActivity());
-        pdSaveConfig.setCancelable(false);
+        pdSaveConfig = new MaterialDialog.Builder(this.getActivity())
+                .title("请稍后...")
+                .content("")
+                .progress(true, 100)
+                .cancelable(false)
+                .build();
         RxView.clicks(btnCancel)
                 .throttleFirst(2, TimeUnit.SECONDS)
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -131,7 +136,7 @@ public class ConfigFragment extends BaseFragment implements IConfigView{
                 .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
-                        pdSaveConfig.setMessage("保存中");
+                        pdSaveConfig.setContent("保存中");
                         pdSaveConfig.show();
                         configPresenter.configSave(etIp.getText().toString(),
                                 etPort.getText().toString(),
@@ -163,7 +168,7 @@ public class ConfigFragment extends BaseFragment implements IConfigView{
 
     @Override
     public void setProgressDialogMessage(String message) {
-        pdSaveConfig.setMessage(message);
+        pdSaveConfig.setContent(message);
     }
 
     @Override

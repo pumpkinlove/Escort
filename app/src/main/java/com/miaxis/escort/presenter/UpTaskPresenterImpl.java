@@ -58,5 +58,6 @@ public class UpTaskPresenterImpl extends BaseFragmentPresenter implements IUpTas
     @Override
     public void doDestroy() {
         upTaskView = null;
+        upTaskModel = null;
     }
 }

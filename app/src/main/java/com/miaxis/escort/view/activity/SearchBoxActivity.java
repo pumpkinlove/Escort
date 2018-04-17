@@ -11,25 +11,31 @@ import android.view.View;
 
 import com.miaxis.escort.R;
 import com.miaxis.escort.adapter.SearchBoxAdapter;
+import com.miaxis.escort.model.entity.BoxBean;
+import com.miaxis.escort.presenter.ISearchBoxPresenter;
+import com.miaxis.escort.presenter.SearchBoxPresenterImpl;
+import com.miaxis.escort.view.viewer.ISearchBoxView;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
+import es.dmoral.toasty.Toasty;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 
-public class SearchBoxActivity extends BaseActivity {
+public class SearchBoxActivity extends BaseActivity implements ISearchBoxView{
 
     @BindView(R.id.search_box_toolbar)
     Toolbar toolbar;
     @BindView(R.id.srl_search_box)
-    SwipeRefreshLayout srl_searchBox;
+    SwipeRefreshLayout srlSearchBox;
     @BindView(R.id.rv_search_box)
     RecyclerView rvSearchBox;
 
+    private ISearchBoxPresenter searchBoxPresenter;
     private SearchBoxAdapter searchBoxAdapter;
 
     @Override
@@ -39,7 +45,7 @@ public class SearchBoxActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-
+        searchBoxPresenter = new SearchBoxPresenterImpl(this, this);
     }
 
     @Override
@@ -47,14 +53,7 @@ public class SearchBoxActivity extends BaseActivity {
         toolbar.setTitle("箱包查询");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        List<String> dataList = new ArrayList<>();
-        dataList.add("箱包1");
-        dataList.add("箱包2");
-        dataList.add("箱包3");
-        dataList.add("箱包4");
-        dataList.add("箱包5");
-        dataList.add("箱包6");
-        searchBoxAdapter = new SearchBoxAdapter(this, dataList);
+        searchBoxAdapter = new SearchBoxAdapter(this, new ArrayList<BoxBean>());
         rvSearchBox.setAdapter(searchBoxAdapter);
         rvSearchBox.setLayoutManager(new LinearLayoutManager(this));
         searchBoxAdapter.setOnItemClickListener(new SearchBoxAdapter.OnItemClickListener() {
@@ -63,22 +62,19 @@ public class SearchBoxActivity extends BaseActivity {
 
             }
         });
-        srl_searchBox.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        srlSearchBox.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Observable.just(0)
-                        .delay(2000, TimeUnit.MILLISECONDS)
-                        .subscribeOn(AndroidSchedulers.mainThread())
-                        .compose(SearchBoxActivity.this.<Integer>bindToLifecycle())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Consumer<Integer>() {
-                            @Override
-                            public void accept(Integer integer) throws Exception {
-                                srl_searchBox.setRefreshing(false);
-                            }
-                        });
+                srlSearchBox.setRefreshing(true);
+                searchBoxPresenter.downSearchBox();
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        searchBoxPresenter.loadSearchBox();
     }
 
     @Override
@@ -92,7 +88,18 @@ public class SearchBoxActivity extends BaseActivity {
     }
 
     @Override
+    public void updateData(List<BoxBean> boxBeans) {
+        searchBoxAdapter.setDataList(boxBeans);
+        searchBoxAdapter.notifyDataSetChanged();
+        if (srlSearchBox.isRefreshing()) {
+            srlSearchBox.setRefreshing(false);
+            Toasty.success(this, "刷新成功",0, true).show();
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
+        searchBoxPresenter.doDestroy();
     }
 }

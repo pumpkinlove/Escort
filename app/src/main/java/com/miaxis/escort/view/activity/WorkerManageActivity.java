@@ -1,6 +1,7 @@
 package com.miaxis.escort.view.activity;
 
 import android.content.Intent;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -11,25 +12,38 @@ import android.widget.Button;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.miaxis.escort.R;
 import com.miaxis.escort.adapter.WorkerAdapter;
+import com.miaxis.escort.app.EscortApp;
+import com.miaxis.escort.model.entity.WorkerBean;
+import com.miaxis.escort.presenter.IWorkerManagePresenter;
+import com.miaxis.escort.presenter.WorkerManagePresenterImpl;
+import com.miaxis.escort.view.viewer.IWorkerManageView;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
+import es.dmoral.toasty.Toasty;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
-public class WorkerManageActivity extends BaseActivity {
+public class WorkerManageActivity extends BaseActivity implements IWorkerManageView{
 
     @BindView(R.id.worker_toolbar)
     Toolbar workerToolbar;
+    @BindView(R.id.srl_worker_manage)
+    SwipeRefreshLayout srlWorkerManage;
     @BindView(R.id.rv_worker_manage)
     RecyclerView rvWorkerManage;
     @BindView(R.id.btn_add_worker)
     Button btnAddWorker;
 
     private WorkerAdapter workerAdapter;
+    private IWorkerManagePresenter workerManagePresenter;
 
     @Override
     protected int setContentView() {
@@ -38,7 +52,7 @@ public class WorkerManageActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-
+        workerManagePresenter = new WorkerManagePresenterImpl(this, this);
     }
 
     @Override
@@ -46,20 +60,20 @@ public class WorkerManageActivity extends BaseActivity {
         workerToolbar.setTitle("操作员管理");
         setSupportActionBar(workerToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        List<String> dataList = new ArrayList<>();
-        dataList.add("操作员1");
-        dataList.add("操作员2");
-        dataList.add("操作员3");
-        dataList.add("操作员4");
-        dataList.add("操作员5");
-        dataList.add("操作员6");
-        workerAdapter = new WorkerAdapter(this, dataList);
+        workerAdapter = new WorkerAdapter(this, new ArrayList<WorkerBean>());
         rvWorkerManage.setAdapter(workerAdapter);
         rvWorkerManage.setLayoutManager(new LinearLayoutManager(this));
         workerAdapter.setOnItemClickListener(new WorkerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
 
+            }
+        });
+        srlWorkerManage.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                srlWorkerManage.setRefreshing(true);
+                workerManagePresenter.downWorkerList();
             }
         });
         RxView.clicks(btnAddWorker)
@@ -77,6 +91,12 @@ public class WorkerManageActivity extends BaseActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        workerManagePresenter.loadWorkerList();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -87,7 +107,18 @@ public class WorkerManageActivity extends BaseActivity {
     }
 
     @Override
+    public void updateDataList(List<WorkerBean> workerBeanList) {
+        workerAdapter.setDataList(workerBeanList);
+        workerAdapter.notifyDataSetChanged();
+        if (srlWorkerManage.isRefreshing()) {
+            srlWorkerManage.setRefreshing(false);
+            Toasty.success(this, "刷新成功",0, true).show();
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
+        workerManagePresenter.doDestroy();
     }
 }

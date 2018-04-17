@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import com.miaxis.escort.app.EscortApp;
 import com.miaxis.escort.model.ConfigModelImpl;
 import com.miaxis.escort.model.IConfigModel;
 import com.miaxis.escort.model.entity.BankBean;
@@ -14,6 +15,7 @@ import com.miaxis.escort.model.retrofit.BankNet;
 import com.miaxis.escort.model.retrofit.BoxNet;
 import com.miaxis.escort.model.retrofit.ResponseEntity;
 import com.miaxis.escort.model.retrofit.WorkerNet;
+import com.miaxis.escort.util.StaticVariable;
 import com.miaxis.escort.view.viewer.IConfigView;
 import com.trello.rxlifecycle2.LifecycleProvider;
 import com.trello.rxlifecycle2.android.FragmentEvent;
@@ -45,6 +47,7 @@ public class ConfigPresenterImpl extends BaseFragmentPresenter implements IConfi
 
     @Override
     public void configSave(String ip, String port, String orgCode) {
+        //TODO:未做删除操作
         final Config config = new Config(1L, ip, port, orgCode);
         final Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())//请求的结果转为实体类
@@ -64,6 +67,7 @@ public class ConfigPresenterImpl extends BaseFragmentPresenter implements IConfi
                 .doOnNext(new Consumer<Config>() {
                     @Override
                     public void accept(Config config) throws Exception {
+                        EscortApp.getInstance().put(StaticVariable.CONFIG, config);
                         configView.setProgressDialogMessage("设置保存成功，正在下载银行信息...");
                     }
                 })
@@ -201,5 +205,6 @@ public class ConfigPresenterImpl extends BaseFragmentPresenter implements IConfi
     @Override
     public void doDestroy() {
         configView = null;
+        configModel = null;
     }
 }

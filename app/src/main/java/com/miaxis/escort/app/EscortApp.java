@@ -7,6 +7,9 @@ import com.miaxis.escort.model.local.greenDao.GreenDaoContext;
 import com.miaxis.escort.model.local.greenDao.gen.DaoMaster;
 import com.miaxis.escort.model.local.greenDao.gen.DaoSession;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by 一非 on 2018/4/8.
  */
@@ -19,11 +22,13 @@ public class EscortApp extends Application{
     private SQLiteDatabase db;
     private DaoMaster daoMaster;
     private DaoSession daoSession;
+    private Map<String, Object> map;
 
     @Override
     public void onCreate() {
         super.onCreate();
         escortApp = this;
+        map = new HashMap<>();
     }
 
     public static EscortApp getInstance() {
@@ -43,6 +48,14 @@ public class EscortApp extends Application{
     public DaoSession getDaoSession() {
         //TODO: 这里的daoSession.clear();是个什么作用
         return daoSession;
+    }
+
+    public void put(String key, Object value) {
+        map.put(key, value);
+    }
+
+    public Object get(String key) {
+        return map.get(key);
     }
 
 }

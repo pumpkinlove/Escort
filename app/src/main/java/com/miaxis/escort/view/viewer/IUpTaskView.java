@@ -8,6 +8,6 @@ import java.util.List;
  * Created by 一非 on 2018/4/11.
  */
 
-public interface IUpTaskView {
+public interface IUpTaskView extends IBaseView{
     void updateBox(List<BoxBean> boxBeanList);
 }

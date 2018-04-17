@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.miaxis.escort.R;
+import com.miaxis.escort.model.entity.WorkerBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,12 +23,12 @@ import butterknife.ButterKnife;
 
 public class WorkerAdapter extends RecyclerView.Adapter<WorkerAdapter.MyViewHolder> {
 
-    private List<String> dataList;
+    private List<WorkerBean> dataList;
 
     private LayoutInflater layoutInflater;
     private OnItemClickListener mOnItemClickListener;
 
-    public WorkerAdapter(Context context, List<String> dataList) {
+    public WorkerAdapter(Context context, List<WorkerBean> dataList) {
         this.dataList = dataList;
         layoutInflater = LayoutInflater.from(context);
     }
@@ -40,7 +41,7 @@ public class WorkerAdapter extends RecyclerView.Adapter<WorkerAdapter.MyViewHold
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        holder.tvVerifyBox.setText(dataList.get(position));
+        holder.tvVerifyBox.setText(dataList.get(position).getName());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,6 +52,10 @@ public class WorkerAdapter extends RecyclerView.Adapter<WorkerAdapter.MyViewHold
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         mOnItemClickListener = onItemClickListener;
+    }
+
+    public void setDataList(List<WorkerBean> workerBeanList) {
+        this.dataList = workerBeanList;
     }
 
     @Override
