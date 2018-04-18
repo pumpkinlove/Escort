@@ -203,7 +203,6 @@
 
     <LinearLayout
         android:id="@+id/ll_about"
-        android:visibility="invisible"
         android:orientation="horizontal"
         style="@style/l_personal_item">
 

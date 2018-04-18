@@ -50,6 +50,11 @@ public class EscortApp extends Application{
         return daoSession;
     }
 
+    public void clearAndRebuildDatabase() {
+        DaoMaster.dropAllTables(daoMaster.getDatabase(),true);
+        DaoMaster.createAllTables(daoMaster.getDatabase(),true);
+    }
+
     public SQLiteDatabase getDb() {
         return db;
     }
