@@ -2,10 +2,12 @@ package com.miaxis.escort.model.entity;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
 
 @Entity
 public class UpdateInfo {
 
+	@Id
 	private String id;
 	private String version;
 	private String path;

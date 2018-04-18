@@ -10,11 +10,19 @@ import android.view.View;
 
 import com.miaxis.escort.R;
 import com.miaxis.escort.adapter.SearchEscortAdapter;
+import com.miaxis.escort.app.EscortApp;
+import com.miaxis.escort.model.entity.EscortBean;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class SearchEscortActivity extends BaseActivity {
 
@@ -40,14 +48,7 @@ public class SearchEscortActivity extends BaseActivity {
         toolbar.setTitle("押运员查询");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        List<String> dataList = new ArrayList<>();
-        dataList.add("押运员1");
-        dataList.add("押运员2");
-        dataList.add("押运员3");
-        dataList.add("押运员4");
-        dataList.add("押运员5");
-        dataList.add("押运员6");
-        searchEscortAdapter = new SearchEscortAdapter(this, dataList);
+        searchEscortAdapter = new SearchEscortAdapter(this, new ArrayList<EscortBean>());
         rvSearchEscort.setAdapter(searchEscortAdapter);
         rvSearchEscort.setLayoutManager(new LinearLayoutManager(this));
         searchEscortAdapter.setOnItemClickListener(new SearchEscortAdapter.OnItemClickListener() {
@@ -56,6 +57,32 @@ public class SearchEscortActivity extends BaseActivity {
 
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //TODO:如有必要，MVP伺候
+        Observable.create(new ObservableOnSubscribe<List<EscortBean>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<EscortBean>> e) throws Exception {
+                e.onNext(EscortApp.getInstance().getDaoSession().getEscortBeanDao().loadAll());
+            }
+        })
+                .subscribeOn(Schedulers.io())
+                .compose(SearchEscortActivity.this.<List<EscortBean>>bindToLifecycle())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<EscortBean>>() {
+                    @Override
+                    public void accept(List<EscortBean> escortBeans) throws Exception {
+                        searchEscortAdapter.setDataList(escortBeans);
+                        searchEscortAdapter.notifyDataSetChanged();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                });
     }
 
     @Override

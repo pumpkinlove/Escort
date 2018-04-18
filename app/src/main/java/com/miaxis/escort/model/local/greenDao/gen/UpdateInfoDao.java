@@ -15,7 +15,7 @@ import com.miaxis.escort.model.entity.UpdateInfo;
 /** 
  * DAO for table "UPDATE_INFO".
 */
-public class UpdateInfoDao extends AbstractDao<UpdateInfo, Void> {
+public class UpdateInfoDao extends AbstractDao<UpdateInfo, String> {
 
     public static final String TABLENAME = "UPDATE_INFO";
 
@@ -24,7 +24,7 @@ public class UpdateInfoDao extends AbstractDao<UpdateInfo, Void> {
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property Id = new Property(0, String.class, "id", false, "ID");
+        public final static Property Id = new Property(0, String.class, "id", true, "ID");
         public final static Property Version = new Property(1, String.class, "version", false, "VERSION");
         public final static Property Path = new Property(2, String.class, "path", false, "PATH");
         public final static Property Filename = new Property(3, String.class, "filename", false, "FILENAME");
@@ -45,7 +45,7 @@ public class UpdateInfoDao extends AbstractDao<UpdateInfo, Void> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"UPDATE_INFO\" (" + //
-                "\"ID\" TEXT," + // 0: id
+                "\"ID\" TEXT PRIMARY KEY NOT NULL ," + // 0: id
                 "\"VERSION\" TEXT," + // 1: version
                 "\"PATH\" TEXT," + // 2: path
                 "\"FILENAME\" TEXT," + // 3: filename
@@ -130,8 +130,8 @@ public class UpdateInfoDao extends AbstractDao<UpdateInfo, Void> {
     }
 
     @Override
-    public Void readKey(Cursor cursor, int offset) {
-        return null;
+    public String readKey(Cursor cursor, int offset) {
+        return cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0);
     }    
 
     @Override
@@ -158,20 +158,22 @@ public class UpdateInfoDao extends AbstractDao<UpdateInfo, Void> {
      }
     
     @Override
-    protected final Void updateKeyAfterInsert(UpdateInfo entity, long rowId) {
-        // Unsupported or missing PK type
-        return null;
+    protected final String updateKeyAfterInsert(UpdateInfo entity, long rowId) {
+        return entity.getId();
     }
     
     @Override
-    public Void getKey(UpdateInfo entity) {
-        return null;
+    public String getKey(UpdateInfo entity) {
+        if(entity != null) {
+            return entity.getId();
+        } else {
+            return null;
+        }
     }
 
     @Override
     public boolean hasKey(UpdateInfo entity) {
-        // TODO
-        return false;
+        return entity.getId() != null;
     }
 
     @Override

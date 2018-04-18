@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.miaxis.escort.R;
+import com.miaxis.escort.model.entity.EscortBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,12 +22,12 @@ import butterknife.ButterKnife;
 
 public class SearchEscortAdapter extends RecyclerView.Adapter<SearchEscortAdapter.MyViewHolder> {
 
-    private List<String> dataList;
+    private List<EscortBean> dataList;
 
     private LayoutInflater layoutInflater;
     private OnItemClickListener mOnItemClickListener;
 
-    public SearchEscortAdapter(Context context, List<String> dataList) {
+    public SearchEscortAdapter(Context context, List<EscortBean> dataList) {
         this.dataList = dataList;
         layoutInflater = LayoutInflater.from(context);
     }
@@ -39,7 +40,7 @@ public class SearchEscortAdapter extends RecyclerView.Adapter<SearchEscortAdapte
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        holder.tvSearchEscort.setText(dataList.get(position));
+        holder.tvSearchEscort.setText(dataList.get(position).getName());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -50,6 +51,14 @@ public class SearchEscortAdapter extends RecyclerView.Adapter<SearchEscortAdapte
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         mOnItemClickListener = onItemClickListener;
+    }
+
+    public List<EscortBean> getDataList() {
+        return dataList;
+    }
+
+    public void setDataList(List<EscortBean> dataList) {
+        this.dataList = dataList;
     }
 
     @Override

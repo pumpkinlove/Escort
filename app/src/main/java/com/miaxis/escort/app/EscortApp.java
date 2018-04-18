@@ -50,6 +50,10 @@ public class EscortApp extends Application{
         return daoSession;
     }
 
+    public SQLiteDatabase getDb() {
+        return db;
+    }
+
     public void put(String key, Object value) {
         map.put(key, value);
     }

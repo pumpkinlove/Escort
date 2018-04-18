@@ -2,16 +2,20 @@ package com.miaxis.escort.model.entity;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
 
 @Entity
 public class TaskBoxBean
 {
+	@Id(autoincrement = true)
+	private Long id;
 	private String taskid;
 	private String boxcode;
 	private String money;
 
-	@Generated(hash = 42689691)
-	public TaskBoxBean(String taskid, String boxcode, String money) {
+	@Generated(hash = 1142817401)
+	public TaskBoxBean(Long id, String taskid, String boxcode, String money) {
+		this.id = id;
 		this.taskid = taskid;
 		this.boxcode = boxcode;
 		this.money = money;
@@ -43,5 +47,11 @@ public class TaskBoxBean
 	public void setMoney(String money)
 	{
 		this.money = money;
+	}
+	public Long getId() {
+		return this.id;
+	}
+	public void setId(Long id) {
+		this.id = id;
 	}
 }

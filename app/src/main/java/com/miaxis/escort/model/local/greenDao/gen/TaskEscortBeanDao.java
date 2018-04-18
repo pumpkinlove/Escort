@@ -1,5 +1,6 @@
 package com.miaxis.escort.model.local.greenDao.gen;
 
+import java.util.List;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteStatement;
 
@@ -8,6 +9,8 @@ import org.greenrobot.greendao.Property;
 import org.greenrobot.greendao.internal.DaoConfig;
 import org.greenrobot.greendao.database.Database;
 import org.greenrobot.greendao.database.DatabaseStatement;
+import org.greenrobot.greendao.query.Query;
+import org.greenrobot.greendao.query.QueryBuilder;
 
 import com.miaxis.escort.model.entity.TaskEscortBean;
 
@@ -15,7 +18,7 @@ import com.miaxis.escort.model.entity.TaskEscortBean;
 /** 
  * DAO for table "TASK_ESCORT_BEAN".
 */
-public class TaskEscortBeanDao extends AbstractDao<TaskEscortBean, Void> {
+public class TaskEscortBeanDao extends AbstractDao<TaskEscortBean, Long> {
 
     public static final String TABLENAME = "TASK_ESCORT_BEAN";
 
@@ -24,10 +27,12 @@ public class TaskEscortBeanDao extends AbstractDao<TaskEscortBean, Void> {
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property Taskid = new Property(0, String.class, "taskid", false, "TASKID");
-        public final static Property Escode = new Property(1, String.class, "escode", false, "ESCODE");
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property Taskid = new Property(1, String.class, "taskid", false, "TASKID");
+        public final static Property Escode = new Property(2, String.class, "escode", false, "ESCODE");
     }
 
+    private Query<TaskEscortBean> taskBean_EscortListQuery;
 
     public TaskEscortBeanDao(DaoConfig config) {
         super(config);
@@ -41,8 +46,9 @@ public class TaskEscortBeanDao extends AbstractDao<TaskEscortBean, Void> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"TASK_ESCORT_BEAN\" (" + //
-                "\"TASKID\" TEXT," + // 0: taskid
-                "\"ESCODE\" TEXT);"); // 1: escode
+                "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
+                "\"TASKID\" TEXT," + // 1: taskid
+                "\"ESCODE\" TEXT);"); // 2: escode
     }
 
     /** Drops the underlying database table. */
@@ -55,14 +61,19 @@ public class TaskEscortBeanDao extends AbstractDao<TaskEscortBean, Void> {
     protected final void bindValues(DatabaseStatement stmt, TaskEscortBean entity) {
         stmt.clearBindings();
  
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
+ 
         String taskid = entity.getTaskid();
         if (taskid != null) {
-            stmt.bindString(1, taskid);
+            stmt.bindString(2, taskid);
         }
  
         String escode = entity.getEscode();
         if (escode != null) {
-            stmt.bindString(2, escode);
+            stmt.bindString(3, escode);
         }
     }
 
@@ -70,52 +81,62 @@ public class TaskEscortBeanDao extends AbstractDao<TaskEscortBean, Void> {
     protected final void bindValues(SQLiteStatement stmt, TaskEscortBean entity) {
         stmt.clearBindings();
  
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
+ 
         String taskid = entity.getTaskid();
         if (taskid != null) {
-            stmt.bindString(1, taskid);
+            stmt.bindString(2, taskid);
         }
  
         String escode = entity.getEscode();
         if (escode != null) {
-            stmt.bindString(2, escode);
+            stmt.bindString(3, escode);
         }
     }
 
     @Override
-    public Void readKey(Cursor cursor, int offset) {
-        return null;
+    public Long readKey(Cursor cursor, int offset) {
+        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }    
 
     @Override
     public TaskEscortBean readEntity(Cursor cursor, int offset) {
         TaskEscortBean entity = new TaskEscortBean( //
-            cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0), // taskid
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1) // escode
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
+            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // taskid
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2) // escode
         );
         return entity;
     }
      
     @Override
     public void readEntity(Cursor cursor, TaskEscortBean entity, int offset) {
-        entity.setTaskid(cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0));
-        entity.setEscode(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
+        entity.setTaskid(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setEscode(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
      }
     
     @Override
-    protected final Void updateKeyAfterInsert(TaskEscortBean entity, long rowId) {
-        // Unsupported or missing PK type
-        return null;
+    protected final Long updateKeyAfterInsert(TaskEscortBean entity, long rowId) {
+        entity.setId(rowId);
+        return rowId;
     }
     
     @Override
-    public Void getKey(TaskEscortBean entity) {
-        return null;
+    public Long getKey(TaskEscortBean entity) {
+        if(entity != null) {
+            return entity.getId();
+        } else {
+            return null;
+        }
     }
 
     @Override
     public boolean hasKey(TaskEscortBean entity) {
-        // TODO
-        return false;
+        return entity.getId() != null;
     }
 
     @Override
@@ -123,4 +144,18 @@ public class TaskEscortBeanDao extends AbstractDao<TaskEscortBean, Void> {
         return true;
     }
     
+    /** Internal query to resolve the "escortList" to-many relationship of TaskBean. */
+    public List<TaskEscortBean> _queryTaskBean_EscortList(String taskid) {
+        synchronized (this) {
+            if (taskBean_EscortListQuery == null) {
+                QueryBuilder<TaskEscortBean> queryBuilder = queryBuilder();
+                queryBuilder.where(Properties.Taskid.eq(null));
+                taskBean_EscortListQuery = queryBuilder.build();
+            }
+        }
+        Query<TaskEscortBean> query = taskBean_EscortListQuery.forCurrentThread();
+        query.setParameter(0, taskid);
+        return query.list();
+    }
+
 }

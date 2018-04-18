@@ -1,5 +1,6 @@
 package com.miaxis.escort.model.local.greenDao.gen;
 
+import java.util.List;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteStatement;
 
@@ -8,6 +9,8 @@ import org.greenrobot.greendao.Property;
 import org.greenrobot.greendao.internal.DaoConfig;
 import org.greenrobot.greendao.database.Database;
 import org.greenrobot.greendao.database.DatabaseStatement;
+import org.greenrobot.greendao.query.Query;
+import org.greenrobot.greendao.query.QueryBuilder;
 
 import com.miaxis.escort.model.entity.TaskBoxBean;
 
@@ -15,7 +18,7 @@ import com.miaxis.escort.model.entity.TaskBoxBean;
 /** 
  * DAO for table "TASK_BOX_BEAN".
 */
-public class TaskBoxBeanDao extends AbstractDao<TaskBoxBean, Void> {
+public class TaskBoxBeanDao extends AbstractDao<TaskBoxBean, Long> {
 
     public static final String TABLENAME = "TASK_BOX_BEAN";
 
@@ -24,11 +27,13 @@ public class TaskBoxBeanDao extends AbstractDao<TaskBoxBean, Void> {
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property Taskid = new Property(0, String.class, "taskid", false, "TASKID");
-        public final static Property Boxcode = new Property(1, String.class, "boxcode", false, "BOXCODE");
-        public final static Property Money = new Property(2, String.class, "money", false, "MONEY");
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property Taskid = new Property(1, String.class, "taskid", false, "TASKID");
+        public final static Property Boxcode = new Property(2, String.class, "boxcode", false, "BOXCODE");
+        public final static Property Money = new Property(3, String.class, "money", false, "MONEY");
     }
 
+    private Query<TaskBoxBean> taskBean_BoxListQuery;
 
     public TaskBoxBeanDao(DaoConfig config) {
         super(config);
@@ -42,9 +47,10 @@ public class TaskBoxBeanDao extends AbstractDao<TaskBoxBean, Void> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"TASK_BOX_BEAN\" (" + //
-                "\"TASKID\" TEXT," + // 0: taskid
-                "\"BOXCODE\" TEXT," + // 1: boxcode
-                "\"MONEY\" TEXT);"); // 2: money
+                "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
+                "\"TASKID\" TEXT," + // 1: taskid
+                "\"BOXCODE\" TEXT," + // 2: boxcode
+                "\"MONEY\" TEXT);"); // 3: money
     }
 
     /** Drops the underlying database table. */
@@ -57,19 +63,24 @@ public class TaskBoxBeanDao extends AbstractDao<TaskBoxBean, Void> {
     protected final void bindValues(DatabaseStatement stmt, TaskBoxBean entity) {
         stmt.clearBindings();
  
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
+ 
         String taskid = entity.getTaskid();
         if (taskid != null) {
-            stmt.bindString(1, taskid);
+            stmt.bindString(2, taskid);
         }
  
         String boxcode = entity.getBoxcode();
         if (boxcode != null) {
-            stmt.bindString(2, boxcode);
+            stmt.bindString(3, boxcode);
         }
  
         String money = entity.getMoney();
         if (money != null) {
-            stmt.bindString(3, money);
+            stmt.bindString(4, money);
         }
     }
 
@@ -77,59 +88,69 @@ public class TaskBoxBeanDao extends AbstractDao<TaskBoxBean, Void> {
     protected final void bindValues(SQLiteStatement stmt, TaskBoxBean entity) {
         stmt.clearBindings();
  
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
+ 
         String taskid = entity.getTaskid();
         if (taskid != null) {
-            stmt.bindString(1, taskid);
+            stmt.bindString(2, taskid);
         }
  
         String boxcode = entity.getBoxcode();
         if (boxcode != null) {
-            stmt.bindString(2, boxcode);
+            stmt.bindString(3, boxcode);
         }
  
         String money = entity.getMoney();
         if (money != null) {
-            stmt.bindString(3, money);
+            stmt.bindString(4, money);
         }
     }
 
     @Override
-    public Void readKey(Cursor cursor, int offset) {
-        return null;
+    public Long readKey(Cursor cursor, int offset) {
+        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }    
 
     @Override
     public TaskBoxBean readEntity(Cursor cursor, int offset) {
         TaskBoxBean entity = new TaskBoxBean( //
-            cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0), // taskid
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // boxcode
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2) // money
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
+            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // taskid
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // boxcode
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3) // money
         );
         return entity;
     }
      
     @Override
     public void readEntity(Cursor cursor, TaskBoxBean entity, int offset) {
-        entity.setTaskid(cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0));
-        entity.setBoxcode(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setMoney(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
+        entity.setTaskid(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setBoxcode(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setMoney(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
      }
     
     @Override
-    protected final Void updateKeyAfterInsert(TaskBoxBean entity, long rowId) {
-        // Unsupported or missing PK type
-        return null;
+    protected final Long updateKeyAfterInsert(TaskBoxBean entity, long rowId) {
+        entity.setId(rowId);
+        return rowId;
     }
     
     @Override
-    public Void getKey(TaskBoxBean entity) {
-        return null;
+    public Long getKey(TaskBoxBean entity) {
+        if(entity != null) {
+            return entity.getId();
+        } else {
+            return null;
+        }
     }
 
     @Override
     public boolean hasKey(TaskBoxBean entity) {
-        // TODO
-        return false;
+        return entity.getId() != null;
     }
 
     @Override
@@ -137,4 +158,18 @@ public class TaskBoxBeanDao extends AbstractDao<TaskBoxBean, Void> {
         return true;
     }
     
+    /** Internal query to resolve the "boxList" to-many relationship of TaskBean. */
+    public List<TaskBoxBean> _queryTaskBean_BoxList(String taskid) {
+        synchronized (this) {
+            if (taskBean_BoxListQuery == null) {
+                QueryBuilder<TaskBoxBean> queryBuilder = queryBuilder();
+                queryBuilder.where(Properties.Taskid.eq(null));
+                taskBean_BoxListQuery = queryBuilder.build();
+            }
+        }
+        Query<TaskBoxBean> query = taskBean_BoxListQuery.forCurrentThread();
+        query.setParameter(0, taskid);
+        return query.list();
+    }
+
 }

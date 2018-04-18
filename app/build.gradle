@@ -63,7 +63,7 @@ dependencies {
 }
 
 greendao {
-    schemaVersion 4
+    schemaVersion 6
     daoPackage 'com.miaxis.escort.model.local.greenDao.gen'
     targetGenDir 'src/main/java'
 }

@@ -49,6 +49,8 @@ public class TaskBeanDao extends AbstractDao<TaskBean, String> {
         public final static Property CarPhoto = new Property(22, byte[].class, "carPhoto", false, "CAR_PHOTO");
     }
 
+    private DaoSession daoSession;
+
 
     public TaskBeanDao(DaoConfig config) {
         super(config);
@@ -56,6 +58,7 @@ public class TaskBeanDao extends AbstractDao<TaskBean, String> {
     
     public TaskBeanDao(DaoConfig config, DaoSession daoSession) {
         super(config, daoSession);
+        this.daoSession = daoSession;
     }
 
     /** Creates the underlying database table. */
@@ -331,6 +334,12 @@ public class TaskBeanDao extends AbstractDao<TaskBean, String> {
         if (carPhoto != null) {
             stmt.bindBlob(23, carPhoto);
         }
+    }
+
+    @Override
+    protected final void attachEntity(TaskBean entity) {
+        super.attachEntity(entity);
+        entity.__setDaoSession(daoSession);
     }
 
     @Override
