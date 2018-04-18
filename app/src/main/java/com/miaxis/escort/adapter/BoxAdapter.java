@@ -52,6 +52,9 @@ public class BoxAdapter extends RecyclerView.Adapter<BoxAdapter.MyViewHolder> {
                 mOnItemClickListener.onItemClick(holder.tvBoxId, holder.getLayoutPosition());
             }
         });
+        if (!selectedList.contains(dataList.get(position))) {
+            holder.tvBoxId.setSelected(false);
+        }
     }
 
     public void setDataList(List<BoxBean> boxBeanList) {

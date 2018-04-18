@@ -2,6 +2,7 @@ package com.miaxis.escort.view.fragment;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -11,23 +12,32 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bruce.pickerview.popwindow.DatePickerPopWin;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.miaxis.escort.R;
 import com.miaxis.escort.adapter.BoxAdapter;
+import com.miaxis.escort.app.EscortApp;
 import com.miaxis.escort.model.entity.BoxBean;
+import com.miaxis.escort.model.entity.Config;
+import com.miaxis.escort.model.entity.TaskBoxBean;
+import com.miaxis.escort.model.entity.TaskUpBean;
+import com.miaxis.escort.model.entity.WorkerBean;
 import com.miaxis.escort.presenter.IUpTaskPresenter;
 import com.miaxis.escort.presenter.UpTaskPresenterImpl;
 import com.miaxis.escort.util.DateUtil;
+import com.miaxis.escort.util.StaticVariable;
 import com.miaxis.escort.view.viewer.IUpTaskView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
+import es.dmoral.toasty.Toasty;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
@@ -61,6 +71,7 @@ public class UpTaskFragment extends BaseFragment implements IUpTaskView{
     private OnFragmentInteractionListener mListener;
     private IUpTaskPresenter upTaskPresenter;
     private String selectedType = "";
+    private MaterialDialog materialDialog;
 
     public UpTaskFragment() {
         // Required empty public constructor
@@ -201,6 +212,9 @@ public class UpTaskFragment extends BaseFragment implements IUpTaskView{
                 .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
+                        if (!checkNotNull()) {
+                            return;
+                        }
                         String temporaryId = "";
                         if ("临时网点接箱".equals(selectedType) || "临时网点送箱".equals(selectedType)) {
                             temporaryId = "(" + etTemporaryBank.getText().toString() + ")";
@@ -215,9 +229,94 @@ public class UpTaskFragment extends BaseFragment implements IUpTaskView{
                                 .content(builder.toString())
                                 .negativeText("取消")
                                 .positiveText("确认")
+                                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                        materialDialog = new MaterialDialog.Builder(UpTaskFragment.this.getActivity())
+                                                .title("请稍后...")
+                                                .content("正在上传任务信息...")
+                                                .cancelable(false)
+                                                .show();
+                                        Config config = (Config) EscortApp.getInstance().get(StaticVariable.CONFIG);
+                                        WorkerBean workerBean = (WorkerBean) EscortApp.getInstance().get(StaticVariable.WORKER);
+                                        TaskUpBean taskUpBean = new TaskUpBean();
+                                        taskUpBean.setTaskcode(config.getOrgCode() + getCurDateTime());
+                                        taskUpBean.setTaskseq("0");
+                                        taskUpBean.setTasktype(turnToInt(selectedType));
+                                        taskUpBean.setDeptno(config.getOrgCode());
+                                        taskUpBean.setDeptno2(etTemporaryBank.getText().toString());
+                                        taskUpBean.setOpuser(workerBean.getOpuser());
+                                        taskUpBean.setOpusername(workerBean.getOpusername());
+                                        taskUpBean.setTaskdate(tvDate.getText().toString().substring(0,10));
+                                        upTaskPresenter.upTask(taskUpBean, turnToTaskBox(taskUpBean.getTaskcode()));
+                                    }
+                                })
                                 .show();
                     }
                 });
+    }
+
+    public boolean checkNotNull() {
+        if ("".equals(selectedType)) {
+            Toasty.error(this.getActivity(), "未选择类型", 0, true).show();
+            return false;
+        }
+        if (boxAdapter.getSelectedSize() == 0) {
+            Toasty.error(this.getActivity(), "未选择箱包", 0, true).show();
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void upTaskSuccess() {
+        if (materialDialog.isShowing()) {
+            materialDialog.dismiss();
+        }
+        Toasty.success(this.getActivity(), "上传成功", 0, true).show();
+        clearSelected();
+    }
+
+    @Override
+    public void upTaskFailed() {
+        if (materialDialog.isShowing()) {
+            materialDialog.dismiss();
+        }
+        Toasty.error(this.getActivity(), "上传失败，请重试", 0, true).show();
+    }
+
+    private void clearSelected() {
+        boxAdapter.clearSelected();
+        boxAdapter.notifyDataSetChanged();
+    }
+
+    public List<TaskBoxBean> turnToTaskBox(String taskId) {
+        List<TaskBoxBean> taskBoxBeanList = new ArrayList<>();
+        for (BoxBean boxBean : boxAdapter.getSelectedItem()) {
+            taskBoxBeanList.add(new TaskBoxBean(null, taskId, boxBean.getBoxcode(), boxBean.getMoney()));
+        }
+        return taskBoxBeanList;
+    }
+
+    protected String getCurDateTime() {
+        Calendar today = Calendar.getInstance();
+        return String.format("%04d%02d%02d%02d%02d%02d", today.get(Calendar.YEAR),
+                today.get(Calendar.MONTH)+1, today.get(Calendar.DAY_OF_MONTH),
+                today.get(Calendar.HOUR), today.get(Calendar.MINUTE),
+                today.get(Calendar.SECOND));
+    }
+
+    public String turnToInt(String type) {
+        if ("常规网点接箱".equals(type)) {
+            return "1";
+        } else if ("常规网点送箱".equals(type)) {
+            return "2";
+        } else if ("临时网点接箱".equals(type)) {
+            return "3";
+        } else if ("临时网点送箱".equals(type)) {
+            return "4";
+        }
+        return "0";
     }
 
     @Override

@@ -10,4 +10,6 @@ import java.util.List;
 
 public interface IUpTaskView extends IBaseView{
     void updateBox(List<BoxBean> boxBeanList);
+    void upTaskSuccess();
+    void upTaskFailed();
 }
