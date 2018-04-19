@@ -68,7 +68,9 @@ public class ConfigPresenterImpl extends BaseFragmentPresenter implements IConfi
                     @Override
                     public void accept(Config config) throws Exception {
                         EscortApp.getInstance().put(StaticVariable.CONFIG, config);
-                        configView.setProgressDialogMessage("设置保存成功，正在下载银行信息...");
+                        if (configView != null) {
+                            configView.setProgressDialogMessage("设置保存成功，正在下载银行信息...");
+                        }
                     }
                 })
                 .observeOn(Schedulers.io())
@@ -92,10 +94,12 @@ public class ConfigPresenterImpl extends BaseFragmentPresenter implements IConfi
                 .doOnNext(new Consumer<ResponseEntity<BankBean>>() {
                     @Override
                     public void accept(ResponseEntity<BankBean> bankBeanResponseEntity) throws Exception {
-                        if (bankBeanResponseEntity.getCode().equals("200")) {
-                            configView.setProgressDialogMessage("下载银行信息成功，正在下载操作员信息...");
-                        } else {
-                            configView.setProgressDialogMessage(bankBeanResponseEntity.getMessage());
+                        if (configView != null) {
+                            if (bankBeanResponseEntity.getCode().equals("200")) {
+                                configView.setProgressDialogMessage("下载银行信息成功，正在下载操作员信息...");
+                            } else {
+                                configView.setProgressDialogMessage(bankBeanResponseEntity.getMessage());
+                            }
                         }
                     }
                 })
@@ -119,7 +123,7 @@ public class ConfigPresenterImpl extends BaseFragmentPresenter implements IConfi
                 .doOnNext(new Consumer<ResponseEntity<WorkerBean>>() {
                     @Override
                     public void accept(ResponseEntity<WorkerBean> workerBeanResponseEntity) throws Exception {
-                        if (workerBeanResponseEntity.getCode().equals("200")) {
+                        if (configView != null && workerBeanResponseEntity.getCode().equals("200")) {
                             configView.setProgressDialogMessage("操作员下载完成，正在下载箱包信息...");
                         }
                     }
@@ -144,19 +148,23 @@ public class ConfigPresenterImpl extends BaseFragmentPresenter implements IConfi
                 .subscribe(new Consumer<ResponseEntity<BoxBean>>() {
                     @Override
                     public void accept(ResponseEntity<BoxBean> boxBeanResponseEntity) throws Exception {
-                        if (boxBeanResponseEntity.getCode().equals("200")) {
-                            configView.setProgressDialogMessage("箱包信息下载完成，正在准备登录...");
-                            configView.configSaveSuccess();
-                        } else {
-                            configView.setProgressDialogMessage("失败：" + boxBeanResponseEntity.getMessage());
-                            configView.configSaveFailed();
+                        if (configView != null) {
+                            if (boxBeanResponseEntity.getCode().equals("200")) {
+                                configView.setProgressDialogMessage("箱包信息下载完成，正在准备登录...");
+                                configView.configSaveSuccess();
+                            } else {
+                                configView.setProgressDialogMessage(boxBeanResponseEntity.getMessage());
+                                configView.configSaveFailed();
+                            }
                         }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        configView.setProgressDialogMessage("出现错误");
-                        configView.configSaveFailed();
+                        if (configView != null) {
+                            configView.setProgressDialogMessage("出现错误");
+                            configView.configSaveFailed();
+                        }
                     }
                 });
         //TODO:下载员工删除列表，做删除操作
@@ -164,12 +172,16 @@ public class ConfigPresenterImpl extends BaseFragmentPresenter implements IConfi
 
     @Override
     public void configSaveSuccess() {
-        configView.configSaveSuccess();
+        if (configView != null) {
+            configView.configSaveSuccess();
+        }
     }
 
     @Override
     public void configSaveFailed() {
-        configView.configSaveFailed();
+        if (configView != null) {
+            configView.configSaveFailed();
+        }
     }
 
     @Override
@@ -187,7 +199,9 @@ public class ConfigPresenterImpl extends BaseFragmentPresenter implements IConfi
                 .subscribe(new Consumer<Config>() {
                     @Override
                     public void accept(Config config) throws Exception {
-                        configView.fetchConfig(config);
+                        if (configView != null) {
+                            configView.fetchConfig(config);
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override

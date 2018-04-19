@@ -11,6 +11,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.miaxis.escort.R;
 import com.miaxis.escort.model.entity.BoxBean;
+import com.miaxis.escort.model.entity.TaskBoxBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,6 +96,14 @@ public class BoxAdapter extends RecyclerView.Adapter<BoxAdapter.MyViewHolder> {
             stringBuilder.append("    " + box.getBoxname() + "\n");
         }
         return stringBuilder.toString();
+    }
+
+    public List<TaskBoxBean> getSelectedTaskBoxList(String taskId) {
+        List<TaskBoxBean> taskBoxBeanList = new ArrayList<>();
+        for (BoxBean boxBean : selectedList) {
+            taskBoxBeanList.add(new TaskBoxBean(null, taskId, boxBean.getBoxcode(), boxBean.getMoney()));
+        }
+        return taskBoxBeanList;
     }
 
     @Override

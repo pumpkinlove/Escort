@@ -240,15 +240,15 @@ public class UpTaskFragment extends BaseFragment implements IUpTaskView{
                                         Config config = (Config) EscortApp.getInstance().get(StaticVariable.CONFIG);
                                         WorkerBean workerBean = (WorkerBean) EscortApp.getInstance().get(StaticVariable.WORKER);
                                         TaskUpBean taskUpBean = new TaskUpBean();
-                                        taskUpBean.setTaskcode(config.getOrgCode() + getCurDateTime());
+                                        taskUpBean.setTaskcode(config.getOrgCode() + DateUtil.getCurDateTime());
                                         taskUpBean.setTaskseq("0");
-                                        taskUpBean.setTasktype(turnToInt(selectedType));
+                                        taskUpBean.setTasktype(StaticVariable.upTaskTypeTurnToString(selectedType));
                                         taskUpBean.setDeptno(config.getOrgCode());
                                         taskUpBean.setDeptno2(etTemporaryBank.getText().toString());
                                         taskUpBean.setOpuser(workerBean.getOpuser());
                                         taskUpBean.setOpusername(workerBean.getOpusername());
                                         taskUpBean.setTaskdate(tvDate.getText().toString().substring(0,10));
-                                        upTaskPresenter.upTask(taskUpBean, turnToTaskBox(taskUpBean.getTaskcode()));
+                                        upTaskPresenter.upTask(taskUpBean, boxAdapter.getSelectedTaskBoxList(taskUpBean.getTaskcode()));
                                     }
                                 })
                                 .show();
@@ -256,6 +256,10 @@ public class UpTaskFragment extends BaseFragment implements IUpTaskView{
                 });
     }
 
+    /**
+     * 上传任务类型箱包编号判空
+     * @return
+     */
     public boolean checkNotNull() {
         if ("".equals(selectedType)) {
             Toasty.error(this.getActivity(), "未选择类型", 0, true).show();
@@ -278,45 +282,19 @@ public class UpTaskFragment extends BaseFragment implements IUpTaskView{
     }
 
     @Override
-    public void upTaskFailed() {
+    public void upTaskFailed(String message) {
         if (materialDialog.isShowing()) {
             materialDialog.dismiss();
         }
-        Toasty.error(this.getActivity(), "上传失败，请重试", 0, true).show();
+        Toasty.error(this.getActivity(), message, 1, true).show();
     }
 
+    /**
+     * 清空已选择的箱包
+     */
     private void clearSelected() {
         boxAdapter.clearSelected();
         boxAdapter.notifyDataSetChanged();
-    }
-
-    public List<TaskBoxBean> turnToTaskBox(String taskId) {
-        List<TaskBoxBean> taskBoxBeanList = new ArrayList<>();
-        for (BoxBean boxBean : boxAdapter.getSelectedItem()) {
-            taskBoxBeanList.add(new TaskBoxBean(null, taskId, boxBean.getBoxcode(), boxBean.getMoney()));
-        }
-        return taskBoxBeanList;
-    }
-
-    protected String getCurDateTime() {
-        Calendar today = Calendar.getInstance();
-        return String.format("%04d%02d%02d%02d%02d%02d", today.get(Calendar.YEAR),
-                today.get(Calendar.MONTH)+1, today.get(Calendar.DAY_OF_MONTH),
-                today.get(Calendar.HOUR), today.get(Calendar.MINUTE),
-                today.get(Calendar.SECOND));
-    }
-
-    public String turnToInt(String type) {
-        if ("常规网点接箱".equals(type)) {
-            return "1";
-        } else if ("常规网点送箱".equals(type)) {
-            return "2";
-        } else if ("临时网点接箱".equals(type)) {
-            return "3";
-        } else if ("临时网点送箱".equals(type)) {
-            return "4";
-        }
-        return "0";
     }
 
     @Override
@@ -335,6 +313,7 @@ public class UpTaskFragment extends BaseFragment implements IUpTaskView{
     @Override
     public void onDestroy() {
         super.onDestroy();
+        upTaskPresenter.doDestroy();
     }
 
     // TODO: Rename method, update argument and hook method into UI event

@@ -65,7 +65,9 @@ public class MyTaskPresenterImpl extends BaseFragmentPresenter implements IMyTas
                 .subscribe(new Consumer<List<TaskBean>>() {
                     @Override
                     public void accept(List<TaskBean> taskBeans) throws Exception {
-                        myTaskView.updateData(taskBeans);
+                        if (myTaskView != null) {
+                            myTaskView.updateData(taskBeans);
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -106,10 +108,12 @@ public class MyTaskPresenterImpl extends BaseFragmentPresenter implements IMyTas
                 .doOnNext(new Consumer<ResponseEntity<TaskBean>>() {
                     @Override
                     public void accept(ResponseEntity<TaskBean> taskBeanResponseEntity) throws Exception {
-                        if (StaticVariable.SUCCESS.equals(taskBeanResponseEntity.getCode())) {
-                            myTaskView.setDialogMessage("下载任务成功，正在下载任务箱包信息...");
-                        } else {
-                            myTaskView.setDialogMessage(taskBeanResponseEntity.getMessage());
+                        if (myTaskView != null) {
+                            if (StaticVariable.SUCCESS.equals(taskBeanResponseEntity.getCode())) {
+                                myTaskView.setDialogMessage("下载任务成功，正在下载任务箱包信息...");
+                            } else {
+                                myTaskView.setDialogMessage(taskBeanResponseEntity.getMessage());
+                            }
                         }
                     }
                 })
@@ -133,10 +137,12 @@ public class MyTaskPresenterImpl extends BaseFragmentPresenter implements IMyTas
                 .doOnNext(new Consumer<ResponseEntity<BoxBean>>() {
                     @Override
                     public void accept(ResponseEntity<BoxBean> boxBeanResponseEntity) throws Exception {
-                        if (StaticVariable.SUCCESS.equals(boxBeanResponseEntity.getCode())) {
-                            myTaskView.setDialogMessage("下载任务箱包完成，正在下载押运员信息...");
-                        } else {
-                            myTaskView.setDialogMessage(boxBeanResponseEntity.getMessage());
+                        if (myTaskView != null) {
+                            if (StaticVariable.SUCCESS.equals(boxBeanResponseEntity.getCode())) {
+                                myTaskView.setDialogMessage("下载任务箱包完成，正在下载押运员信息...");
+                            } else {
+                                myTaskView.setDialogMessage(boxBeanResponseEntity.getMessage());
+                            }
                         }
                     }
                 })
@@ -160,10 +166,12 @@ public class MyTaskPresenterImpl extends BaseFragmentPresenter implements IMyTas
                 .doOnNext(new Consumer<ResponseEntity<EscortBean>>() {
                     @Override
                     public void accept(ResponseEntity<EscortBean> escortBeanResponseEntity) throws Exception {
-                        if (StaticVariable.SUCCESS.equals(escortBeanResponseEntity.getCode())) {
-                            myTaskView.setDialogMessage("下载押运员信息成功，正在更新箱包信息...");
-                        } else {
-                            myTaskView.setDialogMessage(escortBeanResponseEntity.getMessage());
+                        if (myTaskView != null) {
+                            if (StaticVariable.SUCCESS.equals(escortBeanResponseEntity.getCode())) {
+                                myTaskView.setDialogMessage("下载押运员信息成功，正在更新箱包信息...");
+                            } else {
+                                myTaskView.setDialogMessage(escortBeanResponseEntity.getMessage());
+                            }
                         }
                     }
                 })
@@ -187,22 +195,28 @@ public class MyTaskPresenterImpl extends BaseFragmentPresenter implements IMyTas
                 .doOnNext(new Consumer<ResponseEntity<BoxBean>>() {
                     @Override
                     public void accept(ResponseEntity<BoxBean> boxBeanResponseEntity) throws Exception {
-                        if (StaticVariable.SUCCESS.equals(boxBeanResponseEntity.getCode())) {
-                            myTaskView.setDialogMessage("更新箱包成功，正在初始化...");
-                        } else {
-                            myTaskView.setDialogMessage(boxBeanResponseEntity.getMessage());
+                        if (myTaskView != null) {
+                            if (StaticVariable.SUCCESS.equals(boxBeanResponseEntity.getCode())) {
+                                myTaskView.setDialogMessage("更新箱包成功，正在初始化...");
+                            } else {
+                                myTaskView.setDialogMessage(boxBeanResponseEntity.getMessage());
+                            }
                         }
                     }
                 })
                 .subscribe(new Consumer<ResponseEntity<BoxBean>>() {
                     @Override
                     public void accept(ResponseEntity<BoxBean> taskBeanResponseEntity) throws Exception {
-                        myTaskView.downTaskSuccess();
+                        if (myTaskView != null) {
+                            myTaskView.downTaskSuccess();
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        myTaskView.downTaskFailed();
+                        if (myTaskView != null) {
+                            myTaskView.downTaskFailed();
+                        }
                     }
                 });
     }

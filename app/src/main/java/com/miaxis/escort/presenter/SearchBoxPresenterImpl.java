@@ -57,7 +57,9 @@ public class SearchBoxPresenterImpl extends BaseActivityPresenter implements ISe
                 .subscribe(new Consumer<List<BoxBean>>() {
                     @Override
                     public void accept(List<BoxBean> boxBeans) throws Exception {
-                        searchBoxView.updateData(boxBeans);
+                        if (searchBoxView != null) {
+                            searchBoxView.updateData(boxBeans);
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -107,7 +109,9 @@ public class SearchBoxPresenterImpl extends BaseActivityPresenter implements ISe
                 .subscribe(new Consumer<List<BoxBean>>() {
                     @Override
                     public void accept(List<BoxBean> boxBeans) throws Exception {
-                        searchBoxView.updateData(boxBeans);
+                        if (searchBoxView != null) {
+                            searchBoxView.updateData(boxBeans);
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override

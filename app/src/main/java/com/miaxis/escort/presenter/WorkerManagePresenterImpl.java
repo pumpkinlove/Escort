@@ -83,7 +83,9 @@ public class WorkerManagePresenterImpl extends BaseActivityPresenter implements 
                 .subscribe(new Consumer<List<WorkerBean>>() {
                     @Override
                     public void accept(List<WorkerBean> workerBeans) throws Exception {
-                        workerManageView.updateDataList(workerBeans);
+                        if (workerManageView != null) {
+                            workerManageView.updateDataList(workerBeans);
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -107,7 +109,9 @@ public class WorkerManagePresenterImpl extends BaseActivityPresenter implements 
                 .subscribe(new Consumer<List<WorkerBean>>() {
                     @Override
                     public void accept(List<WorkerBean> workerBeanList) throws Exception {
-                        workerManageView.updateDataList(workerBeanList);
+                        if (workerManageView != null) {
+                            workerManageView.updateDataList(workerBeanList);
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override

@@ -1,5 +1,7 @@
 package com.miaxis.escort.presenter;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.miaxis.escort.app.EscortApp;
@@ -58,31 +60,33 @@ public class UpTaskPresenterImpl extends BaseFragmentPresenter implements IUpTas
                 .subscribe(new Consumer<List<BoxBean>>() {
                     @Override
                     public void accept(List<BoxBean> boxBeans) throws Exception {
-                        upTaskView.updateBox(boxBeans);
+                        if (upTaskView != null) {
+                            upTaskView.updateBox(boxBeans);
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-
                     }
                 });
     }
 
     @Override
     public void upTask(final TaskUpBean taskUpBean, final List<TaskBoxBean> boxBeanList) {
-        Config config = (Config) EscortApp.getInstance().get(StaticVariable.CONFIG);
-        Retrofit retrofit = new Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())//请求的结果转为实体类
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())  //适配RxJava2.0, RxJava1.x则为RxJavaCallAdapterFactory.create()
-                .baseUrl("http://" + config.getIp() + ":" + config.getPort())
-                .build();
-        Observable.just(retrofit)
+        Observable.just(0)
                 .subscribeOn(Schedulers.io())
-                .compose(getProvider().<Retrofit>bindToLifecycle())
+                .compose(getProvider().<Integer>bindToLifecycle())
                 .observeOn(Schedulers.io())
-                .flatMap(new Function<Retrofit, ObservableSource<ResponseEntity>>() {
+                .flatMap(new Function<Integer, ObservableSource<ResponseEntity>>() {
                     @Override
-                    public ObservableSource<ResponseEntity> apply(Retrofit retrofit) throws Exception {
+                    public ObservableSource<ResponseEntity> apply(Integer i) throws Exception {
+                        Config config = (Config) EscortApp.getInstance().get(StaticVariable.CONFIG);
+                        Retrofit retrofit = new Retrofit.Builder()
+                                .addConverterFactory(GsonConverterFactory.create())//请求的结果转为实体类
+                                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())  //适配RxJava2.0, RxJava1.x则为RxJavaCallAdapterFactory.create()
+                                .baseUrl("http://" + config.getIp() + ":" + config.getPort())
+                                .build();
+                        Log.e("asd", retrofit.baseUrl().toString());
                         TaskNet taskNet = retrofit.create(TaskNet.class);
                         return taskNet.uploadTask(new Gson().toJson(taskUpBean), new Gson().toJson(boxBeanList));
                     }
@@ -91,16 +95,20 @@ public class UpTaskPresenterImpl extends BaseFragmentPresenter implements IUpTas
                 .subscribe(new Consumer<ResponseEntity>() {
                     @Override
                     public void accept(ResponseEntity responseEntity) throws Exception {
-                        if (StaticVariable.SUCCESS.equals(responseEntity.getCode())) {
-                            upTaskView.upTaskSuccess();
-                        } else {
-                            upTaskView.upTaskFailed();
+                        if (upTaskView != null) {
+                            if (StaticVariable.SUCCESS.equals(responseEntity.getCode())) {
+                                upTaskView.upTaskSuccess();
+                            } else {
+                                upTaskView.upTaskFailed(responseEntity.getMessage());
+                            }
                         }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        upTaskView.upTaskFailed();
+                        if (upTaskView != null) {
+                            upTaskView.upTaskFailed(throwable.getMessage());
+                        }
                     }
                 });
     }

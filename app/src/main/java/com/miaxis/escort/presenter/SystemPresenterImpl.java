@@ -41,12 +41,16 @@ public class SystemPresenterImpl extends BaseFragmentPresenter implements ISyste
                 .subscribe(new Consumer<Integer>() {
                     @Override
                     public void accept(Integer integer) throws Exception {
-                        systemView.clearSuccess();
+                        if (systemView != null) {
+                            systemView.clearSuccess();
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        systemView.clearFailed();
+                        if (systemView != null) {
+                            systemView.clearFailed();
+                        }
                     }
                 });
     }
