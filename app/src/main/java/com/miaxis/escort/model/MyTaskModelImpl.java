@@ -4,6 +4,7 @@ import android.database.Cursor;
 
 import com.miaxis.escort.app.EscortApp;
 import com.miaxis.escort.model.entity.BoxBean;
+import com.miaxis.escort.model.entity.Config;
 import com.miaxis.escort.model.entity.EscortBean;
 import com.miaxis.escort.model.entity.OpdateBean;
 import com.miaxis.escort.model.entity.TaskBean;
@@ -15,8 +16,11 @@ import com.miaxis.escort.model.local.greenDao.gen.TaskBeanDao;
 import com.miaxis.escort.model.local.greenDao.gen.TaskBoxBeanDao;
 import com.miaxis.escort.model.local.greenDao.gen.TaskEscortBeanDao;
 import com.miaxis.escort.presenter.IMyTaskPresenter;
+import com.miaxis.escort.util.DateUtil;
+import com.miaxis.escort.util.StaticVariable;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -27,7 +31,40 @@ public class MyTaskModelImpl implements IMyTaskModel{
 
     @Override
     public List<TaskBean> loadTask() {
-        return EscortApp.getInstance().getDaoSession().getTaskBeanDao().loadAll();
+        List<TaskBean> taskBeanList = EscortApp.getInstance().getDaoSession().getTaskBeanDao().queryBuilder()
+                .where(TaskBeanDao.Properties.Taskdate.eq(DateUtil.getToday()))
+                .where(TaskBeanDao.Properties.Status.notEq("4"))
+                .where(TaskBeanDao.Properties.Status.notEq("1")).list();
+        Config config = (Config) EscortApp.getInstance().get(StaticVariable.CONFIG);
+        for (Iterator<TaskBean> it = taskBeanList.iterator(); it.hasNext();){
+            TaskBean taskBean = it.next();
+            try {
+                if("1".equals(taskBean.getTasklevel())){
+                    it.remove();
+                } else if ("1".equals(taskBean.getTasktype())) {
+
+                } else if ("2".equals(taskBean.getTasktype())) {
+                    if ("3".equals(taskBean.getStatus())) {
+                        it.remove();
+                    }
+                } else if ("3".equals(taskBean.getTasktype())) {
+                    if (!config.getOrgCode().equals(taskBean.getTaskcode().split("_")[0])) {
+                        if ("3".equals(taskBean.getStatus())) {
+                            it.remove();
+                        }
+                    }
+                } else if ("4".equals(taskBean.getTasktype())) {
+                    if (config.getOrgCode().equals(taskBean.getTaskcode().split("_")[0])) {
+                        if ("3".equals(taskBean.getStatus())) {
+                            it.remove();
+                        }
+                    }
+                }
+
+            } catch (Exception e) {
+            }
+        }
+        return taskBeanList;
     }
 
     @Override

@@ -98,20 +98,25 @@ public class WorkerDetailActivity extends BaseActivity implements IWorkerDetailV
                                     .onPositive(new MaterialDialog.SingleButtonCallback() {
                                         @Override
                                         public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                            //TODO：编号查重
                                             if (checkNotNull()) {
-                                                Config config = (Config) EscortApp.getInstance().get(StaticVariable.CONFIG);
-                                                WorkerBean opUser = (WorkerBean) EscortApp.getInstance().get(StaticVariable.WORKER);
-                                                workerBean.setDeptno(config.getOrgCode());
-                                                workerBean.setWorkno(etWorkerCode.getText().toString());
-                                                workerBean.setName(etWorkerName.getText().toString());
-                                                workerBean.setFinger0("0");
-                                                workerBean.setFinger1("0");
-                                                workerBean.setOpdate(DateUtil.getToday());
-                                                workerBean.setOpuser(opUser.getWorkno());
-                                                workerBean.setOpusername(opUser.getName());
-                                                workerDetailPresenter.addWorker(workerBean);
-                                                materialDialog.show();
+                                                if (workerDetailPresenter.isDuplicate(etWorkerCode.getText().toString())) {
+                                                    Toasty.error(WorkerDetailActivity.this, "员工编号重复", 0, true).show();
+                                                } else {
+                                                    Config config = (Config) EscortApp.getInstance().get(StaticVariable.CONFIG);
+                                                    WorkerBean opUser = (WorkerBean) EscortApp.getInstance().get(StaticVariable.WORKER);
+                                                    workerBean.setDeptno(config.getOrgCode());
+                                                    workerBean.setWorkno(etWorkerCode.getText().toString());
+                                                    workerBean.setName(etWorkerName.getText().toString());
+                                                    workerBean.setFinger0("0");
+                                                    workerBean.setFinger1("0");
+                                                    workerBean.setOpdate(DateUtil.getToday());
+                                                    workerBean.setOpuser(opUser.getWorkno());
+                                                    workerBean.setOpusername(opUser.getName());
+                                                    workerDetailPresenter.addWorker(workerBean);
+                                                    materialDialog.show();
+                                                }
+                                            } else {
+                                                Toasty.error(WorkerDetailActivity.this, "请填写相关信息", 0, true).show();
                                             }
                                         }
                                     })
@@ -194,21 +199,50 @@ public class WorkerDetailActivity extends BaseActivity implements IWorkerDetailV
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
+                onBackPressed();
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    public boolean checkNotNull() {
+    @Override
+    public void onBackPressed() {
+        if (!checkEmpty() && check) {
+            new MaterialDialog.Builder(WorkerDetailActivity.this)
+                    .title("确认退出？")
+                    .negativeText("取消")
+                    .positiveText("确认")
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            finish();
+                        }
+                    })
+                    .show();
+        } else {
+            finish();
+        }
+    }
+
+    private boolean checkNotNull() {
         if (materialDialog.isShowing()) {
             materialDialog.dismiss();
         }
-        if (etWorkerCode.getText().equals("") || etWorkerName.getText().equals("")) {
-            Toasty.error(this, "请填写相关信息", 0, true).show();
+        if (etWorkerCode.getText().toString().equals("") || etWorkerName.getText().toString().equals("")) {
             return false;
         }
+        //TODO:指纹录入判空
         return true;
+    }
+
+    private boolean checkEmpty() {
+        if (materialDialog.isShowing()) {
+            materialDialog.dismiss();
+        }
+        if (etWorkerCode.getText().toString().equals("") && etWorkerName.getText().toString().equals("")) {
+            return true;
+        }
+        return false;
     }
 
     @Override

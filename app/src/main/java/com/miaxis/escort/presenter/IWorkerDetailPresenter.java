@@ -10,4 +10,5 @@ public interface IWorkerDetailPresenter extends IBasePresenter{
     void addWorker(WorkerBean workerBean);
     void deleteWorker(String workercode);
     boolean isSelf();
+    boolean isDuplicate(String workno);
 }

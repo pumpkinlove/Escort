@@ -16,7 +16,12 @@ import retrofit2.http.Query;
 public interface TaskNet {
     @GET("yygl/api/downTask")
     Observable<ResponseEntity<TaskBean>> downloadTask(@Query("deptno")String deptno, @Query("opdate")String opdate);
+
     @FormUrlEncoded
     @POST("yygl/api/uploadTask")
     Observable<ResponseEntity> uploadTask(@Field("jsonTaskBean") String jsonTaskBean, @Field("boxList") String boxList);
+
+    @FormUrlEncoded
+    @POST("yygl/api/execTask")
+    Observable<ResponseEntity> uploadTaskExec(@Field("execTask") String execTask);
 }

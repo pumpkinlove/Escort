@@ -17,10 +17,8 @@ import com.miaxis.escort.model.local.greenDao.gen.TaskBeanDao;
 
 @Entity
 public class TaskBean  implements Serializable {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+
+	private static final long serialVersionUID = -5493109912641557743L;
 	@Id
 	private String id;
 	private String taskcode;

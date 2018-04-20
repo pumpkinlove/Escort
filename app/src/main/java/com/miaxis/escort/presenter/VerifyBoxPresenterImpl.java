@@ -1,28 +1,25 @@
 package com.miaxis.escort.presenter;
 
-import android.util.Log;
-
 import com.google.gson.Gson;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.miaxis.escort.app.EscortApp;
-import com.miaxis.escort.model.IUpTaskModel;
-import com.miaxis.escort.model.UpTaskModelImpl;
+import com.miaxis.escort.model.IVerifyBoxModel;
+import com.miaxis.escort.model.VerifyBoxModelImpl;
 import com.miaxis.escort.model.entity.BoxBean;
 import com.miaxis.escort.model.entity.Config;
-import com.miaxis.escort.model.entity.TaskBoxBean;
-import com.miaxis.escort.model.entity.TaskUpBean;
+import com.miaxis.escort.model.entity.TaskBean;
+import com.miaxis.escort.model.entity.TaskExeBean;
 import com.miaxis.escort.model.retrofit.ResponseEntity;
 import com.miaxis.escort.model.retrofit.TaskNet;
 import com.miaxis.escort.util.StaticVariable;
-import com.miaxis.escort.view.viewer.IUpTaskView;
+import com.miaxis.escort.view.viewer.IVerifyBoxView;
 import com.trello.rxlifecycle2.LifecycleProvider;
-import com.trello.rxlifecycle2.android.FragmentEvent;
+import com.trello.rxlifecycle2.android.ActivityEvent;
 
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
 import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
@@ -32,89 +29,91 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Created by 一非 on 2018/4/11.
+ * Created by 一非 on 2018/4/20.
  */
 
-public class UpTaskPresenterImpl extends BaseFragmentPresenter implements IUpTaskPresenter{
+public class VerifyBoxPresenterImpl extends BaseActivityPresenter implements IVerifyBoxPresenter{
 
-    private IUpTaskView upTaskView;
-    private IUpTaskModel upTaskModel;
+    private IVerifyBoxView verifyBoxView;
+    private IVerifyBoxModel verifyBoxModel;
 
-    public UpTaskPresenterImpl(LifecycleProvider<FragmentEvent> provider, IUpTaskView upTaskView) {
+    public VerifyBoxPresenterImpl(LifecycleProvider<ActivityEvent> provider, IVerifyBoxView verifyBoxView) {
         super(provider);
-        this.upTaskView = upTaskView;
-        upTaskModel = new UpTaskModelImpl();
+        this.verifyBoxView = verifyBoxView;
+        verifyBoxModel = new VerifyBoxModelImpl();
     }
 
     @Override
-    public void loadBox() {
-        Observable.create(new ObservableOnSubscribe<List<BoxBean>>() {
-            @Override
-            public void subscribe(ObservableEmitter<List<BoxBean>> e) throws Exception {
-                e.onNext(upTaskModel.loadBox());
-            }
-        })
+    public void loadBox(TaskBean taskBean) {
+        Observable.just(taskBean)
                 .subscribeOn(Schedulers.io())
-                .compose(getProvider().<List<BoxBean>>bindUntilEvent(FragmentEvent.DESTROY))
+                .compose(getProvider().<TaskBean>bindToLifecycle())
+                .observeOn(Schedulers.io())
+                .map(new Function<TaskBean, List<BoxBean>>() {
+                    @Override
+                    public List<BoxBean> apply(TaskBean taskBean) throws Exception {
+                        return verifyBoxModel.loadBoxListByTask(taskBean);
+                    }
+                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<BoxBean>>() {
                     @Override
                     public void accept(List<BoxBean> boxBeans) throws Exception {
-                        if (upTaskView != null) {
-                            upTaskView.updateBox(boxBeans);
+                        if (verifyBoxView != null) {
+                            verifyBoxView.updateBoxList(boxBeans);
                         }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        Toasty.error(EscortApp.getInstance().getApplicationContext(), "未找到相关箱包", 1, true).show();
                     }
                 });
     }
 
     @Override
-    public void upTask(final TaskUpBean taskUpBean, final List<TaskBoxBean> boxBeanList) {
-        Observable.just(0)
+    public void upTaskExe(TaskExeBean taskExeBean) {
+        Observable.just(taskExeBean)
                 .subscribeOn(Schedulers.io())
-                .compose(getProvider().<Integer>bindToLifecycle())
+                .compose(getProvider().<TaskExeBean>bindToLifecycle())
                 .observeOn(Schedulers.io())
-                .flatMap(new Function<Integer, ObservableSource<ResponseEntity>>() {
+                .flatMap(new Function<TaskExeBean, ObservableSource<ResponseEntity>>() {
                     @Override
-                    public ObservableSource<ResponseEntity> apply(Integer i) throws Exception {
+                    public ObservableSource<ResponseEntity> apply(TaskExeBean taskExeBean) throws Exception {
+                        //TODO：续传~~~~~~~~~~~~~~~~~~~
                         Config config = (Config) EscortApp.getInstance().get(StaticVariable.CONFIG);
                         Retrofit retrofit = new Retrofit.Builder()
                                 .addConverterFactory(GsonConverterFactory.create())//请求的结果转为实体类
                                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())  //适配RxJava2.0, RxJava1.x则为RxJavaCallAdapterFactory.create()
                                 .baseUrl("http://" + config.getIp() + ":" + config.getPort())
                                 .build();
+                        verifyBoxModel.updateTaskStatus(taskExeBean);
                         TaskNet taskNet = retrofit.create(TaskNet.class);
-                        return taskNet.uploadTask(new Gson().toJson(taskUpBean), new Gson().toJson(boxBeanList));
+                        return taskNet.uploadTaskExec(new Gson().toJson(taskExeBean));
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResponseEntity>() {
                     @Override
                     public void accept(ResponseEntity responseEntity) throws Exception {
-                        if (upTaskView != null) {
+                        if (verifyBoxView != null) {
                             if (StaticVariable.SUCCESS.equals(responseEntity.getCode())) {
-                                upTaskView.upTaskSuccess();
+                                verifyBoxView.uploadSuccess();
                             } else {
-                                upTaskView.upTaskFailed(responseEntity.getMessage());
+                                verifyBoxView.uploadFailed(responseEntity.getMessage());
                             }
                         }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        if (upTaskView != null) {
-                            upTaskView.upTaskFailed(throwable.getMessage());
-                        }
+                        verifyBoxView.uploadFailed(throwable.getMessage());
                     }
                 });
     }
 
     @Override
     public void doDestroy() {
-        upTaskView = null;
-        upTaskModel = null;
+        verifyBoxView = null;
     }
 }

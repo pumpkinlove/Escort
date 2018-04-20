@@ -24,11 +24,11 @@ public class TaskExeBeanDao extends AbstractDao<TaskExeBean, Void> {
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property Taskcode = new Property(0, String.class, "taskcode", false, "TASKCODE");
+        public final static Property Taskno = new Property(0, String.class, "taskno", false, "TASKNO");
         public final static Property Tasktype = new Property(1, String.class, "tasktype", false, "TASKTYPE");
         public final static Property Deptno = new Property(2, String.class, "deptno", false, "DEPTNO");
-        public final static Property Workercode = new Property(3, String.class, "workercode", false, "WORKERCODE");
-        public final static Property Workername = new Property(4, String.class, "workername", false, "WORKERNAME");
+        public final static Property Workno = new Property(3, String.class, "workno", false, "WORKNO");
+        public final static Property Workname = new Property(4, String.class, "workname", false, "WORKNAME");
         public final static Property Escode1 = new Property(5, String.class, "escode1", false, "ESCODE1");
         public final static Property Esname1 = new Property(6, String.class, "esname1", false, "ESNAME1");
         public final static Property Escode2 = new Property(7, String.class, "escode2", false, "ESCODE2");
@@ -53,11 +53,11 @@ public class TaskExeBeanDao extends AbstractDao<TaskExeBean, Void> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"TASK_EXE_BEAN\" (" + //
-                "\"TASKCODE\" TEXT," + // 0: taskcode
+                "\"TASKNO\" TEXT," + // 0: taskno
                 "\"TASKTYPE\" TEXT," + // 1: tasktype
                 "\"DEPTNO\" TEXT," + // 2: deptno
-                "\"WORKERCODE\" TEXT," + // 3: workercode
-                "\"WORKERNAME\" TEXT," + // 4: workername
+                "\"WORKNO\" TEXT," + // 3: workno
+                "\"WORKNAME\" TEXT," + // 4: workname
                 "\"ESCODE1\" TEXT," + // 5: escode1
                 "\"ESNAME1\" TEXT," + // 6: esname1
                 "\"ESCODE2\" TEXT," + // 7: escode2
@@ -79,9 +79,9 @@ public class TaskExeBeanDao extends AbstractDao<TaskExeBean, Void> {
     protected final void bindValues(DatabaseStatement stmt, TaskExeBean entity) {
         stmt.clearBindings();
  
-        String taskcode = entity.getTaskcode();
-        if (taskcode != null) {
-            stmt.bindString(1, taskcode);
+        String taskno = entity.getTaskno();
+        if (taskno != null) {
+            stmt.bindString(1, taskno);
         }
  
         String tasktype = entity.getTasktype();
@@ -94,14 +94,14 @@ public class TaskExeBeanDao extends AbstractDao<TaskExeBean, Void> {
             stmt.bindString(3, deptno);
         }
  
-        String workercode = entity.getWorkercode();
-        if (workercode != null) {
-            stmt.bindString(4, workercode);
+        String workno = entity.getWorkno();
+        if (workno != null) {
+            stmt.bindString(4, workno);
         }
  
-        String workername = entity.getWorkername();
-        if (workername != null) {
-            stmt.bindString(5, workername);
+        String workname = entity.getWorkname();
+        if (workname != null) {
+            stmt.bindString(5, workname);
         }
  
         String escode1 = entity.getEscode1();
@@ -154,9 +154,9 @@ public class TaskExeBeanDao extends AbstractDao<TaskExeBean, Void> {
     protected final void bindValues(SQLiteStatement stmt, TaskExeBean entity) {
         stmt.clearBindings();
  
-        String taskcode = entity.getTaskcode();
-        if (taskcode != null) {
-            stmt.bindString(1, taskcode);
+        String taskno = entity.getTaskno();
+        if (taskno != null) {
+            stmt.bindString(1, taskno);
         }
  
         String tasktype = entity.getTasktype();
@@ -169,14 +169,14 @@ public class TaskExeBeanDao extends AbstractDao<TaskExeBean, Void> {
             stmt.bindString(3, deptno);
         }
  
-        String workercode = entity.getWorkercode();
-        if (workercode != null) {
-            stmt.bindString(4, workercode);
+        String workno = entity.getWorkno();
+        if (workno != null) {
+            stmt.bindString(4, workno);
         }
  
-        String workername = entity.getWorkername();
-        if (workername != null) {
-            stmt.bindString(5, workername);
+        String workname = entity.getWorkname();
+        if (workname != null) {
+            stmt.bindString(5, workname);
         }
  
         String escode1 = entity.getEscode1();
@@ -233,11 +233,11 @@ public class TaskExeBeanDao extends AbstractDao<TaskExeBean, Void> {
     @Override
     public TaskExeBean readEntity(Cursor cursor, int offset) {
         TaskExeBean entity = new TaskExeBean( //
-            cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0), // taskcode
+            cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0), // taskno
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // tasktype
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // deptno
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // workercode
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // workername
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // workno
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // workname
             cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // escode1
             cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // esname1
             cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // escode2
@@ -253,11 +253,11 @@ public class TaskExeBeanDao extends AbstractDao<TaskExeBean, Void> {
      
     @Override
     public void readEntity(Cursor cursor, TaskExeBean entity, int offset) {
-        entity.setTaskcode(cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0));
+        entity.setTaskno(cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0));
         entity.setTasktype(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setDeptno(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setWorkercode(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-        entity.setWorkername(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setWorkno(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setWorkname(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
         entity.setEscode1(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
         entity.setEsname1(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
         entity.setEscode2(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));

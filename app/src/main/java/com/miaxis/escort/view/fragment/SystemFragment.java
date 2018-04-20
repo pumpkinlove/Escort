@@ -144,6 +144,16 @@ public class SystemFragment extends BaseFragment implements ISystemView{
                                 .show();
                     }
                 });
+        RxView.clicks(llClearAll)
+                .throttleFirst(1, TimeUnit.SECONDS)
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .compose(this.bindToLifecycle())
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+
+                    }
+                });
         RxView.clicks(btnLogout)
                 .throttleFirst(1, TimeUnit.SECONDS)
                 .subscribeOn(AndroidSchedulers.mainThread())

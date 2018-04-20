@@ -25,4 +25,26 @@ public class StaticVariable {
         return "0";
     }
 
+    public static String getTasktypeName(String tasktype, String tasklevel) {
+        if (tasktype.equals("1")) {
+            if(!tasklevel.equals("1")){
+                return "常规接箱";
+            }else{
+                return "出库";
+            }
+        } else if (tasktype.equals("2")) {
+            if(!tasklevel.equals("1")){
+                return "常规送箱";
+            }else{
+                return "入库";
+            }
+        } else if (tasktype.equals("3")) {
+            return "临时接箱";
+        } else if (tasktype.equals("4")) {
+            return "临时送箱";
+        } else {
+            return tasktype;
+        }
+    }
+
 }

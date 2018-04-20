@@ -17,9 +17,12 @@ import com.miaxis.escort.R;
 import com.miaxis.escort.adapter.TaskAdapter;
 import com.miaxis.escort.adapter.VerifyBoxAdapter;
 import com.miaxis.escort.app.EscortApp;
+import com.miaxis.escort.model.entity.EscortBean;
 import com.miaxis.escort.model.entity.TaskBean;
+import com.miaxis.escort.model.entity.WorkerBean;
 import com.miaxis.escort.presenter.IMyTaskPresenter;
 import com.miaxis.escort.presenter.MyTaskPresenterImpl;
+import com.miaxis.escort.util.StaticVariable;
 import com.miaxis.escort.view.activity.VerifyBoxActivity;
 import com.miaxis.escort.view.viewer.IMyTaskView;
 
@@ -73,7 +76,13 @@ public class MyTaskFragment extends BaseFragment implements IMyTaskView{
             @Override
             public void onItemClick(View view, int position) {
                 Intent intent = new Intent(MyTaskFragment.this.getActivity(), VerifyBoxActivity.class);
-                intent.putExtra("task", taskAdapter.getDataList().get(position).getTaskcode());
+                intent.putExtra("task", taskAdapter.getDataList().get(position));
+                //TODO：默认指纹验证通过，默认押运员，默认操作员
+                List<EscortBean> escortBeanList = EscortApp.getInstance().getDaoSession().getEscortBeanDao().loadAll();
+                List<WorkerBean> workerBeanList = EscortApp.getInstance().getDaoSession().getWorkerBeanDao().loadAll();
+                intent.putExtra("escort1st", escortBeanList.get(0));
+                intent.putExtra("escort2nd", escortBeanList.get(1));
+                intent.putExtra("verifyWorker", workerBeanList.get(1));
                 startActivity(intent);
             }
         });

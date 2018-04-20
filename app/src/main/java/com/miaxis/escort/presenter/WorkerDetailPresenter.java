@@ -127,6 +127,11 @@ public class WorkerDetailPresenter extends BaseActivityPresenter implements IWor
     }
 
     @Override
+    public boolean isDuplicate(String workno) {
+        return workerDetailModel.isDuplicate(workno);
+    }
+
+    @Override
     public void doDestroy() {
         workerDetailView = null;
     }

@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.miaxis.escort.R;
 import com.miaxis.escort.model.entity.TaskBean;
+import com.miaxis.escort.util.StaticVariable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        holder.tvTaskName.setText(dataList.get(position).getTaskcode());
+        holder.tvTaskName.setText(StaticVariable.getTasktypeName(dataList.get(position).getTasktype(), dataList.get(position).getTasklevel()));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

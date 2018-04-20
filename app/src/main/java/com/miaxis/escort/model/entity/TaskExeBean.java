@@ -3,13 +3,17 @@ package com.miaxis.escort.model.entity;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 
+import java.io.Serializable;
+
 @Entity
-public class TaskExeBean {
-	private String taskcode;
+public class TaskExeBean implements Serializable{
+
+	private static final long serialVersionUID = 5344500230356169702L;
+	private String taskno;
 	private String tasktype;
 	private String deptno;
-	private String workercode;
-	private String workername;
+	private String workno;
+	private String workname;
 	private String escode1;
 	private String esname1;
 	private String escode2;
@@ -19,17 +23,16 @@ public class TaskExeBean {
 	private String tasktime;
 	private String status;
 	private String boxes;
-
-	@Generated(hash = 829204160)
-	public TaskExeBean(String taskcode, String tasktype, String deptno,
-			String workercode, String workername, String escode1, String esname1,
-			String escode2, String esname2, String carcode, String plateno,
-			String tasktime, String status, String boxes) {
-		this.taskcode = taskcode;
+	@Generated(hash = 651911119)
+	public TaskExeBean(String taskno, String tasktype, String deptno, String workno,
+			String workname, String escode1, String esname1, String escode2,
+			String esname2, String carcode, String plateno, String tasktime,
+			String status, String boxes) {
+		this.taskno = taskno;
 		this.tasktype = tasktype;
 		this.deptno = deptno;
-		this.workercode = workercode;
-		this.workername = workername;
+		this.workno = workno;
+		this.workname = workname;
 		this.escode1 = escode1;
 		this.esname1 = esname1;
 		this.escode2 = escode2;
@@ -43,87 +46,89 @@ public class TaskExeBean {
 	@Generated(hash = 1880158953)
 	public TaskExeBean() {
 	}
-
-	public String getTaskcode() {
-		return taskcode;
+	public String getTaskno() {
+		return this.taskno;
 	}
-	public void setTaskcode(String taskcode) {
-		this.taskcode = taskcode;
+	public void setTaskno(String taskno) {
+		this.taskno = taskno;
 	}
-	public String getTasktype()	{
-		return tasktype;
+	public String getTasktype() {
+		return this.tasktype;
 	}
 	public void setTasktype(String tasktype) {
 		this.tasktype = tasktype;
 	}
 	public String getDeptno() {
-		return deptno;
+		return this.deptno;
 	}
 	public void setDeptno(String deptno) {
 		this.deptno = deptno;
 	}
-	public String getWorkercode() {
-		return workercode;
+	public String getWorkno() {
+		return this.workno;
 	}
-	public void setWorkercode(String workercode) {
-		this.workercode = workercode;
+	public void setWorkno(String workno) {
+		this.workno = workno;
 	}
-	public String getWorkername() {
-		return workername;
+	public String getWorkname() {
+		return this.workname;
 	}
-	public void setWorkername(String workername) {
-		this.workername = workername;
+	public void setWorkname(String workname) {
+		this.workname = workname;
 	}
 	public String getEscode1() {
-		return escode1;
+		return this.escode1;
 	}
 	public void setEscode1(String escode1) {
 		this.escode1 = escode1;
 	}
 	public String getEsname1() {
-		return esname1;
+		return this.esname1;
 	}
 	public void setEsname1(String esname1) {
 		this.esname1 = esname1;
 	}
 	public String getEscode2() {
-		return escode2;
+		return this.escode2;
 	}
 	public void setEscode2(String escode2) {
 		this.escode2 = escode2;
 	}
 	public String getEsname2() {
-		return esname2;
+		return this.esname2;
 	}
 	public void setEsname2(String esname2) {
 		this.esname2 = esname2;
 	}
 	public String getCarcode() {
-		return carcode;
+		return this.carcode;
 	}
 	public void setCarcode(String carcode) {
 		this.carcode = carcode;
 	}
 	public String getPlateno() {
-		return plateno;
+		return this.plateno;
 	}
 	public void setPlateno(String plateno) {
-		this.plateno = plateno; 
+		this.plateno = plateno;
 	}
 	public String getTasktime() {
-		return tasktime;
+		return this.tasktime;
 	}
 	public void setTasktime(String tasktime) {
 		this.tasktime = tasktime;
 	}
 	public String getStatus() {
-		return status;
+		return this.status;
 	}
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	public String getBoxes() {return boxes;}
+	public String getBoxes() {
+		return this.boxes;
+	}
 	public void setBoxes(String boxes) {
 		this.boxes = boxes;
 	}
+
 }

@@ -100,4 +100,12 @@ public class DateUtil {
                 today.get(Calendar.SECOND));
     }
 
+    public static String getCurDateTime24()	{
+        Calendar today = Calendar.getInstance();
+        return String.format("%04d-%02d-%02d %02d:%02d:%02d", today.get(Calendar.YEAR),
+                today.get(Calendar.MONTH)+1, today.get(Calendar.DAY_OF_MONTH),
+                today.get(Calendar.HOUR_OF_DAY), today.get(Calendar.MINUTE),
+                today.get(Calendar.SECOND));
+    }
+
 }

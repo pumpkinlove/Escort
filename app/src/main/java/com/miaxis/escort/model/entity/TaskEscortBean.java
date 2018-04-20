@@ -4,9 +4,12 @@ import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 
+import java.io.Serializable;
+
 @Entity
-public class TaskEscortBean
+public class TaskEscortBean implements Serializable
 {
+	private static final long serialVersionUID = 7716768613612031876L;
 	@Id(autoincrement = true)
 	private Long id;
 	private String taskid;

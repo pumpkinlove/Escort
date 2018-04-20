@@ -13,10 +13,8 @@ import org.greenrobot.greendao.annotation.Generated;
 @Entity
 public class EscortBean implements Serializable
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+
+	private static final long serialVersionUID = -7089709531880954805L;
 	@Id
 	private String id;
 	private String escortno; /* 员工号 */

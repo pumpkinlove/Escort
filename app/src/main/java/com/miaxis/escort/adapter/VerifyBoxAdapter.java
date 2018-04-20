@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.miaxis.escort.R;
+import com.miaxis.escort.model.entity.BoxBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,17 +23,14 @@ import butterknife.ButterKnife;
 
 public class VerifyBoxAdapter extends RecyclerView.Adapter<VerifyBoxAdapter.MyViewHolder> {
 
-    private List<String> dataList;
+    private List<BoxBean> dataList;
     private List<Boolean> checkList;
     private LayoutInflater layoutInflater;
     private OnItemClickListener mOnItemClickListener;
 
-    public VerifyBoxAdapter(Context context, List<String> dataList) {
+    public VerifyBoxAdapter(Context context, List<BoxBean> dataList) {
         this.dataList = dataList;
-        checkList = new ArrayList<>();
-        for (int i = 0; i < dataList.size(); i++) {
-            checkList.add(false);
-        }
+        resetCheck();
         layoutInflater = LayoutInflater.from(context);
     }
 
@@ -44,7 +42,7 @@ public class VerifyBoxAdapter extends RecyclerView.Adapter<VerifyBoxAdapter.MyVi
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        holder.tvVerifyBox.setText(dataList.get(position));
+        holder.tvVerifyBox.setText(dataList.get(position).getBoxname());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,12 +51,48 @@ public class VerifyBoxAdapter extends RecyclerView.Adapter<VerifyBoxAdapter.MyVi
         });
     }
 
+    public List<BoxBean> getDataList() {
+        return dataList;
+    }
+
+    public void setDataList(List<BoxBean> dataList) {
+        this.dataList = dataList;
+    }
+
     public Boolean getCheck(int position) {
         return checkList.get(position);
     }
 
+    public int getCheckSize() {
+        int count = 0;
+        for (Boolean b : checkList) {
+            if (b) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public int getUncheckSize() {
+        int count = 0;
+        for (Boolean b : checkList) {
+            if (!b) {
+                count++;
+            }
+        }
+        return count;
+    }
+
     public void setCheck(int position, Boolean b) {
         checkList.set(position, b);
+    }
+
+    public void resetCheck() {
+        checkList = new ArrayList<>();
+        checkList = new ArrayList<>();
+        for (int i = 0; i < dataList.size(); i++) {
+            checkList.add(false);
+        }
     }
 
     public boolean isAllCheck() {
@@ -68,6 +102,14 @@ public class VerifyBoxAdapter extends RecyclerView.Adapter<VerifyBoxAdapter.MyVi
             }
         }
         return true;
+    }
+
+    public String getBoxString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (BoxBean boxBean : dataList) {
+            stringBuilder.append(boxBean.getBoxcode() + ",");
+        }
+        return stringBuilder.toString();
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
