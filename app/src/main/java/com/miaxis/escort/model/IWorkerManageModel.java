@@ -13,4 +13,5 @@ public interface IWorkerManageModel {
     List<WorkerBean> loadWorkerList();
     void saveWorkerList(List<WorkerBean> workerBeanList);
     List<OpdateBean> getWorkerOpdate();
+    boolean isExist(WorkerBean workerBean);
 }

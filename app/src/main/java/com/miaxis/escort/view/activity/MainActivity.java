@@ -38,6 +38,10 @@ public class MainActivity extends BaseActivity implements UpTaskFragment.OnFragm
     private List<Drawable> normalIconList;
     private List<Drawable> pressedIconList;
 
+    private UpTaskFragment upTaskFragment;
+    private MyTaskFragment myTaskFragment;
+    private SystemFragment systemFragment;
+
     public static final String[] TITLES = {"申报任务", "我的任务", "系统服务"};
 
     @Override
@@ -56,11 +60,11 @@ public class MainActivity extends BaseActivity implements UpTaskFragment.OnFragm
         pressedIconList.add(getResources().getDrawable(R.drawable.tab_mytask_pressd));
         pressedIconList.add(getResources().getDrawable(R.drawable.tab_icon_setting_pressed));
         List<Fragment> fragmentList = new ArrayList<>();
-        UpTaskFragment upTaskFragment = UpTaskFragment.newInstance();
+        upTaskFragment = UpTaskFragment.newInstance();
         fragmentList.add(upTaskFragment);
-        MyTaskFragment myTaskFragment = MyTaskFragment.newInstance();
+        myTaskFragment = MyTaskFragment.newInstance();
         fragmentList.add(myTaskFragment);
-        SystemFragment systemFragment = SystemFragment.newInstance();
+        systemFragment = SystemFragment.newInstance();
         fragmentList.add(systemFragment);
         adapter = new MainFragmentAdapter(getSupportFragmentManager(), fragmentList);
     }
@@ -119,6 +123,11 @@ public class MainActivity extends BaseActivity implements UpTaskFragment.OnFragm
     @Override
     public void onUpTaskFragmentInteraction() {
 
+    }
+
+    @Override
+    public void refreshTask() {
+        myTaskFragment.refreshTaskAfterUpTask();
     }
 
     @Override

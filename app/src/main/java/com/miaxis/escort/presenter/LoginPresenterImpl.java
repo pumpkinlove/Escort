@@ -51,7 +51,7 @@ public class LoginPresenterImpl extends BaseActivityPresenter implements ILoginP
     public LoginPresenterImpl(LifecycleProvider<ActivityEvent> provider, ILoginView loginView) {
         super(provider);
         this.loginView = loginView;
-        this.loginModel = new LoginModelImpl(this);
+        this.loginModel = new LoginModelImpl();
     }
 
     @Override

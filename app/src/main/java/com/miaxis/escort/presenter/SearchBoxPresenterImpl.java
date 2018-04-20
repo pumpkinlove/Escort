@@ -40,7 +40,7 @@ public class SearchBoxPresenterImpl extends BaseActivityPresenter implements ISe
     public SearchBoxPresenterImpl(LifecycleProvider<ActivityEvent> provider, ISearchBoxView searchBoxView) {
         super(provider);
         this.searchBoxView = searchBoxView;
-        searchBoxModel = new SearchBoxModelImpl(this);
+        searchBoxModel = new SearchBoxModelImpl();
     }
 
     @Override

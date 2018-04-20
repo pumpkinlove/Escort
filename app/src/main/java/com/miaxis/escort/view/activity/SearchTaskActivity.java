@@ -62,7 +62,7 @@ public class SearchTaskActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         tvSearchDate.setText(DateUtil.getDayType(DateUtil.getToday()));
         RxView.clicks(tvSearchDate)
-                .throttleFirst(2, TimeUnit.SECONDS)
+                .throttleFirst(1, TimeUnit.SECONDS)
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .compose(this.bindToLifecycle())
                 .subscribe(new Consumer<Object>() {

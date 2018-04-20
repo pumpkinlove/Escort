@@ -4,9 +4,13 @@ import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
 
+import java.io.Serializable;
+
 @Entity
-public class WorkerBean
+public class WorkerBean  implements Serializable
 {
+    private static final long serialVersionUID = -7417097781809707180L;
+
     @Id
 	private String id;
 	private String workno; /* 员工号 */

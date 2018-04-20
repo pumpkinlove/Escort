@@ -1,23 +1,35 @@
 package com.miaxis.escort.view.activity;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.miaxis.escort.R;
+import com.miaxis.escort.app.EscortApp;
+import com.miaxis.escort.model.entity.Config;
+import com.miaxis.escort.model.entity.WorkerBean;
+import com.miaxis.escort.presenter.IWorkerDetailPresenter;
+import com.miaxis.escort.presenter.WorkerDetailPresenter;
+import com.miaxis.escort.util.DateUtil;
+import com.miaxis.escort.util.StaticVariable;
 import com.miaxis.escort.view.fragment.UpTaskFragment;
+import com.miaxis.escort.view.viewer.IWorkerDetailView;
 
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
+import es.dmoral.toasty.Toasty;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 
-public class WorkerDetailActivity extends BaseActivity {
+public class WorkerDetailActivity extends BaseActivity implements IWorkerDetailView{
 
     @BindView(R.id.worker_detail_toolbar)
     Toolbar toolbar;
@@ -31,6 +43,16 @@ public class WorkerDetailActivity extends BaseActivity {
     LinearLayout llSecondFingerPrint;
     @BindView(R.id.btn_add_worker_finish)
     Button btnAddWorkerFinish;
+    @BindView(R.id.tv_first_collect)
+    TextView tvFirstCollect;
+    @BindView(R.id.tv_second_collect)
+    TextView tvSecondCollect;
+
+    private boolean check;
+    private WorkerBean workerBean;
+
+    private IWorkerDetailPresenter workerDetailPresenter;
+    private MaterialDialog materialDialog;
 
     @Override
     protected int setContentView() {
@@ -39,53 +61,133 @@ public class WorkerDetailActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-
+        workerDetailPresenter = new WorkerDetailPresenter(this, this);
+        check = getIntent().getBooleanExtra(StaticVariable.FLAG, false);
+        if (check) {
+            workerBean = new WorkerBean();
+        } else {
+            workerBean = (WorkerBean) getIntent().getSerializableExtra(StaticVariable.WORKER);
+        }
     }
 
     @Override
     protected void initView() {
-        toolbar.setTitle("新增操作员");
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        RxView.clicks(btnAddWorkerFinish)
-                .throttleFirst(2, TimeUnit.SECONDS)
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .compose(this.bindToLifecycle())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Object>() {
-                    @Override
-                    public void accept(Object o) throws Exception {
-                        new MaterialDialog.Builder(WorkerDetailActivity.this)
-                                .title("确认添加？")
-                                .negativeText("取消")
-                                .positiveText("确认")
-                                .show();
-                    }
-                });
-        RxView.clicks(llFirstFingerPrint)
-                .throttleFirst(2, TimeUnit.SECONDS)
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .compose(this.bindToLifecycle())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Object>() {
-                    @Override
-                    public void accept(Object o) throws Exception {
-                        Intent intent = new Intent(WorkerDetailActivity.this, FingerActivity.class);
-                        startActivity(intent);
-                    }
-                });
-        RxView.clicks(llSecondFingerPrint)
-                .throttleFirst(2, TimeUnit.SECONDS)
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .compose(this.bindToLifecycle())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Object>() {
-                    @Override
-                    public void accept(Object o) throws Exception {
-                        Intent intent = new Intent(WorkerDetailActivity.this, FingerActivity.class);
-                        startActivity(intent);
-                    }
-                });
+        materialDialog = new MaterialDialog.Builder(this)
+                .title("请稍后...")
+                .content("正在上传中...")
+                .progress(true,100)
+                .cancelable(false)
+                .build();
+        //区分查看和新增操作员页面（其实干嘛不做两个呢？）
+        if (check) {
+            toolbar.setTitle("新增操作员");
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            RxView.clicks(btnAddWorkerFinish)
+                    .throttleFirst(1, TimeUnit.SECONDS)
+                    .subscribeOn(AndroidSchedulers.mainThread())
+                    .compose(this.bindToLifecycle())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<Object>() {
+                        @Override
+                        public void accept(final Object o) throws Exception {
+                            new MaterialDialog.Builder(WorkerDetailActivity.this)
+                                    .title("确认添加？")
+                                    .negativeText("取消")
+                                    .positiveText("确认")
+                                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                        @Override
+                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                            //TODO：编号查重
+                                            if (checkNotNull()) {
+                                                Config config = (Config) EscortApp.getInstance().get(StaticVariable.CONFIG);
+                                                WorkerBean opUser = (WorkerBean) EscortApp.getInstance().get(StaticVariable.WORKER);
+                                                workerBean.setDeptno(config.getOrgCode());
+                                                workerBean.setWorkno(etWorkerCode.getText().toString());
+                                                workerBean.setName(etWorkerName.getText().toString());
+                                                workerBean.setFinger0("0");
+                                                workerBean.setFinger1("0");
+                                                workerBean.setOpdate(DateUtil.getToday());
+                                                workerBean.setOpuser(opUser.getWorkno());
+                                                workerBean.setOpusername(opUser.getName());
+                                                workerDetailPresenter.addWorker(workerBean);
+                                                materialDialog.show();
+                                            }
+                                        }
+                                    })
+                                    .show();
+                        }
+                    });
+            RxView.clicks(llFirstFingerPrint)
+                    .throttleFirst(1, TimeUnit.SECONDS)
+                    .subscribeOn(AndroidSchedulers.mainThread())
+                    .compose(this.bindToLifecycle())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<Object>() {
+                        @Override
+                        public void accept(Object o) throws Exception {
+                            Intent intent = new Intent(WorkerDetailActivity.this, FingerActivity.class);
+                            startActivity(intent);
+                        }
+                    });
+            RxView.clicks(llSecondFingerPrint)
+                    .throttleFirst(1, TimeUnit.SECONDS)
+                    .subscribeOn(AndroidSchedulers.mainThread())
+                    .compose(this.bindToLifecycle())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<Object>() {
+                        @Override
+                        public void accept(Object o) throws Exception {
+                            Intent intent = new Intent(WorkerDetailActivity.this, FingerActivity.class);
+                            startActivity(intent);
+                        }
+                    });
+        } else {
+            toolbar.setTitle("操作员详情");
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            tvFirstCollect.setText("已采集");
+            tvSecondCollect.setText("已采集");
+            etWorkerCode.setEnabled(false);
+            etWorkerCode.setText(workerBean.getWorkno());
+            etWorkerName.setEnabled(false);
+            etWorkerName.setText(workerBean.getName());
+            btnAddWorkerFinish.setText("删除");
+            btnAddWorkerFinish.setBackgroundColor(getResources().getColor(R.color.red));
+            llFirstFingerPrint.setClickable(false);
+            llFirstFingerPrint.setFocusable(false);
+            llSecondFingerPrint.setClickable(false);
+            llSecondFingerPrint.setFocusable(false);
+            RxView.clicks(btnAddWorkerFinish)
+                    .throttleFirst(1, TimeUnit.SECONDS)
+                    .subscribeOn(AndroidSchedulers.mainThread())
+                    .compose(this.bindToLifecycle())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<Object>() {
+                        @Override
+                        public void accept(final Object o) throws Exception {
+                            String content = "";
+                            if (workerDetailPresenter.isSelf()) {
+                                content = "    确认删除自身？" + "\n" + "    删除后将退出登陆";
+                            } else {
+                                content = "    确认删除？";
+                            }
+                            new MaterialDialog.Builder(WorkerDetailActivity.this)
+                                    .title("确认")
+                                    .content(content)
+                                    .negativeText("取消")
+                                    .positiveText("确认")
+                                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                        @Override
+                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                            materialDialog.show();
+                                            workerDetailPresenter.deleteWorker(workerBean.getWorkno());
+                                        }
+                                    })
+                                    .show();
+                        }
+                    });
+        }
     }
 
     @Override
@@ -98,8 +200,54 @@ public class WorkerDetailActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public boolean checkNotNull() {
+        if (materialDialog.isShowing()) {
+            materialDialog.dismiss();
+        }
+        if (etWorkerCode.getText().equals("") || etWorkerName.getText().equals("")) {
+            Toasty.error(this, "请填写相关信息", 0, true).show();
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void addWorkerSuccess() {
+        if (materialDialog.isShowing()) {
+            materialDialog.dismiss();
+        }
+        Toasty.success(EscortApp.getInstance().getApplicationContext(), "添加成功", 0, true).show();
+        finish();
+    }
+
+    @Override
+    public void addWorkerFailed(String message) {
+        if (materialDialog.isShowing()) {
+            materialDialog.dismiss();
+        }
+        Toasty.error(EscortApp.getInstance().getApplicationContext(), message, 0, true).show();
+    }
+
+    @Override
+    public void delWorkerSuccess() {
+        if (materialDialog.isShowing()) {
+            materialDialog.dismiss();
+        }
+        Toasty.success(EscortApp.getInstance().getApplicationContext(), "删除成功", 0, true).show();
+        finish();
+    }
+
+    @Override
+    public void delWorkerFailed(String message) {
+        if (materialDialog.isShowing()) {
+            materialDialog.dismiss();
+        }
+        Toasty.error(EscortApp.getInstance().getApplicationContext(), message, 0, true).show();
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        workerDetailPresenter.doDestroy();
     }
 }

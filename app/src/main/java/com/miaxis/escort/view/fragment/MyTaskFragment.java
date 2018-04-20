@@ -145,6 +145,14 @@ public class MyTaskFragment extends BaseFragment implements IMyTaskView{
         }
     }
 
+    /**
+     * 开放给UpTaskFragment的刷新任务接口
+     */
+    public void refreshTaskAfterUpTask() {
+        materialDialog.show();
+        myTaskPresenter.downTask();
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);

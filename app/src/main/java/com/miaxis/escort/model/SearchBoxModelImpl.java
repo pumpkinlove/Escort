@@ -14,12 +14,6 @@ import java.util.List;
 
 public class SearchBoxModelImpl implements ISearchBoxModel{
 
-    private ISearchBoxPresenter searchBoxPresenter;
-
-    public SearchBoxModelImpl(ISearchBoxPresenter searchBoxPresenter) {
-        this.searchBoxPresenter = searchBoxPresenter;
-    }
-
     @Override
     public List<BoxBean> loadSearchBox() {
         return EscortApp.getInstance().getDaoSession().getBoxBeanDao().loadAll();

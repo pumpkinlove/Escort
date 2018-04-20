@@ -39,7 +39,7 @@ public class WorkerManagePresenterImpl extends BaseActivityPresenter implements 
     public WorkerManagePresenterImpl(LifecycleProvider<ActivityEvent> provider, IWorkerManageView workerManageView) {
         super(provider);
         this.workerManageView = workerManageView;
-        workerManageModel = new WorkerManageModelImpl(this);
+        workerManageModel = new WorkerManageModelImpl();
     }
 
     @Override
@@ -118,6 +118,11 @@ public class WorkerManagePresenterImpl extends BaseActivityPresenter implements 
                     public void accept(Throwable throwable) throws Exception {
                     }
                 });
+    }
+
+    @Override
+    public boolean isSelf() {
+        return workerManageModel.isExist((WorkerBean) EscortApp.getInstance().get(StaticVariable.WORKER));
     }
 
     @Override

@@ -25,12 +25,6 @@ import java.util.List;
 
 public class MyTaskModelImpl implements IMyTaskModel{
 
-    private IMyTaskPresenter myTaskPresenter;
-
-    public MyTaskModelImpl(IMyTaskPresenter myTaskPresenter) {
-        this.myTaskPresenter = myTaskPresenter;
-    }
-
     @Override
     public List<TaskBean> loadTask() {
         return EscortApp.getInstance().getDaoSession().getTaskBeanDao().loadAll();
@@ -88,14 +82,7 @@ public class MyTaskModelImpl implements IMyTaskModel{
 
     @Override
     public void saveBox(List<BoxBean> boxBeanList) {
-        BoxBeanDao boxBeanDao = EscortApp.getInstance().getDaoSession().getBoxBeanDao();
-        for (BoxBean box: boxBeanList){
-            BoxBean boxBean = boxBeanDao.queryBuilder().where(BoxBeanDao.Properties.Boxcode.eq(box.getBoxcode())).unique();
-            if (boxBean != null) {
-                boxBeanDao.delete(boxBean);
-            }
-            boxBeanDao.insert(box);
-        }
+        EscortApp.getInstance().getDaoSession().getBoxBeanDao().insertOrReplaceInTx(boxBeanList);
     }
 
     @Override
@@ -122,14 +109,7 @@ public class MyTaskModelImpl implements IMyTaskModel{
 
     @Override
     public void saveEscort(List<EscortBean> escortBeanList) {
-        EscortBeanDao escortBeanDao = EscortApp.getInstance().getDaoSession().getEscortBeanDao();
-        for (EscortBean escort: escortBeanList){
-            EscortBean escortBean = escortBeanDao.queryBuilder().where(EscortBeanDao.Properties.Escortno.eq(escort.getEscortno())).unique();
-            if (escortBean != null) {
-                escortBeanDao.delete(escortBean);
-            }
-            escortBeanDao.insert(escort);
-        }
+        EscortApp.getInstance().getDaoSession().getEscortBeanDao().insertOrReplaceInTx(escortBeanList);
     }
 
     @Override

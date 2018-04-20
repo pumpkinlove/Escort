@@ -10,6 +10,7 @@ public class StaticVariable {
     public static final String SUCCESS = "200";
     public static final String FAILED = "400";
     public static final String LOGIN_SUCCESS = "login_success";
+    public static final String FLAG = "flag";
 
     public static String upTaskTypeTurnToString(String type) {
         if ("常规网点接箱".equals(type)) {

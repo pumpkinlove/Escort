@@ -128,6 +128,7 @@ public class SystemFragment extends BaseFragment implements ISystemView{
                                         new MaterialDialog.Builder(SystemFragment.this.getContext())
                                                 .title("请稍后...")
                                                 .content("正在恢复出厂设置...")
+                                                .progress(true, 100)
                                                 .cancelable(false)
                                                 .show();
                                         systemPresenter.clearAll();
@@ -152,7 +153,7 @@ public class SystemFragment extends BaseFragment implements ISystemView{
                     public void accept(Object o) throws Exception {
                         new MaterialDialog.Builder(SystemFragment.this.getContext())
                                 .title("退出登陆")
-                                .content("确认退出登陆吗？")
+                                .content("    确认退出登陆吗？")
                                 .positiveText("确认")
                                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                                     @Override

@@ -7,4 +7,5 @@ package com.miaxis.escort.presenter;
 public interface IWorkerManagePresenter extends IBasePresenter{
     void downWorkerList();
     void loadWorkerList();
+    boolean isSelf();
 }

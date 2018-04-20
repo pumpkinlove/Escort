@@ -69,7 +69,7 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
                 .cancelable(false)
                 .build();
         RxView.clicks(ivConfig)
-                .throttleFirst(2, TimeUnit.SECONDS)
+                .throttleFirst(1, TimeUnit.SECONDS)
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .compose(this.bindToLifecycle())
                 .subscribe(new Consumer<Object>() {
@@ -79,7 +79,7 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
                     }
                 });
         RxView.clicks(btnLogin)
-                .throttleFirst(2, TimeUnit.SECONDS)
+                .throttleFirst(1, TimeUnit.SECONDS)
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .compose(this.bindToLifecycle())
                 .subscribe(new Consumer<Object>() {

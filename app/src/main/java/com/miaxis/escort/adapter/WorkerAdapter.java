@@ -58,6 +58,10 @@ public class WorkerAdapter extends RecyclerView.Adapter<WorkerAdapter.MyViewHold
         this.dataList = workerBeanList;
     }
 
+    public List<WorkerBean> getDataList() {
+        return dataList;
+    }
+
     @Override
     public int getItemCount() {
         return dataList.size();

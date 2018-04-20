@@ -16,12 +16,6 @@ import java.util.List;
 
 public class LoginModelImpl implements ILoginModel{
 
-    private ILoginPresenter loginPresent;
-
-    public LoginModelImpl(ILoginPresenter loginPresent) {
-        this.loginPresent = loginPresent;
-    }
-
     @Override
     public Config loadConfig() {
         return EscortApp.getInstance().getDaoSession().getConfigDao().load(1L);

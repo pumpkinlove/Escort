@@ -41,7 +41,7 @@ public class QueryActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         RxView.clicks(llEscortQuery)
-                .throttleFirst(2, TimeUnit.SECONDS)
+                .throttleFirst(1, TimeUnit.SECONDS)
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .compose(this.bindToLifecycle())
                 .subscribe(new Consumer<Object>() {
@@ -52,7 +52,7 @@ public class QueryActivity extends BaseActivity {
                     }
                 });
         RxView.clicks(llTaskQuery)
-                .throttleFirst(2, TimeUnit.SECONDS)
+                .throttleFirst(1, TimeUnit.SECONDS)
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .compose(this.bindToLifecycle())
                 .subscribe(new Consumer<Object>() {
@@ -63,7 +63,7 @@ public class QueryActivity extends BaseActivity {
                     }
                 });
         RxView.clicks(llBoxQuery)
-                .throttleFirst(2, TimeUnit.SECONDS)
+                .throttleFirst(1, TimeUnit.SECONDS)
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .compose(this.bindToLifecycle())
                 .subscribe(new Consumer<Object>() {

@@ -43,7 +43,7 @@ public class UpTaskPresenterImpl extends BaseFragmentPresenter implements IUpTas
     public UpTaskPresenterImpl(LifecycleProvider<FragmentEvent> provider, IUpTaskView upTaskView) {
         super(provider);
         this.upTaskView = upTaskView;
-        upTaskModel = new UpTaskModelImpl(this);
+        upTaskModel = new UpTaskModelImpl();
     }
 
     @Override

@@ -48,7 +48,7 @@ public class MyTaskPresenterImpl extends BaseFragmentPresenter implements IMyTas
     public MyTaskPresenterImpl(LifecycleProvider<FragmentEvent> provider, IMyTaskView myTaskView) {
         super(provider);
         this.myTaskView = myTaskView;
-        myTaskModel = new MyTaskModelImpl(this);
+        myTaskModel = new MyTaskModelImpl();
     }
 
     @Override

@@ -16,6 +16,7 @@ import com.miaxis.escort.app.EscortApp;
 import com.miaxis.escort.model.entity.WorkerBean;
 import com.miaxis.escort.presenter.IWorkerManagePresenter;
 import com.miaxis.escort.presenter.WorkerManagePresenterImpl;
+import com.miaxis.escort.util.StaticVariable;
 import com.miaxis.escort.view.viewer.IWorkerManageView;
 
 import java.util.ArrayList;
@@ -66,7 +67,10 @@ public class WorkerManageActivity extends BaseActivity implements IWorkerManageV
         workerAdapter.setOnItemClickListener(new WorkerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-
+                Intent intent = new Intent(WorkerManageActivity.this, WorkerDetailActivity.class);
+                intent.putExtra(StaticVariable.FLAG, false);
+                intent.putExtra(StaticVariable.WORKER, workerAdapter.getDataList().get(position));
+                startActivity(intent);
             }
         });
         srlWorkerManage.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -77,7 +81,7 @@ public class WorkerManageActivity extends BaseActivity implements IWorkerManageV
             }
         });
         RxView.clicks(btnAddWorker)
-                .throttleFirst(2, TimeUnit.SECONDS)
+                .throttleFirst(1, TimeUnit.SECONDS)
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .compose(this.bindToLifecycle())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -85,6 +89,7 @@ public class WorkerManageActivity extends BaseActivity implements IWorkerManageV
                     @Override
                     public void accept(Object o) throws Exception {
                         Intent intent = new Intent(WorkerManageActivity.this, WorkerDetailActivity.class);
+                        intent.putExtra(StaticVariable.FLAG, true);
                         startActivity(intent);
                     }
                 });
@@ -93,7 +98,7 @@ public class WorkerManageActivity extends BaseActivity implements IWorkerManageV
     @Override
     protected void onResume() {
         super.onResume();
-        workerManagePresenter.loadWorkerList();
+        workerManagePresenter.downWorkerList();
     }
 
     @Override
@@ -113,6 +118,11 @@ public class WorkerManageActivity extends BaseActivity implements IWorkerManageV
         if (srlWorkerManage.isRefreshing()) {
             srlWorkerManage.setRefreshing(false);
             Toasty.success(this, "刷新成功",0, true).show();
+            if (!workerManagePresenter.isSelf()) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
         }
     }
 

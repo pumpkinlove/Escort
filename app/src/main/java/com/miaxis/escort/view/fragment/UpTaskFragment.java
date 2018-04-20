@@ -235,6 +235,7 @@ public class UpTaskFragment extends BaseFragment implements IUpTaskView{
                                         materialDialog = new MaterialDialog.Builder(UpTaskFragment.this.getActivity())
                                                 .title("请稍后...")
                                                 .content("正在上传任务信息...")
+                                                .progress(true, 100)
                                                 .cancelable(false)
                                                 .show();
                                         Config config = (Config) EscortApp.getInstance().get(StaticVariable.CONFIG);
@@ -279,6 +280,7 @@ public class UpTaskFragment extends BaseFragment implements IUpTaskView{
         }
         Toasty.success(this.getActivity(), "上传成功", 0, true).show();
         clearSelected();
+        mListener.refreshTask();
     }
 
     @Override
@@ -293,6 +295,7 @@ public class UpTaskFragment extends BaseFragment implements IUpTaskView{
      * 清空已选择的箱包
      */
     private void clearSelected() {
+        etTemporaryBank.setText("");
         boxAdapter.clearSelected();
         boxAdapter.notifyDataSetChanged();
     }
@@ -342,5 +345,6 @@ public class UpTaskFragment extends BaseFragment implements IUpTaskView{
 
     public interface OnFragmentInteractionListener {
         void onUpTaskFragmentInteraction();
+        void refreshTask();
     }
 }

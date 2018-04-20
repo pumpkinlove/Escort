@@ -12,12 +12,6 @@ import java.util.List;
 
 public class UpTaskModelImpl implements IUpTaskModel{
 
-    private IUpTaskPresenter upTaskPresenter;
-
-    public UpTaskModelImpl(IUpTaskPresenter upTaskPresenter) {
-        this.upTaskPresenter = upTaskPresenter;
-    }
-
     @Override
     public List<BoxBean> loadBox() {
         return EscortApp.getInstance().getDaoSession().getBoxBeanDao().loadAll();

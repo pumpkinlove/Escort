@@ -52,6 +52,7 @@ public class ConfigModelImpl implements IConfigModel{
 
     @Override
     public void saveWorker(List<WorkerBean> workerBeanList) {
+        EscortApp.getInstance().getDaoSession().getWorkerBeanDao().deleteAll();
         EscortApp.getInstance().getDaoSession().getWorkerBeanDao().insertOrReplaceInTx(workerBeanList);
     }
 

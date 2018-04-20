@@ -16,7 +16,10 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            android:gravity="right"
+            app:popupTheme="@style/AppTheme.PopupOverlay" >
+
+        </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
 
@@ -36,13 +39,11 @@
             android:layout_marginRight="5dp"
             android:layout_marginTop="8dp"
             android:clickable="true"
-            android:digits="0123456789"
-            android:hint="请填写4位操作员编码"
-            android:inputType="number"
-            android:maxLength="4"
+            android:gravity="center_vertical|left"
+            android:hint="请填写操作员编码"
             android:paddingLeft="16.0dip"
-            android:paddingRight="5.0dip"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:textColor="@color/black" />
 
         <EditText
             android:id="@+id/et_worker_name"
@@ -83,6 +84,12 @@
             style="@style/tv_personal_item"
             android:text="第一枚指纹"/>
 
+        <TextView
+            android:id="@+id/tv_first_collect"
+            style="@style/tv_personal_item"
+            android:text="未采集"
+            android:gravity="right|center"/>
+
         <ImageView
             android:src="@mipmap/zicon_arrow"
             android:layout_gravity="end|center_vertical"
@@ -112,6 +119,12 @@
             style="@style/tv_personal_item"
             android:text="第二枚指纹"/>
 
+        <TextView
+            android:id="@+id/tv_second_collect"
+            style="@style/tv_personal_item"
+            android:text="未采集"
+            android:gravity="right|center"/>
+
         <ImageView
             android:src="@mipmap/zicon_arrow"
             android:layout_gravity="end|center_vertical"
@@ -125,6 +138,11 @@
         android:layout_width="match_parent"
         android:layout_height="1px"/>
 
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+    
         <Button
             android:id="@+id/btn_add_worker_finish"
             android:layout_width="match_parent"
