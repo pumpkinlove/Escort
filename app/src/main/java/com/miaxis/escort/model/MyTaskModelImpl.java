@@ -124,10 +124,11 @@ public class MyTaskModelImpl implements IMyTaskModel{
 
     @Override
     public List<OpdateBean> getEscortOpdate(String taskdate) {
+        //TODO:迷之神奇BUG
         // 生成sql语句
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT DISTINCT ESCODE FROM TASK_ESCORT_BEAN ");
-        sql.append("WHERE ESCODE NOT IN (SELECT ESCODE FROM ESCORT_BEAN) AND TASKID IN (");
+        sql.append("SELECT DISTINCT ESCORTNO FROM TASK_ESCORT_BEAN ");
+        sql.append("WHERE ESCORTNO NOT IN (SELECT ESCORTNO FROM ESCORT_BEAN) AND TASKID IN (");
         sql.append("SELECT ID FROM TASK_BEAN WHERE TASKDATE>=?)");
         // 执行sql
         List<OpdateBean> opdateList = new ArrayList<>();

@@ -15,8 +15,8 @@ public class EscortBean implements Serializable
 {
 
 	private static final long serialVersionUID = -7089709531880954805L;
-	@Id
 	private String id;
+	@Id
 	private String escortno; /* 员工号 */
 	private String idcard; /* 身份证号 */
 	private String name;   /* 姓名 */

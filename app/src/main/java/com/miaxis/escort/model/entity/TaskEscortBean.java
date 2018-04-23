@@ -18,8 +18,8 @@ public class TaskEscortBean implements Serializable
 	@Id(autoincrement = true)
 	private Long id;
 	private String taskid;
-	private String escortno;
-	@ToOne(joinProperty = "escortno")
+	private String escode;
+	@ToOne(joinProperty = "escode")
 	private EscortBean escortBean;
 	/** Used to resolve relations */
 	@Generated(hash = 2040040024)
@@ -27,11 +27,11 @@ public class TaskEscortBean implements Serializable
 	/** Used for active entity operations. */
 	@Generated(hash = 1560195627)
 	private transient TaskEscortBeanDao myDao;
-	@Generated(hash = 1123149127)
-	public TaskEscortBean(Long id, String taskid, String escortno) {
+	@Generated(hash = 2040104073)
+	public TaskEscortBean(Long id, String taskid, String escode) {
 		this.id = id;
 		this.taskid = taskid;
-		this.escortno = escortno;
+		this.escode = escode;
 	}
 	@Generated(hash = 1109836887)
 	public TaskEscortBean() {
@@ -48,18 +48,18 @@ public class TaskEscortBean implements Serializable
 	public void setTaskid(String taskid) {
 		this.taskid = taskid;
 	}
-	public String getEscortno() {
-		return this.escortno;
+	public String getEscode() {
+		return this.escode;
 	}
-	public void setEscortno(String escortno) {
-		this.escortno = escortno;
+	public void setEscode(String escode) {
+		this.escode = escode;
 	}
 	@Generated(hash = 1903151015)
 	private transient String escortBean__resolvedKey;
 	/** To-one relationship, resolved on first access. */
-	@Generated(hash = 601624052)
+	@Generated(hash = 1842868241)
 	public EscortBean getEscortBean() {
-		String __key = this.escortno;
+		String __key = this.escode;
 		if (escortBean__resolvedKey == null || escortBean__resolvedKey != __key) {
 			final DaoSession daoSession = this.daoSession;
 			if (daoSession == null) {
@@ -75,12 +75,12 @@ public class TaskEscortBean implements Serializable
 		return escortBean;
 	}
 	/** called by internal mechanisms, do not call yourself. */
-	@Generated(hash = 1280471863)
+	@Generated(hash = 580248282)
 	public void setEscortBean(EscortBean escortBean) {
 		synchronized (this) {
 			this.escortBean = escortBean;
-			escortno = escortBean == null ? null : escortBean.getId();
-			escortBean__resolvedKey = escortno;
+			escode = escortBean == null ? null : escortBean.getEscortno();
+			escortBean__resolvedKey = escode;
 		}
 	}
 	/**
@@ -122,4 +122,5 @@ public class TaskEscortBean implements Serializable
 		this.daoSession = daoSession;
 		myDao = daoSession != null ? daoSession.getTaskEscortBeanDao() : null;
 	}
+
 }

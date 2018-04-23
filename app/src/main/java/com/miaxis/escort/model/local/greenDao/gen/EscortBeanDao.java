@@ -24,8 +24,8 @@ public class EscortBeanDao extends AbstractDao<EscortBean, String> {
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property Id = new Property(0, String.class, "id", true, "ID");
-        public final static Property Escortno = new Property(1, String.class, "escortno", false, "ESCORTNO");
+        public final static Property Id = new Property(0, String.class, "id", false, "ID");
+        public final static Property Escortno = new Property(1, String.class, "escortno", true, "ESCORTNO");
         public final static Property Idcard = new Property(2, String.class, "idcard", false, "IDCARD");
         public final static Property Name = new Property(3, String.class, "name", false, "NAME");
         public final static Property Phone = new Property(4, String.class, "phone", false, "PHONE");
@@ -60,8 +60,8 @@ public class EscortBeanDao extends AbstractDao<EscortBean, String> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"ESCORT_BEAN\" (" + //
-                "\"ID\" TEXT PRIMARY KEY NOT NULL ," + // 0: id
-                "\"ESCORTNO\" TEXT," + // 1: escortno
+                "\"ID\" TEXT," + // 0: id
+                "\"ESCORTNO\" TEXT PRIMARY KEY NOT NULL ," + // 1: escortno
                 "\"IDCARD\" TEXT," + // 2: idcard
                 "\"NAME\" TEXT," + // 3: name
                 "\"PHONE\" TEXT," + // 4: phone
@@ -311,7 +311,7 @@ public class EscortBeanDao extends AbstractDao<EscortBean, String> {
 
     @Override
     public String readKey(Cursor cursor, int offset) {
-        return cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0);
+        return cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1);
     }    
 
     @Override
@@ -369,13 +369,13 @@ public class EscortBeanDao extends AbstractDao<EscortBean, String> {
     
     @Override
     protected final String updateKeyAfterInsert(EscortBean entity, long rowId) {
-        return entity.getId();
+        return entity.getEscortno();
     }
     
     @Override
     public String getKey(EscortBean entity) {
         if(entity != null) {
-            return entity.getId();
+            return entity.getEscortno();
         } else {
             return null;
         }
@@ -383,7 +383,7 @@ public class EscortBeanDao extends AbstractDao<EscortBean, String> {
 
     @Override
     public boolean hasKey(EscortBean entity) {
-        return entity.getId() != null;
+        return entity.getEscortno() != null;
     }
 
     @Override

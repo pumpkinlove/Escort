@@ -33,7 +33,7 @@ public class TaskEscortBeanDao extends AbstractDao<TaskEscortBean, Long> {
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property Taskid = new Property(1, String.class, "taskid", false, "TASKID");
-        public final static Property Escortno = new Property(2, String.class, "escortno", false, "ESCORTNO");
+        public final static Property Escode = new Property(2, String.class, "escode", false, "ESCODE");
     }
 
     private DaoSession daoSession;
@@ -55,7 +55,7 @@ public class TaskEscortBeanDao extends AbstractDao<TaskEscortBean, Long> {
         db.execSQL("CREATE TABLE " + constraint + "\"TASK_ESCORT_BEAN\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
                 "\"TASKID\" TEXT," + // 1: taskid
-                "\"ESCORTNO\" TEXT);"); // 2: escortno
+                "\"ESCODE\" TEXT);"); // 2: escode
     }
 
     /** Drops the underlying database table. */
@@ -78,9 +78,9 @@ public class TaskEscortBeanDao extends AbstractDao<TaskEscortBean, Long> {
             stmt.bindString(2, taskid);
         }
  
-        String escortno = entity.getEscortno();
-        if (escortno != null) {
-            stmt.bindString(3, escortno);
+        String escode = entity.getEscode();
+        if (escode != null) {
+            stmt.bindString(3, escode);
         }
     }
 
@@ -98,9 +98,9 @@ public class TaskEscortBeanDao extends AbstractDao<TaskEscortBean, Long> {
             stmt.bindString(2, taskid);
         }
  
-        String escortno = entity.getEscortno();
-        if (escortno != null) {
-            stmt.bindString(3, escortno);
+        String escode = entity.getEscode();
+        if (escode != null) {
+            stmt.bindString(3, escode);
         }
     }
 
@@ -120,7 +120,7 @@ public class TaskEscortBeanDao extends AbstractDao<TaskEscortBean, Long> {
         TaskEscortBean entity = new TaskEscortBean( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // taskid
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2) // escortno
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2) // escode
         );
         return entity;
     }
@@ -129,7 +129,7 @@ public class TaskEscortBeanDao extends AbstractDao<TaskEscortBean, Long> {
     public void readEntity(Cursor cursor, TaskEscortBean entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setTaskid(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setEscortno(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setEscode(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
      }
     
     @Override
@@ -180,7 +180,7 @@ public class TaskEscortBeanDao extends AbstractDao<TaskEscortBean, Long> {
             builder.append(',');
             SqlUtils.appendColumns(builder, "T0", daoSession.getEscortBeanDao().getAllColumns());
             builder.append(" FROM TASK_ESCORT_BEAN T");
-            builder.append(" LEFT JOIN ESCORT_BEAN T0 ON T.\"ESCORTNO\"=T0.\"ID\"");
+            builder.append(" LEFT JOIN ESCORT_BEAN T0 ON T.\"ESCODE\"=T0.\"ESCORTNO\"");
             builder.append(' ');
             selectDeep = builder.toString();
         }

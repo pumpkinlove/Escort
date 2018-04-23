@@ -215,7 +215,7 @@ public class MyTaskPresenterImpl extends BaseFragmentPresenter implements IMyTas
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         if (myTaskView != null) {
-                            myTaskView.downTaskFailed();
+                            myTaskView.downTaskFailed(throwable.getMessage());
                         }
                     }
                 });

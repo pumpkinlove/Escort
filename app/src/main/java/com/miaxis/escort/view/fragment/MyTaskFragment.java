@@ -126,14 +126,14 @@ public class MyTaskFragment extends BaseFragment implements IMyTaskView{
     }
 
     @Override
-    public void downTaskFailed() {
+    public void downTaskFailed(String message) {
         if (materialDialog.isShowing()) {
             materialDialog.dismiss();
         }
         if (srlTask.isRefreshing()) {
             srlTask.setRefreshing(false);
         }
-        Toasty.error(this.getActivity(), "更新失败",0, true).show();
+        Toasty.error(this.getActivity(), message,0, true).show();
     }
 
     @Override

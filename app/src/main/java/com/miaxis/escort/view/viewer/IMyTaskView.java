@@ -11,6 +11,6 @@ import java.util.List;
 public interface IMyTaskView extends IBaseView{
     void setDialogMessage(String message);
     void downTaskSuccess();
-    void downTaskFailed();
+    void downTaskFailed(String message);
     void updateData(List<TaskBean> taskBeanList);
 }
