@@ -12,8 +12,8 @@ public class BoxBean implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 4502533188196635811L;
-	@Id
 	private String id;
+	@Id
 	private String boxcode;
 	private String boxname;
 	private String deptno;

@@ -1,16 +1,20 @@
 package com.miaxis.escort.model.local.greenDao.gen;
 
 import java.util.List;
+import java.util.ArrayList;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteStatement;
 
 import org.greenrobot.greendao.AbstractDao;
 import org.greenrobot.greendao.Property;
+import org.greenrobot.greendao.internal.SqlUtils;
 import org.greenrobot.greendao.internal.DaoConfig;
 import org.greenrobot.greendao.database.Database;
 import org.greenrobot.greendao.database.DatabaseStatement;
 import org.greenrobot.greendao.query.Query;
 import org.greenrobot.greendao.query.QueryBuilder;
+
+import com.miaxis.escort.model.entity.BoxBean;
 
 import com.miaxis.escort.model.entity.TaskBoxBean;
 
@@ -33,6 +37,8 @@ public class TaskBoxBeanDao extends AbstractDao<TaskBoxBean, Long> {
         public final static Property Money = new Property(3, String.class, "money", false, "MONEY");
     }
 
+    private DaoSession daoSession;
+
     private Query<TaskBoxBean> taskBean_BoxListQuery;
 
     public TaskBoxBeanDao(DaoConfig config) {
@@ -41,6 +47,7 @@ public class TaskBoxBeanDao extends AbstractDao<TaskBoxBean, Long> {
     
     public TaskBoxBeanDao(DaoConfig config, DaoSession daoSession) {
         super(config, daoSession);
+        this.daoSession = daoSession;
     }
 
     /** Creates the underlying database table. */
@@ -110,6 +117,12 @@ public class TaskBoxBeanDao extends AbstractDao<TaskBoxBean, Long> {
     }
 
     @Override
+    protected final void attachEntity(TaskBoxBean entity) {
+        super.attachEntity(entity);
+        entity.__setDaoSession(daoSession);
+    }
+
+    @Override
     public Long readKey(Cursor cursor, int offset) {
         return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }    
@@ -172,4 +185,95 @@ public class TaskBoxBeanDao extends AbstractDao<TaskBoxBean, Long> {
         return query.list();
     }
 
+    private String selectDeep;
+
+    protected String getSelectDeep() {
+        if (selectDeep == null) {
+            StringBuilder builder = new StringBuilder("SELECT ");
+            SqlUtils.appendColumns(builder, "T", getAllColumns());
+            builder.append(',');
+            SqlUtils.appendColumns(builder, "T0", daoSession.getBoxBeanDao().getAllColumns());
+            builder.append(" FROM TASK_BOX_BEAN T");
+            builder.append(" LEFT JOIN BOX_BEAN T0 ON T.\"BOXCODE\"=T0.\"BOXCODE\"");
+            builder.append(' ');
+            selectDeep = builder.toString();
+        }
+        return selectDeep;
+    }
+    
+    protected TaskBoxBean loadCurrentDeep(Cursor cursor, boolean lock) {
+        TaskBoxBean entity = loadCurrent(cursor, 0, lock);
+        int offset = getAllColumns().length;
+
+        BoxBean box = loadCurrentOther(daoSession.getBoxBeanDao(), cursor, offset);
+        entity.setBox(box);
+
+        return entity;    
+    }
+
+    public TaskBoxBean loadDeep(Long key) {
+        assertSinglePk();
+        if (key == null) {
+            return null;
+        }
+
+        StringBuilder builder = new StringBuilder(getSelectDeep());
+        builder.append("WHERE ");
+        SqlUtils.appendColumnsEqValue(builder, "T", getPkColumns());
+        String sql = builder.toString();
+        
+        String[] keyArray = new String[] { key.toString() };
+        Cursor cursor = db.rawQuery(sql, keyArray);
+        
+        try {
+            boolean available = cursor.moveToFirst();
+            if (!available) {
+                return null;
+            } else if (!cursor.isLast()) {
+                throw new IllegalStateException("Expected unique result, but count was " + cursor.getCount());
+            }
+            return loadCurrentDeep(cursor, true);
+        } finally {
+            cursor.close();
+        }
+    }
+    
+    /** Reads all available rows from the given cursor and returns a list of new ImageTO objects. */
+    public List<TaskBoxBean> loadAllDeepFromCursor(Cursor cursor) {
+        int count = cursor.getCount();
+        List<TaskBoxBean> list = new ArrayList<TaskBoxBean>(count);
+        
+        if (cursor.moveToFirst()) {
+            if (identityScope != null) {
+                identityScope.lock();
+                identityScope.reserveRoom(count);
+            }
+            try {
+                do {
+                    list.add(loadCurrentDeep(cursor, false));
+                } while (cursor.moveToNext());
+            } finally {
+                if (identityScope != null) {
+                    identityScope.unlock();
+                }
+            }
+        }
+        return list;
+    }
+    
+    protected List<TaskBoxBean> loadDeepAllAndCloseCursor(Cursor cursor) {
+        try {
+            return loadAllDeepFromCursor(cursor);
+        } finally {
+            cursor.close();
+        }
+    }
+    
+
+    /** A raw-style query where you can pass any WHERE clause and arguments. */
+    public List<TaskBoxBean> queryDeep(String where, String... selectionArg) {
+        Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
+        return loadDeepAllAndCloseCursor(cursor);
+    }
+ 
 }

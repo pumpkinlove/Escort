@@ -48,7 +48,7 @@ public class WorkerDetailActivity extends BaseActivity implements IWorkerDetailV
     @BindView(R.id.tv_second_collect)
     TextView tvSecondCollect;
 
-    private boolean check;
+    private int flag;
     private WorkerBean workerBean;
 
     private IWorkerDetailPresenter workerDetailPresenter;
@@ -62,8 +62,8 @@ public class WorkerDetailActivity extends BaseActivity implements IWorkerDetailV
     @Override
     protected void initData() {
         workerDetailPresenter = new WorkerDetailPresenter(this, this);
-        check = getIntent().getBooleanExtra(StaticVariable.FLAG, false);
-        if (check) {
+        flag = getIntent().getIntExtra(StaticVariable.FLAG, 0);
+        if (flag == 1) {
             workerBean = new WorkerBean();
         } else {
             workerBean = (WorkerBean) getIntent().getSerializableExtra(StaticVariable.WORKER);
@@ -79,7 +79,19 @@ public class WorkerDetailActivity extends BaseActivity implements IWorkerDetailV
                 .cancelable(false)
                 .build();
         //区分查看和新增操作员页面（其实干嘛不做两个呢？）
-        if (check) {
+        if (flag == 2) {
+            tvFirstCollect.setText("已采集");
+            tvSecondCollect.setText("已采集");
+            etWorkerCode.setEnabled(false);
+            etWorkerCode.setText(workerBean.getWorkno());
+            etWorkerName.setEnabled(false);
+            etWorkerName.setText(workerBean.getName());
+            llFirstFingerPrint.setClickable(false);
+            llFirstFingerPrint.setFocusable(false);
+            llSecondFingerPrint.setClickable(false);
+            llSecondFingerPrint.setFocusable(false);
+        }
+        if (flag == 1 || flag == 2) {
             toolbar.setTitle("新增操作员");
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -99,7 +111,7 @@ public class WorkerDetailActivity extends BaseActivity implements IWorkerDetailV
                                         @Override
                                         public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                             if (checkNotNull()) {
-                                                if (workerDetailPresenter.isDuplicate(etWorkerCode.getText().toString())) {
+                                                if (!workerDetailPresenter.isDuplicate(etWorkerCode.getText().toString())) {
                                                     Toasty.error(WorkerDetailActivity.this, "员工编号重复", 0, true).show();
                                                 } else {
                                                     Config config = (Config) EscortApp.getInstance().get(StaticVariable.CONFIG);
@@ -123,31 +135,33 @@ public class WorkerDetailActivity extends BaseActivity implements IWorkerDetailV
                                     .show();
                         }
                     });
-            RxView.clicks(llFirstFingerPrint)
-                    .throttleFirst(1, TimeUnit.SECONDS)
-                    .subscribeOn(AndroidSchedulers.mainThread())
-                    .compose(this.bindToLifecycle())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Consumer<Object>() {
-                        @Override
-                        public void accept(Object o) throws Exception {
-                            Intent intent = new Intent(WorkerDetailActivity.this, FingerActivity.class);
-                            startActivity(intent);
-                        }
-                    });
-            RxView.clicks(llSecondFingerPrint)
-                    .throttleFirst(1, TimeUnit.SECONDS)
-                    .subscribeOn(AndroidSchedulers.mainThread())
-                    .compose(this.bindToLifecycle())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Consumer<Object>() {
-                        @Override
-                        public void accept(Object o) throws Exception {
-                            Intent intent = new Intent(WorkerDetailActivity.this, FingerActivity.class);
-                            startActivity(intent);
-                        }
-                    });
-        } else {
+            if (flag != 2) {
+                RxView.clicks(llFirstFingerPrint)
+                        .throttleFirst(1, TimeUnit.SECONDS)
+                        .subscribeOn(AndroidSchedulers.mainThread())
+                        .compose(this.bindToLifecycle())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Consumer<Object>() {
+                            @Override
+                            public void accept(Object o) throws Exception {
+                                Intent intent = new Intent(WorkerDetailActivity.this, FingerActivity.class);
+                                startActivity(intent);
+                            }
+                        });
+                RxView.clicks(llSecondFingerPrint)
+                        .throttleFirst(1, TimeUnit.SECONDS)
+                        .subscribeOn(AndroidSchedulers.mainThread())
+                        .compose(this.bindToLifecycle())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Consumer<Object>() {
+                            @Override
+                            public void accept(Object o) throws Exception {
+                                Intent intent = new Intent(WorkerDetailActivity.this, FingerActivity.class);
+                                startActivity(intent);
+                            }
+                        });
+            }
+        } else if (flag == 0) {
             toolbar.setTitle("操作员详情");
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -207,7 +221,7 @@ public class WorkerDetailActivity extends BaseActivity implements IWorkerDetailV
 
     @Override
     public void onBackPressed() {
-        if (!checkEmpty() && check) {
+        if (!checkEmpty() && flag == 1) {
             new MaterialDialog.Builder(WorkerDetailActivity.this)
                     .title("确认退出？")
                     .negativeText("取消")

@@ -29,4 +29,10 @@ public class WorkerDetailModel implements IWorkerDetailModel{
         }
         return true;
     }
+
+    @Override
+    public void saveLocal(WorkerBean workerBean) {
+        workerBean.setStatus("未上传");
+        EscortApp.getInstance().getDaoSession().getWorkerBeanDao().insert(workerBean);
+    }
 }

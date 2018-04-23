@@ -18,7 +18,11 @@ import com.jakewharton.rxbinding2.view.RxView;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.miaxis.escort.R;
 import com.miaxis.escort.adapter.SearchTaskAdapter;
+import com.miaxis.escort.model.entity.TaskBean;
+import com.miaxis.escort.presenter.ISearchTaskPresenter;
+import com.miaxis.escort.presenter.SearchTaskPresenterImpl;
 import com.miaxis.escort.util.DateUtil;
+import com.miaxis.escort.view.viewer.ISearchTaskView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +33,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-public class SearchTaskActivity extends BaseActivity {
+public class SearchTaskActivity extends BaseActivity implements ISearchTaskView{
 
     @BindView(R.id.search_task_toolbar)
     Toolbar toolbar;
@@ -44,6 +48,7 @@ public class SearchTaskActivity extends BaseActivity {
 
     private SearchTaskAdapter searchTaskAdapter;
     private DatePickerPopWin datePickerPopWin;
+    private ISearchTaskPresenter searchTaskPresenter;
 
     @Override
     protected int setContentView() {
@@ -52,7 +57,7 @@ public class SearchTaskActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-
+        searchTaskPresenter = new SearchTaskPresenterImpl(this,this);
     }
 
     @Override
@@ -71,9 +76,8 @@ public class SearchTaskActivity extends BaseActivity {
                         datePickerPopWin = new DatePickerPopWin.Builder(SearchTaskActivity.this, new DatePickerPopWin.OnDatePickedListener() {
                             @Override
                             public void onDatePickCompleted(int year, int month, int day, String dateDesc) {
-                                if (!DateUtil.isYesterday(dateDesc)) {
-                                    tvSearchDate.setText(DateUtil.getDayType(dateDesc));
-                                }
+                                tvSearchDate.setText(DateUtil.getDayType(dateDesc));
+                                searchTaskPresenter.loadTaskByDate(tvSearchDate.getText().toString().substring(0,10));
                             }
                         })
                                 .textConfirm("确认") //text of confirm button
@@ -82,26 +86,11 @@ public class SearchTaskActivity extends BaseActivity {
                                 .viewTextSize(25) // pick view text size
                                 .colorCancel(Color.parseColor("#999999")) //color of cancel button
                                 .colorConfirm(Color.parseColor("#009900"))//color of confirm button
-                                .minYear(DateUtil.getYear()) //min year in loop
+                                .minYear(DateUtil.getYear() - 10) //min year in loop
                                 .maxYear(DateUtil.getYear() + 10) // max year in loop
                                 .dateChose(tvSearchDate.getText().toString().substring(0,10)) // date chose when init popwindow
                                 .build();
                         datePickerPopWin.showPopWin(SearchTaskActivity.this);
-                    }
-                });
-        RxTextView.textChanges(tvSearchDate)
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .compose(this.<CharSequence>bindToLifecycle())
-                .observeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<CharSequence>() {
-                    @Override
-                    public void accept(CharSequence charSequence) throws Exception {
-                        if (TextUtils.equals(DateUtil.getDayType(DateUtil.getToday()), new StringBuilder(charSequence).toString())) {
-                            ibSearchLastDay.setEnabled(false);
-                        } else {
-                            ibSearchLastDay.setEnabled(true);
-                        }
                     }
                 });
         RxView.clicks(ibSearchLastDay)
@@ -112,6 +101,7 @@ public class SearchTaskActivity extends BaseActivity {
                     @Override
                     public void accept(Object o) throws Exception {
                         tvSearchDate.setText(DateUtil.getDayType(DateUtil.getLastDay(tvSearchDate.getText().toString().substring(0,10))));
+                        searchTaskPresenter.loadTaskByDate(tvSearchDate.getText().toString().substring(0,10));
                     }
                 });
         RxView.clicks(ibSearchNextDay)
@@ -122,25 +112,32 @@ public class SearchTaskActivity extends BaseActivity {
                     @Override
                     public void accept(Object o) throws Exception {
                         tvSearchDate.setText(DateUtil.getDayType(DateUtil.getNextDay(tvSearchDate.getText().toString().substring(0,10))));
+                        searchTaskPresenter.loadTaskByDate(tvSearchDate.getText().toString().substring(0,10));
                     }
                 });
-        List<String> dataList = new ArrayList<>();
-        dataList.add("任务1");
-        dataList.add("任务2");
-        dataList.add("任务3");
-        dataList.add("任务4");
-        dataList.add("任务5");
-        dataList.add("任务6");
-        searchTaskAdapter = new SearchTaskAdapter(this, dataList);
+        searchTaskAdapter = new SearchTaskAdapter(this, new ArrayList<TaskBean>());
         rvSearchTask.setAdapter(searchTaskAdapter);
         rvSearchTask.setLayoutManager(new LinearLayoutManager(this));
         searchTaskAdapter.setOnItemClickListener(new SearchTaskAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 Intent intent = new Intent(SearchTaskActivity.this, TaskDetailActivity.class);
+                intent.putExtra("task", searchTaskAdapter.getDataList().get(position));
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        searchTaskPresenter.loadTaskByDate(tvSearchDate.getText().toString().substring(0,10));
+    }
+
+    @Override
+    public void updateDataList(List<TaskBean> taskBeanList) {
+        searchTaskAdapter.setDataList(taskBeanList);
+        searchTaskAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -156,5 +153,6 @@ public class SearchTaskActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        searchTaskPresenter.doDestroy();
     }
 }

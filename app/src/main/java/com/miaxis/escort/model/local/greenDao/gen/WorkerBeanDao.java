@@ -24,8 +24,8 @@ public class WorkerBeanDao extends AbstractDao<WorkerBean, String> {
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property Id = new Property(0, String.class, "id", true, "ID");
-        public final static Property Workno = new Property(1, String.class, "workno", false, "WORKNO");
+        public final static Property Id = new Property(0, String.class, "id", false, "ID");
+        public final static Property Workno = new Property(1, String.class, "workno", true, "WORKNO");
         public final static Property Idcard = new Property(2, String.class, "idcard", false, "IDCARD");
         public final static Property Deptno = new Property(3, String.class, "deptno", false, "DEPTNO");
         public final static Property Name = new Property(4, String.class, "name", false, "NAME");
@@ -59,8 +59,8 @@ public class WorkerBeanDao extends AbstractDao<WorkerBean, String> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"WORKER_BEAN\" (" + //
-                "\"ID\" TEXT PRIMARY KEY NOT NULL ," + // 0: id
-                "\"WORKNO\" TEXT," + // 1: workno
+                "\"ID\" TEXT UNIQUE ," + // 0: id
+                "\"WORKNO\" TEXT PRIMARY KEY NOT NULL ," + // 1: workno
                 "\"IDCARD\" TEXT," + // 2: idcard
                 "\"DEPTNO\" TEXT," + // 3: deptno
                 "\"NAME\" TEXT," + // 4: name
@@ -299,7 +299,7 @@ public class WorkerBeanDao extends AbstractDao<WorkerBean, String> {
 
     @Override
     public String readKey(Cursor cursor, int offset) {
-        return cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0);
+        return cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1);
     }    
 
     @Override
@@ -355,13 +355,13 @@ public class WorkerBeanDao extends AbstractDao<WorkerBean, String> {
     
     @Override
     protected final String updateKeyAfterInsert(WorkerBean entity, long rowId) {
-        return entity.getId();
+        return entity.getWorkno();
     }
     
     @Override
     public String getKey(WorkerBean entity) {
         if(entity != null) {
-            return entity.getId();
+            return entity.getWorkno();
         } else {
             return null;
         }
@@ -369,7 +369,7 @@ public class WorkerBeanDao extends AbstractDao<WorkerBean, String> {
 
     @Override
     public boolean hasKey(WorkerBean entity) {
-        return entity.getId() != null;
+        return entity.getWorkno() != null;
     }
 
     @Override

@@ -60,6 +60,22 @@ public class ConfigPresenterImpl extends BaseFragmentPresenter implements IConfi
                 .doOnNext(new Consumer<Config>() {
                     @Override
                     public void accept(Config config) throws Exception {
+                        EscortApp.getInstance().clearAndRebuildDatabase();
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(new Consumer<Config>() {
+                    @Override
+                    public void accept(Config config) throws Exception {
+                        if (configView != null) {
+                            configView.setProgressDialogMessage("清空数据成功，正在保存设置...");
+                        }
+                    }
+                })
+                .observeOn(Schedulers.io())
+                .doOnNext(new Consumer<Config>() {
+                    @Override
+                    public void accept(Config config) throws Exception {
                         configModel.saveConfig(config);
                     }
                 })

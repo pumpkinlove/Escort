@@ -8,6 +8,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.miaxis.escort.R;
+import com.miaxis.escort.model.entity.TaskBean;
+import com.miaxis.escort.util.StaticVariable;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -20,12 +24,12 @@ import butterknife.ButterKnife;
 
 public class SearchTaskAdapter extends RecyclerView.Adapter<SearchTaskAdapter.MyViewHolder> {
 
-    private List<String> dataList;
+    private List<TaskBean> dataList;
 
     private LayoutInflater layoutInflater;
     private OnItemClickListener mOnItemClickListener;
 
-    public SearchTaskAdapter(Context context, List<String> dataList) {
+    public SearchTaskAdapter(Context context, List<TaskBean> dataList) {
         this.dataList = dataList;
         layoutInflater = LayoutInflater.from(context);
     }
@@ -38,13 +42,25 @@ public class SearchTaskAdapter extends RecyclerView.Adapter<SearchTaskAdapter.My
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        holder.tvSearchTask.setText(dataList.get(position));
+        TaskBean taskBean = dataList.get(position);
+        holder.tvSearchTaskType.setText(StaticVariable.getTasktypeName(taskBean.getTasktype(), taskBean.getTasklevel()));
+        holder.tvSearchTaskStatus.setText(taskBean.getStatusName());
+        holder.tvSearchTaskBoxCount.setText("" + taskBean.getBoxList().size());
+        holder.tvSearchTaskDate.setText(taskBean.getTaskdate());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mOnItemClickListener.onItemClick(holder.itemView, holder.getLayoutPosition());
             }
         });
+    }
+
+    public List<TaskBean> getDataList() {
+        return dataList;
+    }
+
+    public void setDataList(List<TaskBean> dataList) {
+        this.dataList = dataList;
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -62,8 +78,14 @@ public class SearchTaskAdapter extends RecyclerView.Adapter<SearchTaskAdapter.My
 
     class MyViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.tv_search_task)
-        TextView tvSearchTask;
+        @BindView(R.id.tv_search_task_type)
+        TextView tvSearchTaskType;
+        @BindView(R.id.tv_search_task_status)
+        TextView tvSearchTaskStatus;
+        @BindView(R.id.tv_search_task_box_count)
+        TextView tvSearchTaskBoxCount;
+        @BindView(R.id.tv_search_task_date)
+        TextView tvSearchTaskDate;
 
         MyViewHolder(View itemView) {
             super(itemView);

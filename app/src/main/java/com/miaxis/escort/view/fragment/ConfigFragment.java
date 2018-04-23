@@ -136,7 +136,7 @@ public class ConfigFragment extends BaseFragment implements IConfigView{
                 .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
-                        pdSaveConfig.setContent("保存中");
+                        pdSaveConfig.setContent("正在清空数据...");
                         pdSaveConfig.show();
                         configPresenter.configSave(etIp.getText().toString(),
                                 etPort.getText().toString(),

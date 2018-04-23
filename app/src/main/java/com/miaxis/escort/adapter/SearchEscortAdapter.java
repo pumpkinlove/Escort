@@ -1,6 +1,7 @@
 package com.miaxis.escort.adapter;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by 一非 on 2018/4/13.
@@ -40,7 +42,12 @@ public class SearchEscortAdapter extends RecyclerView.Adapter<SearchEscortAdapte
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        holder.tvSearchEscort.setText(dataList.get(position).getName());
+        EscortBean escortBean = dataList.get(position);
+        //TODO:押运员无法更新
+        //holder.civSearchEscortImage.setImageBitmap(BitmapFactory.decodeByteArray(escortBean.getPhoto(), 0, escortBean.getPhone().length()));
+        holder.tvSearchEscortName.setText(escortBean.getName());
+        holder.tvSearchEscortCode.setText(escortBean.getEscortno());
+        holder.tvSearchEscortPhone.setText(escortBean.getPhone());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,8 +79,14 @@ public class SearchEscortAdapter extends RecyclerView.Adapter<SearchEscortAdapte
 
     class MyViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.tv_search_escort)
-        TextView tvSearchEscort;
+        @BindView(R.id.civ_search_escort_image)
+        CircleImageView civSearchEscortImage;
+        @BindView(R.id.tv_search_escort_name)
+        TextView tvSearchEscortName;
+        @BindView(R.id.tv_search_escort_code)
+        TextView tvSearchEscortCode;
+        @BindView(R.id.tv_search_escort_phone)
+        TextView tvSearchEscortPhone;
 
         MyViewHolder(View itemView) {
             super(itemView);

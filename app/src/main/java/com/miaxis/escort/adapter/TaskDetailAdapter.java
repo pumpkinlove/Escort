@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.miaxis.escort.R;
+import com.miaxis.escort.app.EscortApp;
+import com.miaxis.escort.model.entity.BoxBean;
+import com.miaxis.escort.model.entity.TaskBoxBean;
 
 import java.util.List;
 
@@ -20,12 +23,12 @@ import butterknife.ButterKnife;
 
 public class TaskDetailAdapter extends RecyclerView.Adapter<TaskDetailAdapter.MyViewHolder> {
 
-    private List<String> dataList;
+    private List<TaskBoxBean> dataList;
 
     private LayoutInflater layoutInflater;
     private OnItemClickListener mOnItemClickListener;
 
-    public TaskDetailAdapter(Context context, List<String> dataList) {
+    public TaskDetailAdapter(Context context, List<TaskBoxBean> dataList) {
         this.dataList = dataList;
         layoutInflater = LayoutInflater.from(context);
     }
@@ -38,7 +41,9 @@ public class TaskDetailAdapter extends RecyclerView.Adapter<TaskDetailAdapter.My
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        holder.tvTaskDetail.setText(dataList.get(position));
+        TaskBoxBean taskBoxBean = dataList.get(position);
+        taskBoxBean.__setDaoSession(EscortApp.getInstance().getDaoSession());
+        holder.tvTaskDetail.setText(taskBoxBean.getBox().getBoxname());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

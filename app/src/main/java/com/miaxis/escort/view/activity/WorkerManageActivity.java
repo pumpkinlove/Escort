@@ -67,8 +67,15 @@ public class WorkerManageActivity extends BaseActivity implements IWorkerManageV
         workerAdapter.setOnItemClickListener(new WorkerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+                /**
+                 * flag 0：已上传查看，1：新增，2：未上传
+                 */
+                int flag = 0;
+                if ("未上传".equals(workerAdapter.getDataList().get(position).getStatus())) {
+                    flag = 2;
+                }
                 Intent intent = new Intent(WorkerManageActivity.this, WorkerDetailActivity.class);
-                intent.putExtra(StaticVariable.FLAG, false);
+                intent.putExtra(StaticVariable.FLAG, flag);
                 intent.putExtra(StaticVariable.WORKER, workerAdapter.getDataList().get(position));
                 startActivity(intent);
             }
@@ -89,7 +96,7 @@ public class WorkerManageActivity extends BaseActivity implements IWorkerManageV
                     @Override
                     public void accept(Object o) throws Exception {
                         Intent intent = new Intent(WorkerManageActivity.this, WorkerDetailActivity.class);
-                        intent.putExtra(StaticVariable.FLAG, true);
+                        intent.putExtra(StaticVariable.FLAG, 1);
                         startActivity(intent);
                     }
                 });
@@ -98,6 +105,12 @@ public class WorkerManageActivity extends BaseActivity implements IWorkerManageV
     @Override
     protected void onResume() {
         super.onResume();
+        srlWorkerManage.post(new Runnable(){
+            @Override
+            public void run() {
+                srlWorkerManage.setRefreshing(true);
+            }
+        });
         workerManagePresenter.downWorkerList();
     }
 
@@ -124,6 +137,19 @@ public class WorkerManageActivity extends BaseActivity implements IWorkerManageV
                 startActivity(intent);
             }
         }
+    }
+
+    @Override
+    public void downWorkerSuccess() {
+
+    }
+
+    @Override
+    public void downWorkerFailed(String message) {
+        if (srlWorkerManage.isRefreshing()) {
+            srlWorkerManage.setRefreshing(false);
+        }
+        workerManagePresenter.loadWorkerList();
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.miaxis.escort.model.entity;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Unique;
 
 import java.io.Serializable;
 
@@ -11,8 +12,9 @@ public class WorkerBean  implements Serializable
 {
     private static final long serialVersionUID = -7417097781809707180L;
 
-    @Id
+    @Unique
 	private String id;
+    @Id
 	private String workno; /* 员工号 */
 	private String idcard; /* 身份证号 */
 	private String deptno; /* 机构号 */

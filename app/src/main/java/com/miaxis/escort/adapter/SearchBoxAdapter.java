@@ -10,6 +10,8 @@ import android.widget.TextView;
 import com.miaxis.escort.R;
 import com.miaxis.escort.model.entity.BoxBean;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 import butterknife.BindView;
@@ -39,7 +41,10 @@ public class SearchBoxAdapter extends RecyclerView.Adapter<SearchBoxAdapter.MyVi
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        holder.tvSearchBoxId.setText(dataList.get(position).getBoxname());
+        BoxBean boxBean = dataList.get(position);
+        holder.tvSearchBoxId.setText(boxBean.getBoxname());
+        holder.tvSearchBoxStatus.setText(boxBean.getStatusName());
+        holder.tvSearchBoxCode.setText(boxBean.getBoxcode());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,6 +74,10 @@ public class SearchBoxAdapter extends RecyclerView.Adapter<SearchBoxAdapter.MyVi
 
         @BindView(R.id.tv_search_box_id)
         TextView tvSearchBoxId;
+        @BindView(R.id.tv_search_box_status)
+        TextView tvSearchBoxStatus;
+        @BindView(R.id.tv_search_box_code)
+        TextView tvSearchBoxCode;
 
         MyViewHolder(View itemView) {
             super(itemView);

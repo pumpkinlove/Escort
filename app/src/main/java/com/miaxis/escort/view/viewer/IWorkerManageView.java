@@ -10,4 +10,6 @@ import java.util.List;
 
 public interface IWorkerManageView extends IBaseView{
     void updateDataList(List<WorkerBean> workerBeanList);
+    void downWorkerSuccess();
+    void downWorkerFailed(String message);
 }

@@ -22,7 +22,16 @@ public class WorkerManageModelImpl implements IWorkerManageModel{
 
     @Override
     public void saveWorkerList(List<WorkerBean> workerBeanList) {
-        EscortApp.getInstance().getDaoSession().getWorkerBeanDao().deleteAll();
+        List<WorkerBean> list = EscortApp.getInstance().getDaoSession().getWorkerBeanDao().queryBuilder()
+                .where(WorkerBeanDao.Properties.Status.notEq("未上传")).list();
+        for (WorkerBean workerBean : list) {
+            EscortApp.getInstance().getDaoSession().getWorkerBeanDao().delete(workerBean);
+        }
+        List<WorkerBean> workerBeans = new ArrayList<>();
+        for (WorkerBean workerBean : workerBeanList) {
+            workerBean.setStatus("已上传");
+            workerBeans.add(workerBean);
+        }
         EscortApp.getInstance().getDaoSession().getWorkerBeanDao().insertOrReplaceInTx(workerBeanList);
     }
 
@@ -31,7 +40,9 @@ public class WorkerManageModelImpl implements IWorkerManageModel{
         List<WorkerBean> workerBeanList = EscortApp.getInstance().getDaoSession().getWorkerBeanDao().loadAll();
         List<OpdateBean> opdateBeanList = new ArrayList<>();
         for (WorkerBean workerBean : workerBeanList) {
-            opdateBeanList.add(new OpdateBean(workerBean.getId(), workerBean.getOpdate()));
+            if (!"未上传".equals(workerBean.getStatus())) {
+                opdateBeanList.add(new OpdateBean(workerBean.getId(), workerBean.getOpdate()));
+            }
         }
         return opdateBeanList;
     }

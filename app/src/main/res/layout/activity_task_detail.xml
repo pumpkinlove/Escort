@@ -45,6 +45,7 @@
             android:background="@color/black"/>
 
         <TextView
+            android:id="@+id/tv_task_detail_type"
             android:gravity="center"
             android:layout_width="0dp"
             android:layout_weight="3"
@@ -69,6 +70,7 @@
             android:background="@color/black"/>
 
         <TextView
+            android:id="@+id/tv_task_detail_status"
             android:gravity="center"
             android:layout_width="0dp"
             android:layout_weight="3"
@@ -87,7 +89,7 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:text="押运员"
+            android:text="押运员1"
             android:background="@color/lightgray"
             android:gravity="center"
             android:layout_width="0dp"
@@ -100,6 +102,7 @@
             android:background="@color/black"/>
 
         <TextView
+            android:id="@+id/tv_task_detail_escort1"
             android:gravity="center"
             android:layout_width="0dp"
             android:layout_weight="3"
@@ -111,7 +114,7 @@
             android:background="@color/black"/>
 
         <TextView
-            android:text="车辆"
+            android:text="车辆1"
             android:background="@color/lightgray"
             android:gravity="center"
             android:layout_width="0dp"
@@ -124,6 +127,64 @@
             android:background="@color/black"/>
 
         <TextView
+            android:id="@+id/tv_task_detail_car1"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="2px"
+        android:background="@color/black"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="押运员2"
+            android:background="@color/lightgray"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="match_parent" />
+
+        <View
+            android:layout_width="2px"
+            android:layout_height="30dp"
+            android:background="@color/black"/>
+
+        <TextView
+            android:id="@+id/tv_task_detail_escort2"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="match_parent" />
+
+        <View
+            android:layout_width="2px"
+            android:layout_height="30dp"
+            android:background="@color/black"/>
+
+        <TextView
+            android:text="车辆2"
+            android:background="@color/lightgray"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="match_parent" />
+
+        <View
+            android:layout_width="2px"
+            android:layout_height="30dp"
+            android:background="@color/black"/>
+
+        <TextView
+            android:id="@+id/tv_task_detail_car2"
             android:gravity="center"
             android:layout_width="0dp"
             android:layout_weight="3"
@@ -155,6 +216,7 @@
             android:background="@color/black"/>
 
         <TextView
+            android:id="@+id/tv_task_detail_worker"
             android:gravity="center"
             android:layout_width="0dp"
             android:layout_weight="3"
@@ -179,6 +241,7 @@
             android:background="@color/black"/>
 
         <TextView
+            android:id="@+id/tv_task_detail_date"
             android:gravity="center"
             android:layout_width="0dp"
             android:layout_weight="3"

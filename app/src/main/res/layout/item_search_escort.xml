@@ -1,18 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="wrap_content">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/civ_search_escort_image"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:src="@mipmap/ic_launcher_round"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:civ_border_width="3dp"
+        app:civ_border_color="#FFFFFFFF"/>
 
     <TextView
-        android:id="@+id/tv_search_escort"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_gravity="center"/>
+        android:id="@+id/tv_search_escort_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/civ_search_escort_image"
+        android:layout_alignTop="@id/civ_search_escort_image"
+        android:layout_marginLeft="15dp"
+        android:text="施克宣" />
+
+    <TextView
+        android:id="@+id/tv_search_escort_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/civ_search_escort_image"
+        android:layout_below="@id/tv_search_escort_name"
+        android:layout_marginLeft="15dp"
+        android:text="015" />
+
+    <TextView
+        android:id="@+id/tv_search_escort_phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/civ_search_escort_image"
+        android:layout_below="@id/tv_search_escort_code"
+        android:layout_marginLeft="15dp"
+        android:text="15700722960" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="@color/lightgray"/>
+        android:layout_below="@id/civ_search_escort_image"
+        android:background="@color/lightgray"
+        android:id="@+id/view" />
 
-</LinearLayout>
+</RelativeLayout>

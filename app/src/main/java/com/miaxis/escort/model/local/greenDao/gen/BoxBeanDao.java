@@ -24,8 +24,8 @@ public class BoxBeanDao extends AbstractDao<BoxBean, String> {
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property Id = new Property(0, String.class, "id", true, "ID");
-        public final static Property Boxcode = new Property(1, String.class, "boxcode", false, "BOXCODE");
+        public final static Property Id = new Property(0, String.class, "id", false, "ID");
+        public final static Property Boxcode = new Property(1, String.class, "boxcode", true, "BOXCODE");
         public final static Property Boxname = new Property(2, String.class, "boxname", false, "BOXNAME");
         public final static Property Deptno = new Property(3, String.class, "deptno", false, "DEPTNO");
         public final static Property Rfid = new Property(4, String.class, "rfid", false, "RFID");
@@ -52,8 +52,8 @@ public class BoxBeanDao extends AbstractDao<BoxBean, String> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"BOX_BEAN\" (" + //
-                "\"ID\" TEXT PRIMARY KEY NOT NULL ," + // 0: id
-                "\"BOXCODE\" TEXT," + // 1: boxcode
+                "\"ID\" TEXT," + // 0: id
+                "\"BOXCODE\" TEXT PRIMARY KEY NOT NULL ," + // 1: boxcode
                 "\"BOXNAME\" TEXT," + // 2: boxname
                 "\"DEPTNO\" TEXT," + // 3: deptno
                 "\"RFID\" TEXT," + // 4: rfid
@@ -215,7 +215,7 @@ public class BoxBeanDao extends AbstractDao<BoxBean, String> {
 
     @Override
     public String readKey(Cursor cursor, int offset) {
-        return cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0);
+        return cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1);
     }    
 
     @Override
@@ -257,13 +257,13 @@ public class BoxBeanDao extends AbstractDao<BoxBean, String> {
     
     @Override
     protected final String updateKeyAfterInsert(BoxBean entity, long rowId) {
-        return entity.getId();
+        return entity.getBoxcode();
     }
     
     @Override
     public String getKey(BoxBean entity) {
         if(entity != null) {
-            return entity.getId();
+            return entity.getBoxcode();
         } else {
             return null;
         }
@@ -271,7 +271,7 @@ public class BoxBeanDao extends AbstractDao<BoxBean, String> {
 
     @Override
     public boolean hasKey(BoxBean entity) {
-        return entity.getId() != null;
+        return entity.getBoxcode() != null;
     }
 
     @Override

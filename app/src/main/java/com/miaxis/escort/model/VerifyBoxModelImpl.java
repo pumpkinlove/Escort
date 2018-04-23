@@ -38,5 +38,6 @@ public class VerifyBoxModelImpl implements IVerifyBoxModel{
                 .where(TaskBeanDao.Properties.Taskcode.eq(taskExeBean.getTaskno())).unique();
         taskBean.setStatus("4");
         taskBean.setExetime(taskExeBean.getTasktime().substring(11));
+        EscortApp.getInstance().getDaoSession().insertOrReplace(taskBean);
     }
 }

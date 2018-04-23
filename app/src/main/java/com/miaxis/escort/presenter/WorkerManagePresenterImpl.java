@@ -90,6 +90,9 @@ public class WorkerManagePresenterImpl extends BaseActivityPresenter implements 
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        if (workerManageView != null) {
+                            workerManageView.downWorkerFailed(throwable.getMessage());
+                        }
                         Toasty.error(EscortApp.getInstance().getApplicationContext(), "刷新失败",0, true).show();
                     }
                 });

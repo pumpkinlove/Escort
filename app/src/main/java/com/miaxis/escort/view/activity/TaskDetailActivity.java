@@ -7,10 +7,17 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.miaxis.escort.R;
 import com.miaxis.escort.adapter.SearchEscortAdapter;
 import com.miaxis.escort.adapter.TaskDetailAdapter;
+import com.miaxis.escort.app.EscortApp;
+import com.miaxis.escort.model.entity.BoxBean;
+import com.miaxis.escort.model.entity.EscortBean;
+import com.miaxis.escort.model.entity.TaskBean;
+import com.miaxis.escort.model.entity.TaskEscortBean;
+import com.miaxis.escort.util.StaticVariable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,10 +28,27 @@ public class TaskDetailActivity extends BaseActivity {
 
     @BindView(R.id.task_detail_toolbar)
     Toolbar toolbar;
+    @BindView(R.id.tv_task_detail_type)
+    TextView tvTaskDetailType;
+    @BindView(R.id.tv_task_detail_status)
+    TextView tvTaskDetailStatus;
+    @BindView(R.id.tv_task_detail_escort1)
+    TextView tvTaskDetailEscort1;
+    @BindView(R.id.tv_task_detail_car1)
+    TextView tvTaskDetailCar1;
+    @BindView(R.id.tv_task_detail_escort2)
+    TextView tvTaskDetailEscort2;
+    @BindView(R.id.tv_task_detail_car2)
+    TextView tvTaskDetailCar2;
+    @BindView(R.id.tv_task_detail_worker)
+    TextView tvTaskDetailWorker;
+    @BindView(R.id.tv_task_detail_date)
+    TextView tvTaskDetailDate;
     @BindView(R.id.rv_task_detail)
     RecyclerView rvTaskDetail;
 
     private TaskDetailAdapter taskDetailAdapter;
+    private TaskBean taskBean;
 
     @Override
     protected int setContentView() {
@@ -33,7 +57,7 @@ public class TaskDetailActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-
+        taskBean = (TaskBean) getIntent().getSerializableExtra("task");
     }
 
     @Override
@@ -41,14 +65,18 @@ public class TaskDetailActivity extends BaseActivity {
         toolbar.setTitle("任务详情");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        List<String> dataList = new ArrayList<>();
-        dataList.add("箱包1");
-        dataList.add("箱包2");
-        dataList.add("箱包3");
-        dataList.add("箱包4");
-        dataList.add("箱包5");
-        dataList.add("箱包6");
-        taskDetailAdapter = new TaskDetailAdapter(this, dataList);
+        tvTaskDetailType.setText(StaticVariable.getTasktypeName(taskBean.getTasktype(), taskBean.getTasklevel()));
+        tvTaskDetailStatus.setText(taskBean.getStatusName());
+        TaskEscortBean taskEscortBean1 = taskBean.getEscortList().get(0);
+        TaskEscortBean taskEscortBean2 = taskBean.getEscortList().get(1);
+        taskEscortBean1.__setDaoSession(EscortApp.getInstance().getDaoSession());
+        taskEscortBean2.__setDaoSession(EscortApp.getInstance().getDaoSession());
+        tvTaskDetailEscort1.setText(taskEscortBean1.getEscortBean().getName());
+        tvTaskDetailEscort2.setText(taskEscortBean2.getEscortBean().getName());
+        tvTaskDetailCar1.setText(taskBean.getCarid());
+        tvTaskDetailWorker.setText(taskBean.getOpusername());
+        tvTaskDetailDate.setText(taskBean.getTaskdate());
+        taskDetailAdapter = new TaskDetailAdapter(this, taskBean.getBoxList());
         rvTaskDetail.setAdapter(taskDetailAdapter);
         rvTaskDetail.setLayoutManager(new LinearLayoutManager(this));
         taskDetailAdapter.setOnItemClickListener(new TaskDetailAdapter.OnItemClickListener() {

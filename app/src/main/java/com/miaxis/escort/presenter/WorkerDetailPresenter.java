@@ -50,6 +50,7 @@ public class WorkerDetailPresenter extends BaseActivityPresenter implements IWor
                 .flatMap(new Function<WorkerBean, ObservableSource<ResponseEntity>>() {
                     @Override
                     public ObservableSource<ResponseEntity> apply(WorkerBean workerBean) throws Exception {
+                        workerDetailModel.saveLocal(workerBean);
                         Config config = (Config) EscortApp.getInstance().get(StaticVariable.CONFIG);
                         Retrofit retrofit = new Retrofit.Builder()
                                 .addConverterFactory(GsonConverterFactory.create())//请求的结果转为实体类

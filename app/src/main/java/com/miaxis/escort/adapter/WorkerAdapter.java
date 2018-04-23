@@ -1,6 +1,7 @@
 package com.miaxis.escort.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,7 +42,11 @@ public class WorkerAdapter extends RecyclerView.Adapter<WorkerAdapter.MyViewHold
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        holder.tvVerifyBox.setText(dataList.get(position).getName());
+        WorkerBean workerBean = dataList.get(position);
+        holder.tvWorkerName.setText(workerBean.getName());
+        holder.tvWorkerCode.setText(workerBean.getWorkno());
+        holder.tvWorkerPhone.setText(workerBean.getPhone());
+        holder.tvWorkerStatus.setText(workerBean.getStatus());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,7 +79,13 @@ public class WorkerAdapter extends RecyclerView.Adapter<WorkerAdapter.MyViewHold
     class MyViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.tv_worker_name)
-        TextView tvVerifyBox;
+        TextView tvWorkerName;
+        @BindView(R.id.tv_worker_code)
+        TextView tvWorkerCode;
+        @BindView(R.id.tv_worker_phone)
+        TextView tvWorkerPhone;
+        @BindView(R.id.tv_worker_status)
+        TextView tvWorkerStatus;
 
         MyViewHolder(View itemView) {
             super(itemView);

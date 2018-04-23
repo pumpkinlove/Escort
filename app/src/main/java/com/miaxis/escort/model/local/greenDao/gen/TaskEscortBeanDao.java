@@ -1,16 +1,20 @@
 package com.miaxis.escort.model.local.greenDao.gen;
 
 import java.util.List;
+import java.util.ArrayList;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteStatement;
 
 import org.greenrobot.greendao.AbstractDao;
 import org.greenrobot.greendao.Property;
+import org.greenrobot.greendao.internal.SqlUtils;
 import org.greenrobot.greendao.internal.DaoConfig;
 import org.greenrobot.greendao.database.Database;
 import org.greenrobot.greendao.database.DatabaseStatement;
 import org.greenrobot.greendao.query.Query;
 import org.greenrobot.greendao.query.QueryBuilder;
+
+import com.miaxis.escort.model.entity.EscortBean;
 
 import com.miaxis.escort.model.entity.TaskEscortBean;
 
@@ -29,8 +33,10 @@ public class TaskEscortBeanDao extends AbstractDao<TaskEscortBean, Long> {
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property Taskid = new Property(1, String.class, "taskid", false, "TASKID");
-        public final static Property Escode = new Property(2, String.class, "escode", false, "ESCODE");
+        public final static Property Escortno = new Property(2, String.class, "escortno", false, "ESCORTNO");
     }
+
+    private DaoSession daoSession;
 
     private Query<TaskEscortBean> taskBean_EscortListQuery;
 
@@ -40,6 +46,7 @@ public class TaskEscortBeanDao extends AbstractDao<TaskEscortBean, Long> {
     
     public TaskEscortBeanDao(DaoConfig config, DaoSession daoSession) {
         super(config, daoSession);
+        this.daoSession = daoSession;
     }
 
     /** Creates the underlying database table. */
@@ -48,7 +55,7 @@ public class TaskEscortBeanDao extends AbstractDao<TaskEscortBean, Long> {
         db.execSQL("CREATE TABLE " + constraint + "\"TASK_ESCORT_BEAN\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
                 "\"TASKID\" TEXT," + // 1: taskid
-                "\"ESCODE\" TEXT);"); // 2: escode
+                "\"ESCORTNO\" TEXT);"); // 2: escortno
     }
 
     /** Drops the underlying database table. */
@@ -71,9 +78,9 @@ public class TaskEscortBeanDao extends AbstractDao<TaskEscortBean, Long> {
             stmt.bindString(2, taskid);
         }
  
-        String escode = entity.getEscode();
-        if (escode != null) {
-            stmt.bindString(3, escode);
+        String escortno = entity.getEscortno();
+        if (escortno != null) {
+            stmt.bindString(3, escortno);
         }
     }
 
@@ -91,10 +98,16 @@ public class TaskEscortBeanDao extends AbstractDao<TaskEscortBean, Long> {
             stmt.bindString(2, taskid);
         }
  
-        String escode = entity.getEscode();
-        if (escode != null) {
-            stmt.bindString(3, escode);
+        String escortno = entity.getEscortno();
+        if (escortno != null) {
+            stmt.bindString(3, escortno);
         }
+    }
+
+    @Override
+    protected final void attachEntity(TaskEscortBean entity) {
+        super.attachEntity(entity);
+        entity.__setDaoSession(daoSession);
     }
 
     @Override
@@ -107,7 +120,7 @@ public class TaskEscortBeanDao extends AbstractDao<TaskEscortBean, Long> {
         TaskEscortBean entity = new TaskEscortBean( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // taskid
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2) // escode
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2) // escortno
         );
         return entity;
     }
@@ -116,7 +129,7 @@ public class TaskEscortBeanDao extends AbstractDao<TaskEscortBean, Long> {
     public void readEntity(Cursor cursor, TaskEscortBean entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setTaskid(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setEscode(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setEscortno(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
      }
     
     @Override
@@ -158,4 +171,95 @@ public class TaskEscortBeanDao extends AbstractDao<TaskEscortBean, Long> {
         return query.list();
     }
 
+    private String selectDeep;
+
+    protected String getSelectDeep() {
+        if (selectDeep == null) {
+            StringBuilder builder = new StringBuilder("SELECT ");
+            SqlUtils.appendColumns(builder, "T", getAllColumns());
+            builder.append(',');
+            SqlUtils.appendColumns(builder, "T0", daoSession.getEscortBeanDao().getAllColumns());
+            builder.append(" FROM TASK_ESCORT_BEAN T");
+            builder.append(" LEFT JOIN ESCORT_BEAN T0 ON T.\"ESCORTNO\"=T0.\"ID\"");
+            builder.append(' ');
+            selectDeep = builder.toString();
+        }
+        return selectDeep;
+    }
+    
+    protected TaskEscortBean loadCurrentDeep(Cursor cursor, boolean lock) {
+        TaskEscortBean entity = loadCurrent(cursor, 0, lock);
+        int offset = getAllColumns().length;
+
+        EscortBean escortBean = loadCurrentOther(daoSession.getEscortBeanDao(), cursor, offset);
+        entity.setEscortBean(escortBean);
+
+        return entity;    
+    }
+
+    public TaskEscortBean loadDeep(Long key) {
+        assertSinglePk();
+        if (key == null) {
+            return null;
+        }
+
+        StringBuilder builder = new StringBuilder(getSelectDeep());
+        builder.append("WHERE ");
+        SqlUtils.appendColumnsEqValue(builder, "T", getPkColumns());
+        String sql = builder.toString();
+        
+        String[] keyArray = new String[] { key.toString() };
+        Cursor cursor = db.rawQuery(sql, keyArray);
+        
+        try {
+            boolean available = cursor.moveToFirst();
+            if (!available) {
+                return null;
+            } else if (!cursor.isLast()) {
+                throw new IllegalStateException("Expected unique result, but count was " + cursor.getCount());
+            }
+            return loadCurrentDeep(cursor, true);
+        } finally {
+            cursor.close();
+        }
+    }
+    
+    /** Reads all available rows from the given cursor and returns a list of new ImageTO objects. */
+    public List<TaskEscortBean> loadAllDeepFromCursor(Cursor cursor) {
+        int count = cursor.getCount();
+        List<TaskEscortBean> list = new ArrayList<TaskEscortBean>(count);
+        
+        if (cursor.moveToFirst()) {
+            if (identityScope != null) {
+                identityScope.lock();
+                identityScope.reserveRoom(count);
+            }
+            try {
+                do {
+                    list.add(loadCurrentDeep(cursor, false));
+                } while (cursor.moveToNext());
+            } finally {
+                if (identityScope != null) {
+                    identityScope.unlock();
+                }
+            }
+        }
+        return list;
+    }
+    
+    protected List<TaskEscortBean> loadDeepAllAndCloseCursor(Cursor cursor) {
+        try {
+            return loadAllDeepFromCursor(cursor);
+        } finally {
+            cursor.close();
+        }
+    }
+    
+
+    /** A raw-style query where you can pass any WHERE clause and arguments. */
+    public List<TaskEscortBean> queryDeep(String where, String... selectionArg) {
+        Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
+        return loadDeepAllAndCloseCursor(cursor);
+    }
+ 
 }
