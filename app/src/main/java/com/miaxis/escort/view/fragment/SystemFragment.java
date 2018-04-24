@@ -55,6 +55,7 @@ public class SystemFragment extends BaseFragment implements ISystemView{
 
     private OnFragmentInteractionListener mListener;
     private ISystemPresenter systemPresenter;
+    private boolean updateFlag = false;
 
     public SystemFragment() {
         // Required empty public constructor
@@ -144,14 +145,14 @@ public class SystemFragment extends BaseFragment implements ISystemView{
                                 .show();
                     }
                 });
-        RxView.clicks(llClearAll)
+        RxView.clicks(llUpdate)
                 .throttleFirst(1, TimeUnit.SECONDS)
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .compose(this.bindToLifecycle())
                 .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
-
+                        systemPresenter.updateApp();
                     }
                 });
         RxView.clicks(btnLogout)
@@ -234,7 +235,40 @@ public class SystemFragment extends BaseFragment implements ISystemView{
     }
 
     @Override
+    public void downAppMessageSuccess(String message) {
+        StringBuilder content = new StringBuilder();
+        String[] data = message.split("&");
+        if (data[0].equals(getVersion())) {
+            content.append("当前已经是最新版本，无需更新！");
+            updateFlag = false;
+        } else {
+            content.append(message);
+            updateFlag = true;
+        }
+        new MaterialDialog.Builder(this.getContext())
+                .title("更新")
+                .content(content.toString())
+                .negativeText("取消")
+                .positiveText("确认")
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        if (updateFlag) {
+                            Toasty.success(SystemFragment.this.getContext(), "下载成功", 0, true).show();
+                        }
+                    }
+                })
+                .show();
+    }
+
+    @Override
+    public void downAppMessageFailed(String message) {
+        Toasty.error(this.getContext(), message, 1, true).show();
+    }
+
+    @Override
     public void onDestroy() {
+        systemPresenter.doDestroy();
         super.onDestroy();
     }
 

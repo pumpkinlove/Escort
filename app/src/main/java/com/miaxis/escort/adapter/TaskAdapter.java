@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.miaxis.escort.R;
+import com.miaxis.escort.app.EscortApp;
 import com.miaxis.escort.model.entity.TaskBean;
 import com.miaxis.escort.util.StaticVariable;
 
@@ -41,11 +42,16 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        holder.tvTaskName.setText(StaticVariable.getTasktypeName(dataList.get(position).getTasktype(), dataList.get(position).getTasklevel()));
+        TaskBean taskBean = dataList.get(position);
+        taskBean.__setDaoSession(EscortApp.getInstance().getDaoSession());
+        holder.tvTaskType.setText(StaticVariable.getTasktypeName(taskBean.getTasktype(), taskBean.getTasklevel()));
+        holder.tvTaskCarId.setText(taskBean.getCarid());
+        holder.tvTaskBoxCount.setText("" + taskBean.getBoxList().size());
+        holder.tvTaskDate.setText(taskBean.getOpdate());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOnItemClickListener.onItemClick(holder.tvTaskName, holder.getLayoutPosition());
+                mOnItemClickListener.onItemClick(holder.itemView, holder.getLayoutPosition());
             }
         });
     }
@@ -73,8 +79,14 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
 
     class MyViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.tv_task_name)
-        TextView tvTaskName;
+        @BindView(R.id.tv_task_type)
+        TextView tvTaskType;
+        @BindView(R.id.tv_task_car_id)
+        TextView tvTaskCarId;
+        @BindView(R.id.tv_task_box_count)
+        TextView tvTaskBoxCount;
+        @BindView(R.id.tv_task_date)
+        TextView tvTaskDate;
 
         MyViewHolder(View itemView) {
             super(itemView);

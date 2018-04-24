@@ -7,4 +7,6 @@ package com.miaxis.escort.view.viewer;
 public interface ISystemView {
     void clearSuccess();
     void clearFailed();
+    void downAppMessageSuccess(String message);
+    void downAppMessageFailed(String message);
 }

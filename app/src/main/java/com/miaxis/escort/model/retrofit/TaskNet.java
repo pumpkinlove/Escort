@@ -24,4 +24,7 @@ public interface TaskNet {
     @FormUrlEncoded
     @POST("yygl/api/execTask")
     Observable<ResponseEntity> uploadTaskExec(@Field("execTask") String execTask);
+
+    @GET("yygl/api/delTask")
+    Observable<ResponseEntity> deleteTask(@Query("taskcode")String taskcode);
 }

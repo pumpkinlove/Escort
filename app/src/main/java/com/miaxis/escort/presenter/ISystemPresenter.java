@@ -6,4 +6,5 @@ package com.miaxis.escort.presenter;
 
 public interface ISystemPresenter extends IBasePresenter{
     void clearAll();
+    void updateApp();
 }

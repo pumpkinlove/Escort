@@ -44,7 +44,7 @@ public class SearchEscortAdapter extends RecyclerView.Adapter<SearchEscortAdapte
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         EscortBean escortBean = dataList.get(position);
         //TODO:押运员无法更新
-        //holder.civSearchEscortImage.setImageBitmap(BitmapFactory.decodeByteArray(escortBean.getPhoto(), 0, escortBean.getPhone().length()));
+        holder.civSearchEscortImage.setImageBitmap(BitmapFactory.decodeByteArray(escortBean.getPhoto(), 0, escortBean.getPhoto().length));
         holder.tvSearchEscortName.setText(escortBean.getName());
         holder.tvSearchEscortCode.setText(escortBean.getEscortno());
         holder.tvSearchEscortPhone.setText(escortBean.getPhone());

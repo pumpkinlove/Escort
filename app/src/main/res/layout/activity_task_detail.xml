@@ -114,7 +114,7 @@
             android:background="@color/black"/>
 
         <TextView
-            android:text="车辆1"
+            android:text="车辆"
             android:background="@color/lightgray"
             android:gravity="center"
             android:layout_width="0dp"
@@ -171,38 +171,6 @@
             android:background="@color/black"/>
 
         <TextView
-            android:text="车辆2"
-            android:background="@color/lightgray"
-            android:gravity="center"
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:layout_height="match_parent" />
-
-        <View
-            android:layout_width="2px"
-            android:layout_height="30dp"
-            android:background="@color/black"/>
-
-        <TextView
-            android:id="@+id/tv_task_detail_car2"
-            android:gravity="center"
-            android:layout_width="0dp"
-            android:layout_weight="3"
-            android:layout_height="match_parent" />
-
-    </LinearLayout>
-
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="2px"
-        android:background="@color/black"/>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
             android:text="操作员"
             android:background="@color/lightgray"
             android:gravity="center"
@@ -222,17 +190,24 @@
             android:layout_weight="3"
             android:layout_height="match_parent" />
 
-        <View
-            android:layout_width="2px"
-            android:layout_height="30dp"
-            android:background="@color/black"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="2px"
+        android:background="@color/black"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <TextView
             android:text="日期"
             android:background="@color/lightgray"
             android:gravity="center"
             android:layout_width="0dp"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:layout_height="match_parent" />
 
         <View
@@ -244,7 +219,7 @@
             android:id="@+id/tv_task_detail_date"
             android:gravity="center"
             android:layout_width="0dp"
-            android:layout_weight="3"
+            android:layout_weight="4"
             android:layout_height="match_parent" />
 
     </LinearLayout>
@@ -261,5 +236,14 @@
         android:layout_weight="1">
 
     </android.support.v7.widget.RecyclerView>
+
+    <Button
+        android:id="@+id/btn_delete_task"
+        android:visibility="gone"
+        android:background="@drawable/blue_btn_bg"
+        android:textColor="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="删除"/>
 
 </LinearLayout>

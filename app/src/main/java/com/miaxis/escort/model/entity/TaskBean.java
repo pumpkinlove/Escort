@@ -147,7 +147,19 @@ public class TaskBean  implements Serializable {
 					this.status = status;
 				}
 				public String getStatusName() {
-					return this.statusName;
+					statusName="";
+					if ("1".equals(status)) {
+						statusName="已上报";
+					} else if ("2".equals(status)) {
+						statusName="已审核";
+					} else if ("3".equals(status)) {
+						statusName="已交接";
+					} else if ("4".equals(status)) {
+						statusName="已完成";
+					} else if ("5".equals(status)) {
+						statusName="已注销";
+					}
+					return statusName;
 				}
 				public void setStatusName(String statusName) {
 					this.statusName = statusName;

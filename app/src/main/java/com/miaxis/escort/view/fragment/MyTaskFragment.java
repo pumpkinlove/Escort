@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.miaxis.escort.R;
 import com.miaxis.escort.adapter.TaskAdapter;
@@ -36,7 +38,7 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 
-public class MyTaskFragment extends BaseFragment implements IMyTaskView{
+public class MyTaskFragment extends BaseFragment implements IMyTaskView ,VerifyTaskDialogFragment.OnVerifyTaskDialogListener{
 
     @BindView(R.id.rv_task)
     RecyclerView rvTask;
@@ -47,6 +49,10 @@ public class MyTaskFragment extends BaseFragment implements IMyTaskView{
     private OnFragmentInteractionListener mListener;
     private IMyTaskPresenter myTaskPresenter;
     private MaterialDialog materialDialog;
+    private VerifyTaskDialogFragment verifyTaskDialogFragment;
+
+    private String selecteTaskID = "";
+    private int step = 1;
 
     public MyTaskFragment() {
         // Required empty public constructor
@@ -74,16 +80,26 @@ public class MyTaskFragment extends BaseFragment implements IMyTaskView{
         rvTask.setLayoutManager(new LinearLayoutManager(getActivity()));
         taskAdapter.setOnItemClickListener(new TaskAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, int position) {
-                Intent intent = new Intent(MyTaskFragment.this.getActivity(), VerifyBoxActivity.class);
-                intent.putExtra("task", taskAdapter.getDataList().get(position));
-                //TODO：默认指纹验证通过，默认押运员，默认操作员
-                List<EscortBean> escortBeanList = EscortApp.getInstance().getDaoSession().getEscortBeanDao().loadAll();
-                List<WorkerBean> workerBeanList = EscortApp.getInstance().getDaoSession().getWorkerBeanDao().loadAll();
-                intent.putExtra("escort1st", escortBeanList.get(0));
-                intent.putExtra("escort2nd", escortBeanList.get(1));
-                intent.putExtra("verifyWorker", workerBeanList.get(1));
-                startActivity(intent);
+            public void onItemClick(View view, final int position) {
+                new MaterialDialog.Builder(MyTaskFragment.this.getContext())
+                        .title("开始执行任务？")
+                        .negativeText("取消")
+                        .positiveText("确认")
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                TaskBean taskBean = taskAdapter.getDataList().get(position);
+                                if (!selecteTaskID.equals(taskBean.getTaskcode())) {
+                                    step = 1;
+                                    selecteTaskID = taskBean.getTaskcode();
+                                }
+                                verifyTaskDialogFragment = VerifyTaskDialogFragment.newInstance(
+                                        taskBean, step, MyTaskFragment.this);
+                                verifyTaskDialogFragment.show(getChildFragmentManager(), "verifyTaskDialogFragment");
+                                verifyTaskDialogFragment.setCancelable(false);
+                            }
+                        })
+                        .show();
             }
         });
         srlTask.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -160,6 +176,34 @@ public class MyTaskFragment extends BaseFragment implements IMyTaskView{
     public void refreshTaskAfterUpTask() {
         materialDialog.show();
         myTaskPresenter.downTask();
+    }
+
+    @Override
+    public void updateStep(int step) {
+        this.step = step;
+    }
+
+    @Override
+    public void verifySuccess(TaskBean taskBean) {
+        verifyTaskDialogFragment.dismiss();
+        selecteTaskID = "";
+        step = 1;
+        Intent intent = new Intent(MyTaskFragment.this.getActivity(), VerifyBoxActivity.class);
+        intent.putExtra("task", taskBean);
+        //TODO：默认指纹验证通过，默认押运员，默认操作员
+        List<EscortBean> escortBeanList = EscortApp.getInstance().getDaoSession().getEscortBeanDao().loadAll();
+        List<WorkerBean> workerBeanList = EscortApp.getInstance().getDaoSession().getWorkerBeanDao().loadAll();
+        intent.putExtra("escort1st", escortBeanList.get(0));
+        intent.putExtra("escort2nd", escortBeanList.get(1));
+        intent.putExtra("verifyWorker", workerBeanList.get(1));
+        startActivity(intent);
+    }
+
+    @Override
+    public void verifyFailed() {
+        verifyTaskDialogFragment.dismiss();
+        selecteTaskID = "";
+        step = 1;
     }
 
     @Override

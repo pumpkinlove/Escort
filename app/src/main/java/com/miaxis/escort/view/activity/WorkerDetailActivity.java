@@ -172,7 +172,7 @@ public class WorkerDetailActivity extends BaseActivity implements IWorkerDetailV
             etWorkerName.setEnabled(false);
             etWorkerName.setText(workerBean.getName());
             btnAddWorkerFinish.setText("删除");
-            btnAddWorkerFinish.setBackgroundColor(getResources().getColor(R.color.red));
+            btnAddWorkerFinish.setBackgroundColor(getResources().getColor(R.color.crimson));
             llFirstFingerPrint.setClickable(false);
             llFirstFingerPrint.setFocusable(false);
             llSecondFingerPrint.setClickable(false);

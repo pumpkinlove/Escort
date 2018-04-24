@@ -43,7 +43,10 @@ public class TaskDetailAdapter extends RecyclerView.Adapter<TaskDetailAdapter.My
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         TaskBoxBean taskBoxBean = dataList.get(position);
         taskBoxBean.__setDaoSession(EscortApp.getInstance().getDaoSession());
-        holder.tvTaskDetail.setText(taskBoxBean.getBox().getBoxname());
+        BoxBean boxBean = taskBoxBean.getBox();
+        holder.tvTaskDetailBoxName.setText(boxBean.getBoxname());
+        holder.tvTaskDetailBoxCode.setText(boxBean.getBoxcode());
+        holder.tvTaskDetailStatus.setText(boxBean.getStatusName());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,8 +70,12 @@ public class TaskDetailAdapter extends RecyclerView.Adapter<TaskDetailAdapter.My
 
     class MyViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.tv_task_detail)
-        TextView tvTaskDetail;
+        @BindView(R.id.tv_task_detail_box_code)
+        TextView tvTaskDetailBoxCode;
+        @BindView(R.id.tv_task_detail_box_name)
+        TextView tvTaskDetailBoxName;
+        @BindView(R.id.tv_task_detail_box_status)
+        TextView tvTaskDetailStatus;
 
         MyViewHolder(View itemView) {
             super(itemView);
