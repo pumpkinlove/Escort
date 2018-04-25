@@ -288,7 +288,7 @@ public class UpTaskFragment extends BaseFragment implements IUpTaskView{
         if (materialDialog.isShowing()) {
             materialDialog.dismiss();
         }
-        Toasty.error(this.getActivity(), message, 1, true).show();
+        Toasty.error(this.getActivity(), message, 0, true).show();
     }
 
     /**

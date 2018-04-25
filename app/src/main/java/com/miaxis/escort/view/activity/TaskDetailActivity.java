@@ -146,7 +146,7 @@ public class TaskDetailActivity extends BaseActivity implements ITaskDetailView{
         if (materialDialog.isShowing()) {
             materialDialog.dismiss();
         }
-        Toasty.error(this, message, 1, true).show();
+        Toasty.error(this, message, 0, true).show();
     }
 
     @Override

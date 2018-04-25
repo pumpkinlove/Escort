@@ -161,7 +161,7 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
 
     @Override
     public void getPermissionsFailed() {
-        Toasty.error(this, "拒绝权限将无法正常运行", Toast.LENGTH_LONG, true).show();
+        Toasty.error(this, "拒绝权限将无法正常运行", 0, true).show();
         finish();
     }
 }

@@ -66,7 +66,7 @@ public class VerifyBoxPresenterImpl extends BaseActivityPresenter implements IVe
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        Toasty.error(EscortApp.getInstance().getApplicationContext(), "未找到相关箱包", 1, true).show();
+                        Toasty.error(EscortApp.getInstance().getApplicationContext(), "未找到相关箱包", 0, true).show();
                     }
                 });
     }

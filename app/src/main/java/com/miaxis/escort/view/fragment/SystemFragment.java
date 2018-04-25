@@ -302,7 +302,7 @@ public class SystemFragment extends BaseFragment implements ISystemView{
 
     @Override
     public void downAppMessageFailed(String message) {
-        Toasty.error(this.getContext(), message, 1, true).show();
+        Toasty.error(EscortApp.getInstance().getApplicationContext(), message, 0, true).show();
     }
 
     @Override
@@ -311,7 +311,7 @@ public class SystemFragment extends BaseFragment implements ISystemView{
             materialDialog.setProgress(100);
             materialDialog.dismiss();
         }
-        Toasty.success(this.getContext(), "下载成功", 1, true).show();
+        Toasty.success(EscortApp.getInstance().getApplicationContext(), "下载成功", 0, true).show();
         File file = new File(path);
         if (file.exists()) {
             Uri uriForFile = FileProvider.getUriForFile(context, "com.miaxis.escort.fileprovider", file);
@@ -327,7 +327,7 @@ public class SystemFragment extends BaseFragment implements ISystemView{
 
     @Override
     public void downloadFailed(String message) {
-        Toasty.error(this.getContext(), message, 1, true).show();
+        Toasty.error(EscortApp.getInstance().getApplicationContext(), message, 0, true).show();
     }
 
     @Override
@@ -335,7 +335,7 @@ public class SystemFragment extends BaseFragment implements ISystemView{
         if (materialDialog.isShowing()) {
             materialDialog.dismiss();
         }
-        Toasty.error(this.getContext(), "取消下载", 1, true).show();
+        Toasty.error(EscortApp.getInstance().getApplicationContext(), "取消下载", 0, true).show();
     }
 
     @Override
