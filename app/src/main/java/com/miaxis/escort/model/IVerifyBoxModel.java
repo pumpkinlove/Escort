@@ -13,4 +13,5 @@ import java.util.List;
 public interface IVerifyBoxModel {
     List<BoxBean> loadBoxListByTask(TaskBean taskBean);
     void updateTaskStatus(TaskExeBean taskExeBean);
+    void saveLocal(TaskExeBean taskExeBean);
 }

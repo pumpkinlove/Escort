@@ -2,6 +2,7 @@ package com.miaxis.escort.model.entity;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
 
 import java.io.Serializable;
 
@@ -9,6 +10,8 @@ import java.io.Serializable;
 public class TaskExeBean implements Serializable{
 
 	private static final long serialVersionUID = 5344500230356169702L;
+	@Id(autoincrement = true)
+    private Long id;
 	private String taskno;
 	private String tasktype;
 	private String deptno;
@@ -23,11 +26,12 @@ public class TaskExeBean implements Serializable{
 	private String tasktime;
 	private String status;
 	private String boxes;
-	@Generated(hash = 651911119)
-	public TaskExeBean(String taskno, String tasktype, String deptno, String workno,
-			String workname, String escode1, String esname1, String escode2,
-			String esname2, String carcode, String plateno, String tasktime,
-			String status, String boxes) {
+	@Generated(hash = 539121695)
+	public TaskExeBean(Long id, String taskno, String tasktype, String deptno,
+			String workno, String workname, String escode1, String esname1,
+			String escode2, String esname2, String carcode, String plateno,
+			String tasktime, String status, String boxes) {
+		this.id = id;
 		this.taskno = taskno;
 		this.tasktype = tasktype;
 		this.deptno = deptno;
@@ -45,6 +49,12 @@ public class TaskExeBean implements Serializable{
 	}
 	@Generated(hash = 1880158953)
 	public TaskExeBean() {
+	}
+	public Long getId() {
+		return this.id;
+	}
+	public void setId(Long id) {
+		this.id = id;
 	}
 	public String getTaskno() {
 		return this.taskno;

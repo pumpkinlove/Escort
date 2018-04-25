@@ -13,6 +13,7 @@ import com.miaxis.escort.model.LoginModelImpl;
 import com.miaxis.escort.model.entity.Config;
 import com.miaxis.escort.model.entity.EscortBean;
 import com.miaxis.escort.model.entity.TaskBean;
+import com.miaxis.escort.model.entity.TaskExeBean;
 import com.miaxis.escort.model.entity.WorkerBean;
 import com.miaxis.escort.model.retrofit.EscortNet;
 import com.miaxis.escort.model.retrofit.ResponseEntity;
@@ -108,6 +109,69 @@ public class LoginPresenterImpl extends BaseActivityPresenter implements ILoginP
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         loginView.loginFailed();
+                    }
+                });
+    }
+
+    @Override
+    public void resumeTaskExe() {
+        Observable.create(new ObservableOnSubscribe<TaskExeBean>() {
+            @Override
+            public void subscribe(ObservableEmitter<TaskExeBean> e) throws Exception {
+                List<TaskExeBean> taskExeBeanList = EscortApp.getInstance().getDaoSession().getTaskExeBeanDao().loadAll();
+                for (TaskExeBean taskExeBean : taskExeBeanList) {
+                    e.onNext(taskExeBean);
+                }
+            }
+        })
+                .subscribeOn(Schedulers.io())
+                .compose(getProvider().<TaskExeBean>bindToLifecycle())
+                .observeOn(Schedulers.io())
+                .doOnNext(new Consumer<TaskExeBean>() {
+                    @Override
+                    public void accept(TaskExeBean taskExeBean) throws Exception {
+                        resumeTaskExeBean(taskExeBean);
+                    }
+                })
+                .subscribe(new Consumer<TaskExeBean>() {
+                    @Override
+                    public void accept(TaskExeBean taskExeBean) throws Exception {
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                });
+    }
+
+    private void resumeTaskExeBean(final TaskExeBean taskExeBean) {
+        Observable.just(taskExeBean)
+                .subscribeOn(Schedulers.io())
+                .compose(getProvider().<TaskExeBean>bindToLifecycle())
+                .observeOn(Schedulers.io())
+                .flatMap(new Function<TaskExeBean, ObservableSource<ResponseEntity>>() {
+                    @Override
+                    public ObservableSource<ResponseEntity> apply(TaskExeBean taskExeBean) throws Exception {
+                        Config config = loginModel.loadConfig();
+                        Retrofit retrofit = new Retrofit.Builder()
+                                .addConverterFactory(GsonConverterFactory.create())//请求的结果转为实体类
+                                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())  //适配RxJava2.0, RxJava1.x则为RxJavaCallAdapterFactory.create()
+                                .baseUrl("http://" + config.getIp() + ":" + config.getPort())
+                                .build();
+                        TaskNet taskNet = retrofit.create(TaskNet.class);
+                        return taskNet.uploadTaskExec(new Gson().toJson(taskExeBean));
+                    }
+                })
+                .subscribe(new Consumer<ResponseEntity>() {
+                    @Override
+                    public void accept(ResponseEntity responseEntity) throws Exception {
+                        if (StaticVariable.SUCCESS.equals(responseEntity.getCode())) {
+                            loginModel.deleteTaskExe(taskExeBean);
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
                     }
                 });
     }

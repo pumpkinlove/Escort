@@ -86,9 +86,12 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
                     @Override
                     public void accept(Object o) throws Exception {
                         //TODO:登陆指纹验证
+                        //TODO：进入App无设置切换到设置页面
+                        //TODO:上传箱包处加个下拉刷新
                         loginPresenter.initAppData();
                     }
                 });
+        loginPresenter.resumeTaskExe();
     }
 
     @Override

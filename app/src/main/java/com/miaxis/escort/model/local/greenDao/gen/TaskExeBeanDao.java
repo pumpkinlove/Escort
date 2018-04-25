@@ -15,7 +15,7 @@ import com.miaxis.escort.model.entity.TaskExeBean;
 /** 
  * DAO for table "TASK_EXE_BEAN".
 */
-public class TaskExeBeanDao extends AbstractDao<TaskExeBean, Void> {
+public class TaskExeBeanDao extends AbstractDao<TaskExeBean, Long> {
 
     public static final String TABLENAME = "TASK_EXE_BEAN";
 
@@ -24,20 +24,21 @@ public class TaskExeBeanDao extends AbstractDao<TaskExeBean, Void> {
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property Taskno = new Property(0, String.class, "taskno", false, "TASKNO");
-        public final static Property Tasktype = new Property(1, String.class, "tasktype", false, "TASKTYPE");
-        public final static Property Deptno = new Property(2, String.class, "deptno", false, "DEPTNO");
-        public final static Property Workno = new Property(3, String.class, "workno", false, "WORKNO");
-        public final static Property Workname = new Property(4, String.class, "workname", false, "WORKNAME");
-        public final static Property Escode1 = new Property(5, String.class, "escode1", false, "ESCODE1");
-        public final static Property Esname1 = new Property(6, String.class, "esname1", false, "ESNAME1");
-        public final static Property Escode2 = new Property(7, String.class, "escode2", false, "ESCODE2");
-        public final static Property Esname2 = new Property(8, String.class, "esname2", false, "ESNAME2");
-        public final static Property Carcode = new Property(9, String.class, "carcode", false, "CARCODE");
-        public final static Property Plateno = new Property(10, String.class, "plateno", false, "PLATENO");
-        public final static Property Tasktime = new Property(11, String.class, "tasktime", false, "TASKTIME");
-        public final static Property Status = new Property(12, String.class, "status", false, "STATUS");
-        public final static Property Boxes = new Property(13, String.class, "boxes", false, "BOXES");
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property Taskno = new Property(1, String.class, "taskno", false, "TASKNO");
+        public final static Property Tasktype = new Property(2, String.class, "tasktype", false, "TASKTYPE");
+        public final static Property Deptno = new Property(3, String.class, "deptno", false, "DEPTNO");
+        public final static Property Workno = new Property(4, String.class, "workno", false, "WORKNO");
+        public final static Property Workname = new Property(5, String.class, "workname", false, "WORKNAME");
+        public final static Property Escode1 = new Property(6, String.class, "escode1", false, "ESCODE1");
+        public final static Property Esname1 = new Property(7, String.class, "esname1", false, "ESNAME1");
+        public final static Property Escode2 = new Property(8, String.class, "escode2", false, "ESCODE2");
+        public final static Property Esname2 = new Property(9, String.class, "esname2", false, "ESNAME2");
+        public final static Property Carcode = new Property(10, String.class, "carcode", false, "CARCODE");
+        public final static Property Plateno = new Property(11, String.class, "plateno", false, "PLATENO");
+        public final static Property Tasktime = new Property(12, String.class, "tasktime", false, "TASKTIME");
+        public final static Property Status = new Property(13, String.class, "status", false, "STATUS");
+        public final static Property Boxes = new Property(14, String.class, "boxes", false, "BOXES");
     }
 
 
@@ -53,20 +54,21 @@ public class TaskExeBeanDao extends AbstractDao<TaskExeBean, Void> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"TASK_EXE_BEAN\" (" + //
-                "\"TASKNO\" TEXT," + // 0: taskno
-                "\"TASKTYPE\" TEXT," + // 1: tasktype
-                "\"DEPTNO\" TEXT," + // 2: deptno
-                "\"WORKNO\" TEXT," + // 3: workno
-                "\"WORKNAME\" TEXT," + // 4: workname
-                "\"ESCODE1\" TEXT," + // 5: escode1
-                "\"ESNAME1\" TEXT," + // 6: esname1
-                "\"ESCODE2\" TEXT," + // 7: escode2
-                "\"ESNAME2\" TEXT," + // 8: esname2
-                "\"CARCODE\" TEXT," + // 9: carcode
-                "\"PLATENO\" TEXT," + // 10: plateno
-                "\"TASKTIME\" TEXT," + // 11: tasktime
-                "\"STATUS\" TEXT," + // 12: status
-                "\"BOXES\" TEXT);"); // 13: boxes
+                "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
+                "\"TASKNO\" TEXT," + // 1: taskno
+                "\"TASKTYPE\" TEXT," + // 2: tasktype
+                "\"DEPTNO\" TEXT," + // 3: deptno
+                "\"WORKNO\" TEXT," + // 4: workno
+                "\"WORKNAME\" TEXT," + // 5: workname
+                "\"ESCODE1\" TEXT," + // 6: escode1
+                "\"ESNAME1\" TEXT," + // 7: esname1
+                "\"ESCODE2\" TEXT," + // 8: escode2
+                "\"ESNAME2\" TEXT," + // 9: esname2
+                "\"CARCODE\" TEXT," + // 10: carcode
+                "\"PLATENO\" TEXT," + // 11: plateno
+                "\"TASKTIME\" TEXT," + // 12: tasktime
+                "\"STATUS\" TEXT," + // 13: status
+                "\"BOXES\" TEXT);"); // 14: boxes
     }
 
     /** Drops the underlying database table. */
@@ -79,74 +81,79 @@ public class TaskExeBeanDao extends AbstractDao<TaskExeBean, Void> {
     protected final void bindValues(DatabaseStatement stmt, TaskExeBean entity) {
         stmt.clearBindings();
  
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
+ 
         String taskno = entity.getTaskno();
         if (taskno != null) {
-            stmt.bindString(1, taskno);
+            stmt.bindString(2, taskno);
         }
  
         String tasktype = entity.getTasktype();
         if (tasktype != null) {
-            stmt.bindString(2, tasktype);
+            stmt.bindString(3, tasktype);
         }
  
         String deptno = entity.getDeptno();
         if (deptno != null) {
-            stmt.bindString(3, deptno);
+            stmt.bindString(4, deptno);
         }
  
         String workno = entity.getWorkno();
         if (workno != null) {
-            stmt.bindString(4, workno);
+            stmt.bindString(5, workno);
         }
  
         String workname = entity.getWorkname();
         if (workname != null) {
-            stmt.bindString(5, workname);
+            stmt.bindString(6, workname);
         }
  
         String escode1 = entity.getEscode1();
         if (escode1 != null) {
-            stmt.bindString(6, escode1);
+            stmt.bindString(7, escode1);
         }
  
         String esname1 = entity.getEsname1();
         if (esname1 != null) {
-            stmt.bindString(7, esname1);
+            stmt.bindString(8, esname1);
         }
  
         String escode2 = entity.getEscode2();
         if (escode2 != null) {
-            stmt.bindString(8, escode2);
+            stmt.bindString(9, escode2);
         }
  
         String esname2 = entity.getEsname2();
         if (esname2 != null) {
-            stmt.bindString(9, esname2);
+            stmt.bindString(10, esname2);
         }
  
         String carcode = entity.getCarcode();
         if (carcode != null) {
-            stmt.bindString(10, carcode);
+            stmt.bindString(11, carcode);
         }
  
         String plateno = entity.getPlateno();
         if (plateno != null) {
-            stmt.bindString(11, plateno);
+            stmt.bindString(12, plateno);
         }
  
         String tasktime = entity.getTasktime();
         if (tasktime != null) {
-            stmt.bindString(12, tasktime);
+            stmt.bindString(13, tasktime);
         }
  
         String status = entity.getStatus();
         if (status != null) {
-            stmt.bindString(13, status);
+            stmt.bindString(14, status);
         }
  
         String boxes = entity.getBoxes();
         if (boxes != null) {
-            stmt.bindString(14, boxes);
+            stmt.bindString(15, boxes);
         }
     }
 
@@ -154,136 +161,146 @@ public class TaskExeBeanDao extends AbstractDao<TaskExeBean, Void> {
     protected final void bindValues(SQLiteStatement stmt, TaskExeBean entity) {
         stmt.clearBindings();
  
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
+ 
         String taskno = entity.getTaskno();
         if (taskno != null) {
-            stmt.bindString(1, taskno);
+            stmt.bindString(2, taskno);
         }
  
         String tasktype = entity.getTasktype();
         if (tasktype != null) {
-            stmt.bindString(2, tasktype);
+            stmt.bindString(3, tasktype);
         }
  
         String deptno = entity.getDeptno();
         if (deptno != null) {
-            stmt.bindString(3, deptno);
+            stmt.bindString(4, deptno);
         }
  
         String workno = entity.getWorkno();
         if (workno != null) {
-            stmt.bindString(4, workno);
+            stmt.bindString(5, workno);
         }
  
         String workname = entity.getWorkname();
         if (workname != null) {
-            stmt.bindString(5, workname);
+            stmt.bindString(6, workname);
         }
  
         String escode1 = entity.getEscode1();
         if (escode1 != null) {
-            stmt.bindString(6, escode1);
+            stmt.bindString(7, escode1);
         }
  
         String esname1 = entity.getEsname1();
         if (esname1 != null) {
-            stmt.bindString(7, esname1);
+            stmt.bindString(8, esname1);
         }
  
         String escode2 = entity.getEscode2();
         if (escode2 != null) {
-            stmt.bindString(8, escode2);
+            stmt.bindString(9, escode2);
         }
  
         String esname2 = entity.getEsname2();
         if (esname2 != null) {
-            stmt.bindString(9, esname2);
+            stmt.bindString(10, esname2);
         }
  
         String carcode = entity.getCarcode();
         if (carcode != null) {
-            stmt.bindString(10, carcode);
+            stmt.bindString(11, carcode);
         }
  
         String plateno = entity.getPlateno();
         if (plateno != null) {
-            stmt.bindString(11, plateno);
+            stmt.bindString(12, plateno);
         }
  
         String tasktime = entity.getTasktime();
         if (tasktime != null) {
-            stmt.bindString(12, tasktime);
+            stmt.bindString(13, tasktime);
         }
  
         String status = entity.getStatus();
         if (status != null) {
-            stmt.bindString(13, status);
+            stmt.bindString(14, status);
         }
  
         String boxes = entity.getBoxes();
         if (boxes != null) {
-            stmt.bindString(14, boxes);
+            stmt.bindString(15, boxes);
         }
     }
 
     @Override
-    public Void readKey(Cursor cursor, int offset) {
-        return null;
+    public Long readKey(Cursor cursor, int offset) {
+        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }    
 
     @Override
     public TaskExeBean readEntity(Cursor cursor, int offset) {
         TaskExeBean entity = new TaskExeBean( //
-            cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0), // taskno
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // tasktype
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // deptno
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // workno
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // workname
-            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // escode1
-            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // esname1
-            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // escode2
-            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // esname2
-            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // carcode
-            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // plateno
-            cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11), // tasktime
-            cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12), // status
-            cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13) // boxes
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
+            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // taskno
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // tasktype
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // deptno
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // workno
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // workname
+            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // escode1
+            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // esname1
+            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // escode2
+            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // esname2
+            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // carcode
+            cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11), // plateno
+            cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12), // tasktime
+            cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13), // status
+            cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14) // boxes
         );
         return entity;
     }
      
     @Override
     public void readEntity(Cursor cursor, TaskExeBean entity, int offset) {
-        entity.setTaskno(cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0));
-        entity.setTasktype(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setDeptno(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setWorkno(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-        entity.setWorkname(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-        entity.setEscode1(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
-        entity.setEsname1(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
-        entity.setEscode2(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
-        entity.setEsname2(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
-        entity.setCarcode(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
-        entity.setPlateno(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
-        entity.setTasktime(cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11));
-        entity.setStatus(cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12));
-        entity.setBoxes(cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13));
+        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
+        entity.setTaskno(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setTasktype(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setDeptno(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setWorkno(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setWorkname(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setEscode1(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
+        entity.setEsname1(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
+        entity.setEscode2(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
+        entity.setEsname2(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
+        entity.setCarcode(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
+        entity.setPlateno(cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11));
+        entity.setTasktime(cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12));
+        entity.setStatus(cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13));
+        entity.setBoxes(cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14));
      }
     
     @Override
-    protected final Void updateKeyAfterInsert(TaskExeBean entity, long rowId) {
-        // Unsupported or missing PK type
-        return null;
+    protected final Long updateKeyAfterInsert(TaskExeBean entity, long rowId) {
+        entity.setId(rowId);
+        return rowId;
     }
     
     @Override
-    public Void getKey(TaskExeBean entity) {
-        return null;
+    public Long getKey(TaskExeBean entity) {
+        if(entity != null) {
+            return entity.getId();
+        } else {
+            return null;
+        }
     }
 
     @Override
     public boolean hasKey(TaskExeBean entity) {
-        // TODO
-        return false;
+        return entity.getId() != null;
     }
 
     @Override

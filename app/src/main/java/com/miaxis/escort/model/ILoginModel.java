@@ -4,6 +4,7 @@ import com.miaxis.escort.model.entity.Config;
 import com.miaxis.escort.model.entity.EscortBean;
 import com.miaxis.escort.model.entity.OpdateBean;
 import com.miaxis.escort.model.entity.TaskBean;
+import com.miaxis.escort.model.entity.TaskExeBean;
 import com.miaxis.escort.model.entity.WorkerBean;
 
 import java.util.List;
@@ -14,7 +15,5 @@ import java.util.List;
 
 public interface ILoginModel {
     Config loadConfig();
-    WorkerBean loadWorker();
-    void saveTask(List<TaskBean> taskBeanList);
-    List<OpdateBean> getOpdateByTask();
+    void deleteTaskExe(TaskExeBean taskExeBean);
 }

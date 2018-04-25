@@ -5,6 +5,7 @@ import com.miaxis.escort.model.entity.Config;
 import com.miaxis.escort.model.entity.EscortBean;
 import com.miaxis.escort.model.entity.OpdateBean;
 import com.miaxis.escort.model.entity.TaskBean;
+import com.miaxis.escort.model.entity.TaskExeBean;
 import com.miaxis.escort.model.entity.WorkerBean;
 import com.miaxis.escort.presenter.ILoginPresenter;
 
@@ -22,17 +23,7 @@ public class LoginModelImpl implements ILoginModel{
     }
 
     @Override
-    public WorkerBean loadWorker() {
-        return null;
-    }
-
-    @Override
-    public void saveTask(List<TaskBean> taskBeanList) {
-        EscortApp.getInstance().getDaoSession().getTaskBeanDao().insertOrReplaceInTx(taskBeanList);
-    }
-
-    @Override
-    public List<OpdateBean> getOpdateByTask() {
-        return null;
+    public void deleteTaskExe(TaskExeBean taskExeBean) {
+        EscortApp.getInstance().getDaoSession().getTaskExeBeanDao().delete(taskExeBean);
     }
 }

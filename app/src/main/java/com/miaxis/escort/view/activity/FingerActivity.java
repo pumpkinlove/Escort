@@ -1,18 +1,28 @@
 package com.miaxis.escort.view.activity;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.graphics.Bitmap;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.miaxis.escort.R;
+import com.miaxis.escort.presenter.FingerPresenterImpl;
+import com.miaxis.escort.presenter.IFingerPresenter;
+import com.miaxis.escort.view.viewer.IFingerView;
 
 import butterknife.BindView;
 
-public class FingerActivity extends BaseActivity {
+public class FingerActivity extends BaseActivity implements IFingerView{
 
     @BindView(R.id.finger_toolbar)
     Toolbar toolbar;
+    @BindView(R.id.iv_finger)
+    ImageView ivFinger;
+    @BindView(R.id.tv_tip)
+    TextView tvTip;
+
+    private IFingerPresenter fingerPresenter;
 
     @Override
     protected int setContentView() {
@@ -21,7 +31,7 @@ public class FingerActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-
+        fingerPresenter = new FingerPresenterImpl(this, this);
     }
 
     @Override
@@ -29,6 +39,42 @@ public class FingerActivity extends BaseActivity {
         toolbar.setTitle("押运员查询");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fingerPresenter.regFinger();
+    }
+
+    @Override
+    public void updateTip(final String message) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                tvTip.setText(message);
+            }
+        });
+    }
+
+    @Override
+    public void updateImage(final Bitmap bitmap) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ivFinger.setImageBitmap(bitmap);
+            }
+        });
+    }
+
+    @Override
+    public void register(final String finger) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                tvTip.setText(finger);
+            }
+        });
     }
 
     @Override
@@ -44,5 +90,6 @@ public class FingerActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        fingerPresenter.doDestroy();
     }
 }

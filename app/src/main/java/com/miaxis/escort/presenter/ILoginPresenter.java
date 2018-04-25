@@ -9,4 +9,5 @@ import android.app.Activity;
 public interface ILoginPresenter extends IBasePresenter{
     void getPermissions(Activity activity);
     void initAppData();
+    void resumeTaskExe();
 }

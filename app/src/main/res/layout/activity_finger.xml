@@ -30,7 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="20pt"
-        android:id="@+id/info"/>
+        android:id="@+id/tv_info"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -38,7 +38,7 @@
 
     <ImageView
         android:layout_gravity="center"
-        android:id="@+id/imgView"
+        android:id="@+id/iv_finger"
         android:layout_width="160dp"
         android:layout_height="208dp"
         android:padding="4dp"
@@ -51,7 +51,7 @@
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:layout_gravity="center"
-        android:id="@+id/tip"/>
+        android:id="@+id/tv_tip"/>
 
     <Space
         android:layout_width="match_parent"

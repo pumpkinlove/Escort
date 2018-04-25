@@ -40,4 +40,9 @@ public class VerifyBoxModelImpl implements IVerifyBoxModel{
         taskBean.setExetime(taskExeBean.getTasktime().substring(11));
         EscortApp.getInstance().getDaoSession().insertOrReplace(taskBean);
     }
+
+    @Override
+    public void saveLocal(TaskExeBean taskExeBean) {
+        EscortApp.getInstance().getDaoSession().getTaskExeBeanDao().insertOrReplace(taskExeBean);
+    }
 }

@@ -72,7 +72,7 @@ public class VerifyBoxPresenterImpl extends BaseActivityPresenter implements IVe
     }
 
     @Override
-    public void upTaskExe(TaskExeBean taskExeBean) {
+    public void upTaskExe(final TaskExeBean taskExeBean) {
         Observable.just(taskExeBean)
                 .subscribeOn(Schedulers.io())
                 .compose(getProvider().<TaskExeBean>bindToLifecycle())
@@ -101,13 +101,17 @@ public class VerifyBoxPresenterImpl extends BaseActivityPresenter implements IVe
                                 verifyBoxView.uploadSuccess();
                             } else {
                                 verifyBoxView.uploadFailed(responseEntity.getMessage());
+                                verifyBoxModel.saveLocal(taskExeBean);
                             }
                         }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        verifyBoxView.uploadFailed(throwable.getMessage());
+                        if (verifyBoxView != null) {
+                            verifyBoxView.uploadFailed(throwable.getMessage());
+                            verifyBoxModel.saveLocal(taskExeBean);
+                        }
                     }
                 });
     }
