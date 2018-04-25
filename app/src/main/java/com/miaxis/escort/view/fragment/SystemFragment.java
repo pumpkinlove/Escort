@@ -6,9 +6,12 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,16 +21,21 @@ import android.widget.LinearLayout;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.jakewharton.rxbinding2.view.RxView;
+import com.liulishuo.filedownloader.FileDownloader;
 import com.miaxis.escort.R;
 import com.miaxis.escort.app.EscortApp;
 import com.miaxis.escort.presenter.ISystemPresenter;
 import com.miaxis.escort.presenter.SystemPresenterImpl;
+import com.miaxis.escort.util.StaticVariable;
 import com.miaxis.escort.view.activity.ConfigActivity;
 import com.miaxis.escort.view.activity.LoginActivity;
 import com.miaxis.escort.view.activity.QueryActivity;
 import com.miaxis.escort.view.activity.WorkerManageActivity;
 import com.miaxis.escort.view.viewer.ISystemView;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -35,6 +43,7 @@ import es.dmoral.toasty.Toasty;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.http.Url;
 
 public class SystemFragment extends BaseFragment implements ISystemView{
 
@@ -237,12 +246,16 @@ public class SystemFragment extends BaseFragment implements ISystemView{
     @Override
     public void downAppMessageSuccess(String message) {
         StringBuilder content = new StringBuilder();
-        String[] data = message.split("&");
+        final String[] data = message.split("&");
         if (data[0].equals(getVersion())) {
             content.append("当前已经是最新版本，无需更新！");
             updateFlag = false;
         } else {
-            content.append(message);
+            content.append("最新版本为：V" + data[0] + "\n");
+            content.append("当前版本为：V" + getVersion() + "\n");
+            content.append("安装包大小：" + StaticVariable.convertFileSize(Long.parseLong(data[1])) + "\n");
+            content.append("更新时间：" + data[2]);
+            Log.e("asd", data[3]);
             updateFlag = true;
         }
         new MaterialDialog.Builder(this.getContext())
@@ -254,16 +267,69 @@ public class SystemFragment extends BaseFragment implements ISystemView{
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         if (updateFlag) {
-                            Toasty.success(SystemFragment.this.getContext(), "下载成功", 0, true).show();
+                            materialDialog = new MaterialDialog.Builder(SystemFragment.this.getContext())
+                                    .title("下载进度")
+                                    .progress(false, 100)
+                                    .positiveText("取消")
+                                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                        @Override
+                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                            FileDownloader.getImpl().pauseAll();
+                                        }
+                                    })
+                                    .cancelable(false)
+                                    .show();
+                            try {
+                                systemPresenter.download(new URL(data[3]), Environment.getExternalStorageDirectory().getPath()+"/xunjian V" + data[0] + ".apk");
+                            } catch (MalformedURLException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 })
                 .show();
     }
+    MaterialDialog materialDialog;
+
+    @Override
+    public void updateProgress(int progress) {
+        if (materialDialog.isShowing()) {
+            materialDialog.setProgress(progress);
+        }
+    }
 
     @Override
     public void downAppMessageFailed(String message) {
         Toasty.error(this.getContext(), message, 1, true).show();
+    }
+
+    @Override
+    public void downloadSuccess(String path) {
+        if (materialDialog.isShowing()) {
+            materialDialog.setProgress(100);
+            materialDialog.dismiss();
+        }
+        Toasty.success(this.getContext(), "下载成功", 1, true).show();
+        //File file = new File(path);
+        //Uri apkUri = FileProvider.getUriForFile(SystemFragment.this.getContext(), "com.miaxis.escort.fileprovider", file);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(Uri.parse(path), "application/vnd.android.package-archive");
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        startActivity(intent);
+    }
+
+    @Override
+    public void downloadFailed(String message) {
+        Toasty.error(this.getContext(), message, 1, true).show();
+    }
+
+    @Override
+    public void downloadPause() {
+        if (materialDialog.isShowing()) {
+            materialDialog.dismiss();
+        }
+        Toasty.error(this.getContext(), "取消下载", 1, true).show();
     }
 
     @Override

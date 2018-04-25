@@ -3,6 +3,7 @@ package com.miaxis.escort.app;
 import android.app.Application;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.liulishuo.filedownloader.FileDownloader;
 import com.miaxis.escort.model.local.greenDao.GreenDaoContext;
 import com.miaxis.escort.model.local.greenDao.gen.DaoMaster;
 import com.miaxis.escort.model.local.greenDao.gen.DaoSession;
@@ -29,6 +30,7 @@ public class EscortApp extends Application{
         super.onCreate();
         escortApp = this;
         map = new HashMap<>();
+        FileDownloader.setup(this);
     }
 
     public static EscortApp getInstance() {

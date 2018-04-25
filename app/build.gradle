@@ -60,6 +60,7 @@ dependencies {
     compile 'com.brucetoo.pickview:library:1.2.3'
     implementation 'com.afollestad.material-dialogs:commons:0.9.6.0'
     compile 'com.google.code.gson:gson:2.6.2'
+    implementation 'com.liulishuo.filedownloader:library:1.7.3'
 }
 
 greendao {

@@ -13,8 +13,8 @@ import retrofit2.http.Query;
 public interface AppNet {
     @GET("yygl/api/getAppLength")
     Observable<ResponseEntity<String>> getAppLength();
-    @GET("yygl/api/getAppData")
-    Observable<ResponseEntity<String>> getAppData(@Query("start") int start, @Query("length") int length);
+    @GET("yygl/api/getAppUrl")
+    Observable<ResponseEntity<String>> getAppUrl();
     @GET("yygl/api/getAppVersion")
     Observable<ResponseEntity<String>> getAppVersion();
     @GET("yygl/api/getTime")
