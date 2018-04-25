@@ -1,5 +1,6 @@
 package com.miaxis.escort.view.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -85,6 +86,7 @@ public class SystemFragment extends BaseFragment implements ISystemView{
         systemPresenter = new SystemPresenterImpl(this, this);
     }
 
+    @SuppressLint("CheckResult")
     @Override
     protected void initView() {
         RxView.clicks(llQuery)
@@ -310,13 +312,17 @@ public class SystemFragment extends BaseFragment implements ISystemView{
             materialDialog.dismiss();
         }
         Toasty.success(this.getContext(), "下载成功", 1, true).show();
-        //File file = new File(path);
-        //Uri apkUri = FileProvider.getUriForFile(SystemFragment.this.getContext(), "com.miaxis.escort.fileprovider", file);
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.parse(path), "application/vnd.android.package-archive");
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-        startActivity(intent);
+        File file = new File(path);
+        if (file.exists()) {
+            Uri uriForFile = FileProvider.getUriForFile(context, "com.miaxis.escort.fileprovider", file);
+
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setDataAndType(uriForFile, "application/vnd.android.package-archive");
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            startActivity(intent);
+        }
     }
 
     @Override
