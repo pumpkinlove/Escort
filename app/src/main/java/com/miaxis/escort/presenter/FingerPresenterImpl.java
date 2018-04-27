@@ -107,7 +107,7 @@ public class FingerPresenterImpl extends BaseActivityPresenter implements IFinge
                     }
                     return;
                 }
-                String str = new String(Base64.encode(mb, Base64.NO_WRAP));
+                String str = new String(Base64.encode(mb, Base64.DEFAULT));
                 if (fingerView != null) {
                     fingerView.register(str);
                 }

@@ -12,16 +12,24 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.device.Device;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.miaxis.escort.R;
 import com.miaxis.escort.app.EscortApp;
 import com.miaxis.escort.model.entity.EscortBean;
 import com.miaxis.escort.model.entity.TaskBean;
 import com.miaxis.escort.model.entity.TaskEscortBean;
+import com.miaxis.escort.model.entity.WorkerBean;
+import com.miaxis.escort.presenter.IVerifyTaskDialogPresenter;
+import com.miaxis.escort.presenter.VerifyTaskDialogPresenterImpl;
+import com.miaxis.escort.view.viewer.IVerifyTaskDialogView;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
+import es.dmoral.toasty.Toasty;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 
@@ -29,7 +37,7 @@ import io.reactivex.functions.Consumer;
  * Created by 一非 on 2018/4/24.
  */
 
-public class VerifyTaskDialogFragment extends BaseDialogFragment {
+public class VerifyTaskDialogFragment extends BaseDialogFragment implements IVerifyTaskDialogView{
 
     @BindView(R.id.tv_dialog_text)
     TextView tvDialigText;
@@ -43,6 +51,10 @@ public class VerifyTaskDialogFragment extends BaseDialogFragment {
     private int step;
     private TaskBean taskBean;
     private OnVerifyTaskDialogListener listener;
+    private IVerifyTaskDialogPresenter verifyTaskDialogPresenter;
+    private List<EscortBean> escortBeanList;
+    private List<EscortBean> mList;
+    private WorkerBean workerBean;
 
     public VerifyTaskDialogFragment() {
 
@@ -63,44 +75,20 @@ public class VerifyTaskDialogFragment extends BaseDialogFragment {
 
     @Override
     protected void initData() {
-
+        escortBeanList = new ArrayList<>();
+        mList = new ArrayList<>();
+        verifyTaskDialogPresenter = new VerifyTaskDialogPresenterImpl(this, this);
+        taskBean.__setDaoSession(EscortApp.getInstance().getDaoSession());
+        for (TaskEscortBean taskEscortBean : taskBean.getEscortList()) {
+            taskEscortBean.__setDaoSession(EscortApp.getInstance().getDaoSession());
+            escortBeanList.add(taskEscortBean.getEscortBean());
+            mList.add(taskEscortBean.getEscortBean());
+        }
     }
 
     @Override
     protected void initView() {
         refreshStepView();
-        /**Test*/
-        RxView.clicks(ivDialogPicture)
-                .throttleFirst(1000, TimeUnit.MILLISECONDS)
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .compose(this.bindToLifecycle())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Object>() {
-                    @Override
-                    public void accept(Object o) throws Exception {
-                        btnDialogNext.setEnabled(true);
-                        if (step == 1) {
-                            if (taskBean.getCarPhoto() != null) {
-                                ivDialogPicture.setImageBitmap(BitmapFactory.decodeByteArray(taskBean.getCarPhoto(), 0, taskBean.getCarPhoto().length));
-                            }
-                        } else if (step == 2) {
-                            ivDialogPicture.setImageResource(R.mipmap.ic_launcher);
-                        } else if (step ==3) {
-                            taskBean.__setDaoSession(EscortApp.getInstance().getDaoSession());
-                            TaskEscortBean taskEscortBean = taskBean.getEscortList().get(0);
-                            taskEscortBean.__setDaoSession(EscortApp.getInstance().getDaoSession());
-                            EscortBean escortBean = taskEscortBean.getEscortBean();
-                            ivDialogPicture.setImageBitmap(BitmapFactory.decodeByteArray(escortBean.getPhoto(), 0 ,escortBean.getPhoto().length));
-                        }else if (step == 4) {
-                            taskBean.__setDaoSession(EscortApp.getInstance().getDaoSession());
-                            TaskEscortBean taskEscortBean = taskBean.getEscortList().get(1);
-                            taskEscortBean.__setDaoSession(EscortApp.getInstance().getDaoSession());
-                            EscortBean escortBean = taskEscortBean.getEscortBean();
-                            ivDialogPicture.setImageBitmap(BitmapFactory.decodeByteArray(escortBean.getPhoto(), 0 ,escortBean.getPhoto().length));
-                        } else {
-                        }
-                    }
-                });
         RxView.clicks(btnDialogDismiss)
                 .throttleFirst(1000, TimeUnit.MILLISECONDS)
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -116,6 +104,7 @@ public class VerifyTaskDialogFragment extends BaseDialogFragment {
                                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                                     @Override
                                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                        verifyTaskDialogPresenter.pause();
                                         VerifyTaskDialogFragment.this.dismiss();
                                         listener.updateStep(step);
                                     }
@@ -150,18 +139,71 @@ public class VerifyTaskDialogFragment extends BaseDialogFragment {
     }
 
     private void refreshStepView() {
+        ivDialogPicture.setImageResource(R.drawable.background);
         if (step == 1) {
             tvDialigText.setText("验证车辆");
+            verifyTaskDialogPresenter.verifyCar(taskBean);
         } else if (step == 2) {
             tvDialigText.setText("验证操作员");
+            verifyTaskDialogPresenter.verifyWorker();
         } else if (step ==3) {
             tvDialigText.setText("验证押运员1");
+            verifyTaskDialogPresenter.verifyEscort(mList);
         }else if (step == 4) {
             tvDialigText.setText("验证押运员2");
+            verifyTaskDialogPresenter.verifyEscort(mList);
         } else {
             tvDialigText.setText("验证完毕");
-            listener.verifySuccess(taskBean);
+            listener.verifySuccess(taskBean,workerBean,escortBeanList);
         }
+    }
+
+    @Override
+    public void verifySuccess() {
+        Toasty.success(EscortApp.getInstance().getApplicationContext(), "验证成功", 0, true).show();
+        if (step == 1) {
+            if (taskBean.getCarPhoto() != null) {
+                ivDialogPicture.setImageBitmap(BitmapFactory.decodeByteArray(taskBean.getCarPhoto(), 0, taskBean.getCarPhoto().length));
+            }
+        } else if (step == 2) {
+            ivDialogPicture.setImageResource(R.mipmap.ic_launcher);
+        } else if (step ==3) {
+        }else if (step == 4) {
+        }
+        btnDialogNext.setEnabled(true);
+    }
+
+    @Override
+    public void verifyFailed(String message) {
+        Toasty.error(EscortApp.getInstance().getApplicationContext(), message, 0, true).show();
+        closeDevice();
+    }
+
+    private void closeDevice() {
+        byte[] message = new byte[200];
+        Device.closeRfid(message);
+        Device.closeFinger(message);
+    }
+
+    @Override
+    public void showToasty(final String message) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toasty.error(EscortApp.getInstance().getApplicationContext(), message, 0, true).show();
+            }
+        });
+    }
+
+    @Override
+    public void removeVerified(EscortBean escortBean) {
+        ivDialogPicture.setImageBitmap(BitmapFactory.decodeByteArray(escortBean.getPhoto(), 0, escortBean.getPhoto().length));
+        mList.remove(escortBean);
+    }
+
+    @Override
+    public void setVerifyWorker(WorkerBean worker) {
+        workerBean = worker;
     }
 
     public int getStep() {
@@ -191,11 +233,12 @@ public class VerifyTaskDialogFragment extends BaseDialogFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        verifyTaskDialogPresenter.doDestroy();
     }
 
     public interface OnVerifyTaskDialogListener {
         void updateStep(int step);
-        void verifySuccess(TaskBean taskBean);
+        void verifySuccess(TaskBean taskBean, WorkerBean workerBean, List<EscortBean> escortBeanList);
         void verifyFailed();
     }
 

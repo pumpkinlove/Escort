@@ -7,7 +7,10 @@ import com.miaxis.escort.model.entity.OpdateBean;
 import com.miaxis.escort.model.entity.TaskBean;
 import com.miaxis.escort.model.entity.TaskExeBean;
 import com.miaxis.escort.model.entity.WorkerBean;
+import com.miaxis.escort.model.local.greenDao.gen.WorkerBeanDao;
 import com.miaxis.escort.presenter.ILoginPresenter;
+
+import org.greenrobot.greendao.query.WhereCondition;
 
 import java.util.List;
 
@@ -25,5 +28,10 @@ public class LoginModelImpl implements ILoginModel{
     @Override
     public void deleteTaskExe(TaskExeBean taskExeBean) {
         EscortApp.getInstance().getDaoSession().getTaskExeBeanDao().delete(taskExeBean);
+    }
+
+    @Override
+    public List<WorkerBean> loadWorker() {
+        return EscortApp.getInstance().getDaoSession().getWorkerBeanDao().loadAll();
     }
 }

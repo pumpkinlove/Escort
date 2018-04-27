@@ -48,7 +48,7 @@ public class EscortApp extends Application{
     }
 
     public DaoSession getDaoSession() {
-        //TODO: 这里的daoSession.clear();是个什么作用
+        daoSession.clear();
         return daoSession;
     }
 

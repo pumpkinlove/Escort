@@ -4,7 +4,9 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.util.Base64;
 
+import com.device.Device;
 import com.google.gson.Gson;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.miaxis.escort.app.EscortApp;
@@ -100,15 +102,15 @@ public class LoginPresenterImpl extends BaseActivityPresenter implements ILoginP
                     @Override
                     public void accept(Config config) throws Exception {
                         List<WorkerBean> workerBeanList = EscortApp.getInstance().getDaoSession().getWorkerBeanDao().loadAll();
-                        //TODO:默认登陆员工
+                        //默认登陆员工
                         EscortApp.getInstance().put(StaticVariable.WORKER, workerBeanList.get(0));
                         EscortApp.getInstance().put(StaticVariable.CONFIG, config);
-                        loginView.loginSuccess();
+                        loginView.loginSuccess(workerBeanList.get(0));
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        loginView.loginFailed();
+                        loginView.loginFailed(throwable.getMessage());
                     }
                 });
     }
@@ -172,6 +174,108 @@ public class LoginPresenterImpl extends BaseActivityPresenter implements ILoginP
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                    }
+                });
+    }
+
+    @Override
+    public void login() {
+        final byte[] message = new byte[200];
+        Observable.just(0)
+                .subscribeOn(Schedulers.io())
+                .compose(getProvider().<Integer>bindToLifecycle())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+                        Toasty.info(EscortApp.getInstance().getApplicationContext(), "请按手指", 0, true).show();
+                    }
+                })
+                .observeOn(Schedulers.io())
+                .map(new Function<Integer, byte[]>() {
+                    @Override
+                    public byte[] apply(Integer integer) throws Exception {
+                        Device.openFinger(message);
+                        try {
+                            Thread.sleep(1000);
+                        }
+                        catch (InterruptedException e) {
+                        }
+                        byte[] finger = new byte[2000+152*200];
+                        byte[] tz = new byte[513];
+                        int result = Device.getImage(10000, finger, message);
+                        if (result != 0) {
+                            throw new Exception(new String(message, "GBK"));
+                        }
+                        result = Device.ImageToFeature(finger, tz, message);
+                        if (result != 0) {
+                            throw new Exception(new String(message, "GBK"));
+                        }
+                        return tz;
+                    }
+                })
+                .map(new Function<byte[], WorkerBean>() {
+                    @Override
+                    public WorkerBean apply(byte[] bytes) throws Exception {
+                        List<WorkerBean> workerBeanList = loginModel.loadWorker();
+                        for (WorkerBean worker: workerBeanList) {
+                            for (int i=0; i<10; i++) {
+                                String mbFinger = worker.getFinger(i);
+                                if (mbFinger == null || mbFinger.equals("")) {
+                                    continue;
+                                }
+                                int result = Device.verifyBinFinger(Base64.decode(mbFinger,Base64.DEFAULT), bytes, 3);
+                                //int result = Device.verifyFinger(mbFinger, new String(Base64.encode(bytes, Base64.NO_WRAP)), 3);
+                                if (result == 0) {
+                                    return worker;
+                                }
+                            }
+                        }
+                        return null;
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<WorkerBean>() {
+                    @Override
+                    public void accept(WorkerBean workerBean) throws Exception {
+                        Device.closeFinger(message);
+                        if (loginView != null) {
+                            loginView.loginSuccess(workerBean);
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Device.closeFinger(message);
+                        if (loginView != null) {
+                            loginView.loginFailed(throwable.getMessage());
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void loadConfig() {
+        Observable.create(new ObservableOnSubscribe<Config>() {
+            @Override
+            public void subscribe(ObservableEmitter<Config> e) throws Exception {
+                Config config = loginModel.loadConfig();
+                e.onNext(config);
+            }
+        })
+                .subscribeOn(Schedulers.io())
+                .compose(getProvider().<Config>bindToLifecycle())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Config>() {
+                    @Override
+                    public void accept(Config config) throws Exception {
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        if (loginView != null) {
+                            loginView.loadConfigFailed();
+                        }
                     }
                 });
     }

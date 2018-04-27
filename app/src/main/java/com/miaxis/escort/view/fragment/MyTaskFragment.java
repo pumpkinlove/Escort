@@ -88,6 +88,7 @@ public class MyTaskFragment extends BaseFragment implements IMyTaskView ,VerifyT
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                //TODO:确保押运员数量，操作员数量
                                 TaskBean taskBean = taskAdapter.getDataList().get(position);
                                 if (!selecteTaskID.equals(taskBean.getTaskcode())) {
                                     step = 1;
@@ -184,18 +185,15 @@ public class MyTaskFragment extends BaseFragment implements IMyTaskView ,VerifyT
     }
 
     @Override
-    public void verifySuccess(TaskBean taskBean) {
+    public void verifySuccess(TaskBean taskBean, WorkerBean workerBean, List<EscortBean> escortBeanList) {
         verifyTaskDialogFragment.dismiss();
         selecteTaskID = "";
         step = 1;
         Intent intent = new Intent(MyTaskFragment.this.getActivity(), VerifyBoxActivity.class);
         intent.putExtra("task", taskBean);
-        //TODO：默认指纹验证通过，默认押运员，默认操作员
-        List<EscortBean> escortBeanList = EscortApp.getInstance().getDaoSession().getEscortBeanDao().loadAll();
-        List<WorkerBean> workerBeanList = EscortApp.getInstance().getDaoSession().getWorkerBeanDao().loadAll();
         intent.putExtra("escort1st", escortBeanList.get(0));
         intent.putExtra("escort2nd", escortBeanList.get(1));
-        intent.putExtra("verifyWorker", workerBeanList.get(1));
+        intent.putExtra("verifyWorker", workerBean);
         startActivity(intent);
     }
 

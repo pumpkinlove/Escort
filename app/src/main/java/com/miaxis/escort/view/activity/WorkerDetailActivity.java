@@ -54,6 +54,9 @@ public class WorkerDetailActivity extends BaseActivity implements IWorkerDetailV
     private IWorkerDetailPresenter workerDetailPresenter;
     private MaterialDialog materialDialog;
 
+    private String finger1 = "";
+    private String finger2 = "";
+
     @Override
     protected int setContentView() {
         return R.layout.activity_worker_detail;
@@ -119,8 +122,8 @@ public class WorkerDetailActivity extends BaseActivity implements IWorkerDetailV
                                                     workerBean.setDeptno(config.getOrgCode());
                                                     workerBean.setWorkno(etWorkerCode.getText().toString());
                                                     workerBean.setName(etWorkerName.getText().toString());
-                                                    workerBean.setFinger0("0");
-                                                    workerBean.setFinger1("0");
+                                                    workerBean.setFinger0(finger1);
+                                                    workerBean.setFinger1(finger2);
                                                     workerBean.setOpdate(DateUtil.getToday());
                                                     workerBean.setOpuser(opUser.getWorkno());
                                                     workerBean.setOpusername(opUser.getName());
@@ -145,7 +148,8 @@ public class WorkerDetailActivity extends BaseActivity implements IWorkerDetailV
                             @Override
                             public void accept(Object o) throws Exception {
                                 Intent intent = new Intent(WorkerDetailActivity.this, FingerActivity.class);
-                                startActivity(intent);
+                                intent.putExtra("finger1", StaticVariable.FINGER1ST);
+                                startActivityForResult(intent, StaticVariable.FINGER1ST);
                             }
                         });
                 RxView.clicks(llSecondFingerPrint)
@@ -157,7 +161,8 @@ public class WorkerDetailActivity extends BaseActivity implements IWorkerDetailV
                             @Override
                             public void accept(Object o) throws Exception {
                                 Intent intent = new Intent(WorkerDetailActivity.this, FingerActivity.class);
-                                startActivity(intent);
+                                intent.putExtra("finger2", StaticVariable.FINGER2ND);
+                                startActivityForResult(intent, StaticVariable.FINGER2ND);
                             }
                         });
             }
@@ -210,6 +215,22 @@ public class WorkerDetailActivity extends BaseActivity implements IWorkerDetailV
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == 1) {
+            switch (requestCode) {
+                case StaticVariable.FINGER1ST:
+                    finger1 = data.getStringExtra("finger");
+                    tvFirstCollect.setText("已采集");
+                        break;
+                case StaticVariable.FINGER2ND:
+                    finger2 = data.getStringExtra("finger");
+                    tvSecondCollect.setText("已采集");
+                    break;
+            }
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -245,7 +266,9 @@ public class WorkerDetailActivity extends BaseActivity implements IWorkerDetailV
         if (etWorkerCode.getText().toString().equals("") || etWorkerName.getText().toString().equals("")) {
             return false;
         }
-        //TODO:指纹录入判空
+        if ("".equals(finger1) || "".equals(finger2)) {
+            return false;
+        }
         return true;
     }
 
@@ -254,6 +277,9 @@ public class WorkerDetailActivity extends BaseActivity implements IWorkerDetailV
             materialDialog.dismiss();
         }
         if (etWorkerCode.getText().toString().equals("") && etWorkerName.getText().toString().equals("")) {
+            return true;
+        }
+        if ("".equals(finger1) && "".equals(finger2)) {
             return true;
         }
         return false;

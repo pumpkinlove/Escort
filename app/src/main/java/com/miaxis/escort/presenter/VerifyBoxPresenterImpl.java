@@ -1,5 +1,8 @@
 package com.miaxis.escort.presenter;
 
+import android.util.Log;
+
+import com.device.Device;
 import com.google.gson.Gson;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.miaxis.escort.app.EscortApp;
@@ -16,6 +19,7 @@ import com.miaxis.escort.view.viewer.IVerifyBoxView;
 import com.trello.rxlifecycle2.LifecycleProvider;
 import com.trello.rxlifecycle2.android.ActivityEvent;
 
+import java.util.Iterator;
 import java.util.List;
 
 import es.dmoral.toasty.Toasty;
@@ -36,6 +40,7 @@ public class VerifyBoxPresenterImpl extends BaseActivityPresenter implements IVe
 
     private IVerifyBoxView verifyBoxView;
     private IVerifyBoxModel verifyBoxModel;
+    private boolean pause = false;
 
     public VerifyBoxPresenterImpl(LifecycleProvider<ActivityEvent> provider, IVerifyBoxView verifyBoxView) {
         super(provider);
@@ -80,7 +85,6 @@ public class VerifyBoxPresenterImpl extends BaseActivityPresenter implements IVe
                 .flatMap(new Function<TaskExeBean, ObservableSource<ResponseEntity>>() {
                     @Override
                     public ObservableSource<ResponseEntity> apply(TaskExeBean taskExeBean) throws Exception {
-                        //TODO：续传~~~~~~~~~~~~~~~~~~~
                         Config config = (Config) EscortApp.getInstance().get(StaticVariable.CONFIG);
                         Retrofit retrofit = new Retrofit.Builder()
                                 .addConverterFactory(GsonConverterFactory.create())//请求的结果转为实体类
@@ -114,6 +118,87 @@ public class VerifyBoxPresenterImpl extends BaseActivityPresenter implements IVe
                         }
                     }
                 });
+    }
+
+    @Override
+    public void verifyBox(List<BoxBean> boxBeanList) {
+        final byte[] message = new byte[200];
+        Observable.just(boxBeanList)
+                .subscribeOn(Schedulers.io())
+                .compose(getProvider().<List<BoxBean>>bindToLifecycle())
+                .observeOn(Schedulers.io())
+                .doOnNext(new Consumer<List<BoxBean>>() {
+                    @Override
+                    public void accept(List<BoxBean> boxBeanList) throws Exception {
+                        Device.openRfid(message);
+                        try {
+                            Thread.sleep(1000);
+                        }
+                        catch (InterruptedException e) {
+                        }
+                    }
+                })
+                .doOnNext(new Consumer<List<BoxBean>>() {
+                    @Override
+                    public void accept(List<BoxBean> boxBeanList) throws Exception {
+                        while (true) {
+                            if (pause) {
+                                pause = false;
+                                throw new Exception("取消验证");
+                            }
+                            try {
+                                Thread.sleep(1000);
+                            }
+                            catch (InterruptedException e) {
+                            }
+                            byte[] tids = new byte[20000];
+                            byte[] epcids = new byte[20000];
+                            int result = Device.getRfid(1000, tids, epcids, message);
+                            if (verifyBoxView != null) {
+                                verifyBoxView.addCount();
+                            }
+                            if (result != 0) {
+                                continue;
+                            }
+                            String rfids = new String(epcids).trim();
+                            String[] rfidArr = rfids.split(",");
+                            Iterator<BoxBean> iterator = boxBeanList.iterator();
+                            for (int i=0; i<rfidArr.length; i++) {
+                                while (iterator.hasNext()) {
+                                    BoxBean boxBean = iterator.next();
+                                    if ((boxBean.getRfid().equals(rfidArr[i]))) {
+                                        if(("0".equals(boxBean.getCheckStatus()) || null == boxBean.getCheckStatus())){
+                                            if (verifyBoxView != null) {
+                                                verifyBoxView.updateVerify(boxBean);
+                                            }
+                                            iterator.remove();
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            if (boxBeanList.size() == 0) {
+                                break;
+                            }
+                        }
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<BoxBean>>() {
+                    @Override
+                    public void accept(List<BoxBean> boxBeanList) throws Exception {
+                        Device.closeRfid(message);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Device.closeRfid(message);
+                    }
+                });
+    }
+
+    public void pause() {
+        pause = true;
     }
 
     @Override

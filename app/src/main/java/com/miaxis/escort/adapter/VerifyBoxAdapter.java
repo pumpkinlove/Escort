@@ -43,6 +43,11 @@ public class VerifyBoxAdapter extends RecyclerView.Adapter<VerifyBoxAdapter.MyVi
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         holder.tvVerifyBox.setText(dataList.get(position).getBoxname());
+        if (checkList.get(position)) {
+            holder.imageView.setImageResource(R.drawable.ic_check_black_24dp);
+        } else {
+            holder.imageView.setImageResource(R.drawable.ic_uncheck_black_24dp);
+        }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,12 +109,25 @@ public class VerifyBoxAdapter extends RecyclerView.Adapter<VerifyBoxAdapter.MyVi
         return true;
     }
 
+    public List<BoxBean> getDataListCopy() {
+        List<BoxBean> boxBeanList = new ArrayList<>();
+        for (int i = 0; i < dataList.size(); i++) {
+            boxBeanList.add(dataList.get(i));
+        }
+        return boxBeanList;
+    }
+
     public String getBoxString() {
         StringBuilder stringBuilder = new StringBuilder();
         for (BoxBean boxBean : dataList) {
             stringBuilder.append(boxBean.getBoxcode() + ",");
         }
         return stringBuilder.toString();
+    }
+
+    public void setBoxCheck(BoxBean boxBean) {
+        int position = dataList.indexOf(boxBean);
+        setCheck(position, true);
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {

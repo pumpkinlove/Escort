@@ -11,7 +11,7 @@ import java.util.List;
 public interface IVerifyBoxView {
     void updateBoxList(List<BoxBean> boxBeanList);
     void addCount();
-    void updateVerify();
+    void updateVerify(BoxBean boxBean);
     void updateUnverified();
     void uploadSuccess();
     void uploadFailed(String message);

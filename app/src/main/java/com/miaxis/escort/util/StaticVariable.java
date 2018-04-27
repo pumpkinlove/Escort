@@ -11,6 +11,8 @@ public class StaticVariable {
     public static final String FAILED = "400";
     public static final String LOGIN_SUCCESS = "login_success";
     public static final String FLAG = "flag";
+    public static final int FINGER1ST = 1;
+    public static final int FINGER2ND = 2;
 
     public static String upTaskTypeTurnToString(String type) {
         if ("常规网点接箱".equals(type)) {

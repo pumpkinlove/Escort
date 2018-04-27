@@ -17,6 +17,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.miaxis.escort.R;
 import com.miaxis.escort.app.EscortApp;
+import com.miaxis.escort.model.entity.WorkerBean;
 import com.miaxis.escort.presenter.ILoginPresenter;
 import com.miaxis.escort.presenter.LoginPresenterImpl;
 import com.miaxis.escort.util.StaticVariable;
@@ -85,24 +86,28 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
                 .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
-                        //TODO:登陆指纹验证
-                        //TODO：进入App无设置切换到设置页面
                         //TODO:上传箱包处加个下拉刷新
-                        loginPresenter.initAppData();
+                        //TODO：员工列表为空时超级操作员
+                        loginPresenter.login();
+                        //loginPresenter.initAppData();
                     }
                 });
         loginPresenter.resumeTaskExe();
     }
 
     @Override
-    public void loginSuccess() {
+    public void loginSuccess(WorkerBean workerBean) {
+        Toasty.success(EscortApp.getInstance().getApplicationContext(), "欢迎您，" + workerBean.getName(), 0, true).show();
+        EscortApp.getInstance().put(StaticVariable.WORKER, workerBean);
+        EscortApp.getInstance().put(StaticVariable.CONFIG, EscortApp.getInstance().getDaoSession().getConfigDao().load(1L));
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
     }
 
     @Override
-    public void loginFailed() {
-        Toasty.error(this, "登录失败",0, true).show();
+    public void loginFailed(String message) {
+        //Toasty.error(this, message,0, true).show();
+        Toasty.error(this, "登录失败，请重试",0, true).show();
     }
 
     private String getVersion() {
@@ -135,6 +140,11 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
     }
 
     @Override
+    public void loadConfigFailed() {
+        showConfigView();
+    }
+
+    @Override
     public void setDialogMessage(String message) {
         materialDialog.setContent(message);
     }
@@ -149,7 +159,6 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
     public void onConfigSave() {
         showLoginView();
         Toasty.success(this, "信息下载成功", 0, true).show();
-        //TODO:登陆页面显示相关信息
     }
 
     @Override
@@ -160,6 +169,7 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
     @Override
     public void getPermissionsSuccess() {
         EscortApp.getInstance().initDbHelp();
+        loginPresenter.loadConfig();
     }
 
     @Override

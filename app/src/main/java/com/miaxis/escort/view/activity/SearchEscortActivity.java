@@ -64,7 +64,6 @@ public class SearchEscortActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        //TODO:如有必要，MVP伺候
         Observable.create(new ObservableOnSubscribe<List<EscortBean>>() {
             @Override
             public void subscribe(ObservableEmitter<List<EscortBean>> e) throws Exception {

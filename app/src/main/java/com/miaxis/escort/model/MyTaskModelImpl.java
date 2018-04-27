@@ -124,7 +124,6 @@ public class MyTaskModelImpl implements IMyTaskModel{
 
     @Override
     public List<OpdateBean> getEscortOpdate(String taskdate) {
-        //TODO:迷之神奇BUG
         // 生成sql语句
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT DISTINCT ESCODE FROM TASK_ESCORT_BEAN ");

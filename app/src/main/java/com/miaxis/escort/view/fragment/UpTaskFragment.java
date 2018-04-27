@@ -303,7 +303,6 @@ public class UpTaskFragment extends BaseFragment implements IUpTaskView{
     @Override
     public void onResume() {
         super.onResume();
-        //TODO:箱包按照机构号查询
         upTaskPresenter.loadBox();
     }
 
@@ -320,7 +319,6 @@ public class UpTaskFragment extends BaseFragment implements IUpTaskView{
         upTaskPresenter.doDestroy();
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed() {
         if (mListener != null) {
             mListener.onUpTaskFragmentInteraction();

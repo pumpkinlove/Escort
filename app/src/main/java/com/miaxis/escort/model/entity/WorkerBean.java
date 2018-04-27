@@ -184,5 +184,28 @@ public class WorkerBean  implements Serializable
 	public void setStatus(String status) {
 		this.status = status;
 	}
-
+	public String getFinger(int i) {
+		if (i == 0) {
+		    return getFinger0();
+        } else if (i == 1) {
+		    return getFinger1();
+        } else if (i == 2) {
+            return getFinger2();
+        } else if (i == 3) {
+            return getFinger3();
+        } else if (i == 4) {
+            return getFinger4();
+        } else if (i == 5) {
+            return getFinger5();
+        } else if (i == 6) {
+            return getFinger6();
+        } else if (i == 7) {
+            return getFinger7();
+        } else if (i == 8) {
+            return getFinger8();
+        } else if (i == 9) {
+            return getFinger9();
+        }
+        return null;
+	}
 }

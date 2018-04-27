@@ -19,7 +19,6 @@ public class VerifyBoxModelImpl implements IVerifyBoxModel{
 
     @Override
     public List<BoxBean> loadBoxListByTask(TaskBean taskBean) {
-        //TODO：更好的方案，TaskBoxBean与BoxBean一对一关系映射
         List<BoxBean> boxs = new ArrayList<>();
         List<BoxBean> boxBeanList = EscortApp.getInstance().getDaoSession().getBoxBeanDao().loadAll();
         for (TaskBoxBean taskBoxBean : taskBean.getBoxList()) {

@@ -47,7 +47,6 @@ public class ConfigPresenterImpl extends BaseFragmentPresenter implements IConfi
 
     @Override
     public void configSave(String ip, String port, String orgCode) {
-        //TODO:未做删除操作
         final Config config = new Config(1L, ip, port, orgCode);
         final Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())//请求的结果转为实体类
@@ -183,7 +182,6 @@ public class ConfigPresenterImpl extends BaseFragmentPresenter implements IConfi
                         }
                     }
                 });
-        //TODO:下载员工删除列表，做删除操作
     }
 
     @Override

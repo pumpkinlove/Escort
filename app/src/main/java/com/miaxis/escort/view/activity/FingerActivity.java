@@ -1,5 +1,6 @@
 package com.miaxis.escort.view.activity;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 import com.miaxis.escort.R;
 import com.miaxis.escort.presenter.FingerPresenterImpl;
 import com.miaxis.escort.presenter.IFingerPresenter;
+import com.miaxis.escort.util.StaticVariable;
 import com.miaxis.escort.view.viewer.IFingerView;
 
 import butterknife.BindView;
@@ -32,6 +34,7 @@ public class FingerActivity extends BaseActivity implements IFingerView{
     @Override
     protected void initData() {
         fingerPresenter = new FingerPresenterImpl(this, this);
+
     }
 
     @Override
@@ -72,9 +75,18 @@ public class FingerActivity extends BaseActivity implements IFingerView{
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                tvTip.setText(finger);
+                Intent intent = new Intent();
+                intent.putExtra("finger", finger);
+                setResult(1, intent);
+                finish();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult(0);
+        finish();
     }
 
     @Override

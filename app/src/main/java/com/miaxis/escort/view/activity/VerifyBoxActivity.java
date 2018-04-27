@@ -64,8 +64,6 @@ public class VerifyBoxActivity extends BaseActivity implements IVerifyBoxView {
     private EscortBean escort2nd;
     private WorkerBean verifyWorker;
 
-    private boolean lock = true;
-
     private VerifyBoxAdapter verifyBoxAdapter;
     private IVerifyBoxPresenter verifyBoxPresenter;
     private MaterialDialog materialDialog;
@@ -102,43 +100,38 @@ public class VerifyBoxActivity extends BaseActivity implements IVerifyBoxView {
         verifyBoxAdapter.setOnItemClickListener(new VerifyBoxAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                if (lock) {
-                    return;
-                }
-                Boolean b = verifyBoxAdapter.getCheck(position);
-                ImageView imageView = view.findViewById(R.id.iv_check);
-                if (b) {
-                    verifyBoxAdapter.setCheck(position, false);
-                    imageView.setImageResource(R.drawable.ic_uncheck_black_24dp);
-                    Toasty.error(VerifyBoxActivity.this, "未完成", Toast.LENGTH_SHORT, true).show();
-                } else {
-                    verifyBoxAdapter.setCheck(position, true);
-                    imageView.setImageResource(R.drawable.ic_check_black_24dp);
-                    Toasty.success(VerifyBoxActivity.this, "已完成", Toast.LENGTH_SHORT, true).show();
-                }
-                if (verifyBoxAdapter.isAllCheck()) {
-                    btnVerifyComplete.setEnabled(true);
-                } else {
-                    btnVerifyComplete.setEnabled(false);
-                }
-                addCount();
-                updateVerify();
-                updateUnverified();
             }
         });
         RxView.clicks(btnVerifyStart)
-                .throttleFirst(1, TimeUnit.SECONDS)
+                .throttleFirst(3, TimeUnit.SECONDS)
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .compose(this.bindToLifecycle())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(final Object o) throws Exception {
-                        llPrompt.setVisibility(View.VISIBLE);
-                        lock = false;
-                        updateVerify();
-                        updateUnverified();
-                        Toasty.info(VerifyBoxActivity.this, "开始验证", 0, true).show();
+                        if (btnVerifyStart.getText().toString().equals("开始验证")) {
+                            llPrompt.setVisibility(View.VISIBLE);
+                            tvVerifyBoxCount.setText("" + verifyBoxAdapter.getCheckSize());
+                            updateUnverified();
+                            Toasty.info(VerifyBoxActivity.this, "开始验证", 0, true).show();
+                            verifyBoxPresenter.verifyBox(verifyBoxAdapter.getDataListCopy());
+                            btnVerifyStart.setText("结束验证");
+                        } else if (btnVerifyStart.getText().toString().equals("结束验证")) {
+                            new MaterialDialog.Builder(VerifyBoxActivity.this)
+                                    .title("确认结束验证？")
+                                    .negativeText("取消")
+                                    .positiveText("确认")
+                                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                        @Override
+                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                            verifyBoxPresenter.pause();
+                                            btnVerifyComplete.setEnabled(true);
+                                            btnVerifyStart.setText("开始验证");
+                                        }
+                                    })
+                                    .show();
+                        }
                     }
                 });
         RxView.clicks(btnVerifyComplete)
@@ -216,13 +209,32 @@ public class VerifyBoxActivity extends BaseActivity implements IVerifyBoxView {
 
     @Override
     public void addCount() {
-        int count = Integer.parseInt(tvVerifyCount.getText().toString()) + 1;
-        tvVerifyCount.setText("" + count);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                int count = Integer.parseInt(tvVerifyCount.getText().toString()) + 1;
+                tvVerifyCount.setText("" + count);
+            }
+        });
     }
 
     @Override
-    public void updateVerify() {
-        tvVerifyBoxCount.setText("" + verifyBoxAdapter.getCheckSize());
+    public void updateVerify(final BoxBean boxBean) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                verifyBoxAdapter.setBoxCheck(boxBean);
+                verifyBoxAdapter.notifyDataSetChanged();
+                Toasty.success(VerifyBoxActivity.this, "已完成", Toast.LENGTH_SHORT, true).show();
+                if (verifyBoxAdapter.isAllCheck()) {
+                    btnVerifyComplete.setEnabled(true);
+                } else {
+                    btnVerifyComplete.setEnabled(false);
+                }
+                tvVerifyBoxCount.setText("" + verifyBoxAdapter.getCheckSize());
+                updateUnverified();
+            }
+        });
     }
 
     @Override
@@ -241,7 +253,6 @@ public class VerifyBoxActivity extends BaseActivity implements IVerifyBoxView {
 
     @Override
     public void uploadFailed(String message) {
-        //TODO：续传~~~~~~~~~~~~~~~~~~~~~~~~~~
         if (materialDialog.isShowing()) {
             materialDialog.dismiss();
         }
