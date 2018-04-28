@@ -9,8 +9,10 @@ import com.miaxis.escort.model.IUpTaskModel;
 import com.miaxis.escort.model.UpTaskModelImpl;
 import com.miaxis.escort.model.entity.BoxBean;
 import com.miaxis.escort.model.entity.Config;
+import com.miaxis.escort.model.entity.OpdateBean;
 import com.miaxis.escort.model.entity.TaskBoxBean;
 import com.miaxis.escort.model.entity.TaskUpBean;
+import com.miaxis.escort.model.retrofit.BoxNet;
 import com.miaxis.escort.model.retrofit.ResponseEntity;
 import com.miaxis.escort.model.retrofit.TaskNet;
 import com.miaxis.escort.util.StaticVariable;
@@ -107,6 +109,56 @@ public class UpTaskPresenterImpl extends BaseFragmentPresenter implements IUpTas
                     public void accept(Throwable throwable) throws Exception {
                         if (upTaskView != null) {
                             upTaskView.upTaskFailed(throwable.getMessage());
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void downBox() {
+        Observable.create(new ObservableOnSubscribe<List<String>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<String>> e) throws Exception {
+                e.onNext(upTaskModel.loadBoxCode());
+            }
+        })
+                .subscribeOn(Schedulers.io())
+                .compose(getProvider().<List<String>>bindToLifecycle())
+                .observeOn(Schedulers.io())
+                .flatMap(new Function<List<String>, ObservableSource<ResponseEntity<BoxBean>>>() {
+                    @Override
+                    public ObservableSource<ResponseEntity<BoxBean>> apply(List<String> boxCodeList) throws Exception {
+                        Config config = (Config) EscortApp.getInstance().get(StaticVariable.CONFIG);
+                        final Retrofit retrofit = new Retrofit.Builder()
+                                .addConverterFactory(GsonConverterFactory.create())//请求的结果转为实体类
+                                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())  //适配RxJava2.0, RxJava1.x则为RxJavaCallAdapterFactory.create()
+                                .baseUrl("http://" + config.getIp() + ":" + config.getPort())
+                                .build();
+                        BoxNet boxNet = retrofit.create(BoxNet.class);
+                        return boxNet.updateBox(new Gson().toJson(boxCodeList));
+                    }
+                })
+                .doOnNext(new Consumer<ResponseEntity<BoxBean>>() {
+                    @Override
+                    public void accept(ResponseEntity<BoxBean> boxBeanResponseEntity) throws Exception {
+                        if (StaticVariable.SUCCESS.equals(boxBeanResponseEntity.getCode())) {
+                            upTaskModel.saveBoxList(boxBeanResponseEntity.getListData());
+                        }
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResponseEntity<BoxBean>>() {
+                    @Override
+                    public void accept(ResponseEntity<BoxBean> boxBeanResponseEntity) throws Exception {
+                        if (upTaskView != null) {
+                            upTaskView.downBoxSuccess();
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        if (upTaskView != null) {
+                            upTaskView.downBoxFailed(throwable.getMessage());
                         }
                     }
                 });

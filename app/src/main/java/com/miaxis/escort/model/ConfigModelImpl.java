@@ -75,4 +75,9 @@ public class ConfigModelImpl implements IConfigModel{
     public void saveBox(List<BoxBean> boxBeanList) {
         EscortApp.getInstance().getDaoSession().getBoxBeanDao().insertOrReplaceInTx(boxBeanList);
     }
+
+    @Override
+    public int getWorkerSize() {
+        return EscortApp.getInstance().getDaoSession().getWorkerBeanDao().loadAll().size();
+    }
 }

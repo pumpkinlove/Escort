@@ -12,4 +12,5 @@ public interface IConfigPresenter extends IBasePresenter{
     void configSaveFailed();
     void loadConfig();
     void fetchConfig(Config config);
+    void initWorker();
 }

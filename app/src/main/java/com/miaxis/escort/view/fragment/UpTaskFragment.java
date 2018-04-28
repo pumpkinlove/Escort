@@ -3,6 +3,7 @@ package com.miaxis.escort.view.fragment;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -60,6 +61,8 @@ public class UpTaskFragment extends BaseFragment implements IUpTaskView{
     TextView tvSendTemporary;
     @BindView(R.id.et_temporary_bank)
     EditText etTemporaryBank;
+    @BindView(R.id.srl_up_task_box)
+    SwipeRefreshLayout srlUpTaskBox;
     @BindView(R.id.rv_box)
     RecyclerView rvBox;
     @BindView(R.id.btn_up_task)
@@ -255,6 +258,18 @@ public class UpTaskFragment extends BaseFragment implements IUpTaskView{
                                 .show();
                     }
                 });
+        srlUpTaskBox.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                materialDialog = new MaterialDialog.Builder(UpTaskFragment.this.getActivity())
+                        .title("请稍后...")
+                        .content("正在更新箱包信息...")
+                        .progress(true, 100)
+                        .cancelable(false)
+                        .show();
+                upTaskPresenter.downBox();
+            }
+        });
     }
 
     /**
@@ -308,9 +323,39 @@ public class UpTaskFragment extends BaseFragment implements IUpTaskView{
 
     @Override
     public void updateBox(List<BoxBean> boxBeanList) {
-        boxAdapter.setDataList(boxBeanList);
-        boxAdapter.clearSelected();
-        boxAdapter.notifyDataSetChanged();
+        if (materialDialog.isShowing()) {
+            materialDialog.dismiss();
+        }
+        if (srlUpTaskBox.isRefreshing()) {
+            srlUpTaskBox.setRefreshing(false);
+        }
+        if (boxBeanList != null) {
+            boxAdapter.setDataList(boxBeanList);
+            boxAdapter.clearSelected();
+            boxAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void downBoxSuccess() {
+        if (materialDialog.isShowing()) {
+            materialDialog.dismiss();
+        }
+        if (srlUpTaskBox.isRefreshing()) {
+            srlUpTaskBox.setRefreshing(false);
+        }
+        upTaskPresenter.loadBox();
+    }
+
+    @Override
+    public void downBoxFailed(String message) {
+        if (materialDialog.isShowing()) {
+            materialDialog.dismiss();
+        }
+        if (srlUpTaskBox.isRefreshing()) {
+            srlUpTaskBox.setRefreshing(false);
+        }
+        Toasty.error(EscortApp.getInstance().getApplicationContext(), message, 0, true).show();
     }
 
     @Override

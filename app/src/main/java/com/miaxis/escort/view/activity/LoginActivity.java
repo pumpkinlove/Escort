@@ -86,10 +86,13 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
                 .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
-                        //TODO:上传箱包处加个下拉刷新
                         //TODO：员工列表为空时超级操作员
-                        loginPresenter.login();
-                        //loginPresenter.initAppData();
+                        if (loginPresenter.loadWorkerSize() == 0) {
+                            Toasty.error(EscortApp.getInstance().getApplicationContext(), "未找到员工信息，请尝试重新设置IP、端口和机构号",1, true).show();
+                        } else {
+                            loginPresenter.login();
+                            //loginPresenter.initAppData();
+                        }
                     }
                 });
         loginPresenter.resumeTaskExe();

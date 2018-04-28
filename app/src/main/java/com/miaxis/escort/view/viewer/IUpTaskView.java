@@ -12,4 +12,6 @@ public interface IUpTaskView extends IBaseView{
     void updateBox(List<BoxBean> boxBeanList);
     void upTaskSuccess();
     void upTaskFailed(String message);
+    void downBoxSuccess();
+    void downBoxFailed(String message);
 }

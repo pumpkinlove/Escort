@@ -281,6 +281,11 @@ public class LoginPresenterImpl extends BaseActivityPresenter implements ILoginP
     }
 
     @Override
+    public int loadWorkerSize() {
+        return loginModel.loadWorkerSize();
+    }
+
+    @Override
     public void doDestroy() {
         loginView = null;
         loginModel = null;

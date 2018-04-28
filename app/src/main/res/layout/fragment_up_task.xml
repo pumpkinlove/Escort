@@ -148,8 +148,8 @@
         android:layout_marginTop="8dp"
         android:background="@color/lightgray"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_box"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/srl_up_task_box"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -157,7 +157,14 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp">
 
-    </android.support.v7.widget.RecyclerView>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_box"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </android.support.v7.widget.RecyclerView>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <Button
         android:id="@+id/btn_up_task"

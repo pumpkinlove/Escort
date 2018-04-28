@@ -17,4 +17,5 @@ public interface ILoginModel {
     Config loadConfig();
     void deleteTaskExe(TaskExeBean taskExeBean);
     List<WorkerBean> loadWorker();
+    int loadWorkerSize();
 }

@@ -35,4 +35,11 @@ public class WorkerDetailModel implements IWorkerDetailModel{
         workerBean.setStatus("未上传");
         EscortApp.getInstance().getDaoSession().getWorkerBeanDao().insert(workerBean);
     }
+
+    @Override
+    public void deleteLocal(String workerCode) {
+        WorkerBean workerBean = EscortApp.getInstance().getDaoSession().getWorkerBeanDao().queryBuilder()
+                .where(WorkerBeanDao.Properties.Workno.eq(workerCode)).unique();
+        EscortApp.getInstance().getDaoSession().getWorkerBeanDao().delete(workerBean);
+    }
 }

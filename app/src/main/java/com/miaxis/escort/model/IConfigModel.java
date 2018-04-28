@@ -20,4 +20,5 @@ public interface IConfigModel {
     void saveWorker(List<WorkerBean> workerBeanList);
     List<OpdateBean> loadBoxOpdate();
     void saveBox(List<BoxBean> boxBeanList);
+    int getWorkerSize();
 }

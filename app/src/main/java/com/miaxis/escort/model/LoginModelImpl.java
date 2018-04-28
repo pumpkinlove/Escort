@@ -34,4 +34,9 @@ public class LoginModelImpl implements ILoginModel{
     public List<WorkerBean> loadWorker() {
         return EscortApp.getInstance().getDaoSession().getWorkerBeanDao().loadAll();
     }
+
+    @Override
+    public int loadWorkerSize() {
+        return EscortApp.getInstance().getDaoSession().getWorkerBeanDao().loadAll().size();
+    }
 }

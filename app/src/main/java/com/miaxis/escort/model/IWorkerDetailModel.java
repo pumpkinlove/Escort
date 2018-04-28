@@ -10,4 +10,5 @@ public interface IWorkerDetailModel {
     boolean isExist(WorkerBean workerBean);
     boolean isDuplicate(String workno);
     void saveLocal(WorkerBean workerBean);
+    void deleteLocal(String workerCode);
 }

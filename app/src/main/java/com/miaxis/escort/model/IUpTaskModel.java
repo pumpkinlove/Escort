@@ -1,6 +1,7 @@
 package com.miaxis.escort.model;
 
 import com.miaxis.escort.model.entity.BoxBean;
+import com.miaxis.escort.model.entity.OpdateBean;
 
 import java.util.List;
 
@@ -10,4 +11,6 @@ import java.util.List;
 
 public interface IUpTaskModel {
     List<BoxBean> loadBox();
+    List<String> loadBoxCode();
+    void saveBoxList(List<BoxBean> boxBeanList);
 }

@@ -13,4 +13,5 @@ import java.util.List;
 public interface IUpTaskPresenter extends IBasePresenter{
     void loadBox();
     void upTask(TaskUpBean taskUpBean, List<TaskBoxBean> boxBeanList);
+    void downBox();
 }

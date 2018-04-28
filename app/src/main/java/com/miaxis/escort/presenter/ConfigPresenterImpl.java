@@ -20,6 +20,7 @@ import com.miaxis.escort.view.viewer.IConfigView;
 import com.trello.rxlifecycle2.LifecycleProvider;
 import com.trello.rxlifecycle2.android.FragmentEvent;
 
+import es.dmoral.toasty.Toasty;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -169,7 +170,8 @@ public class ConfigPresenterImpl extends BaseFragmentPresenter implements IConfi
                                 configView.configSaveSuccess();
                             } else {
                                 configView.setProgressDialogMessage(boxBeanResponseEntity.getMessage());
-                                configView.configSaveFailed();
+                                //该机构下没有箱包放行
+                                configView.configSaveSuccess();
                             }
                         }
                     }
@@ -228,6 +230,32 @@ public class ConfigPresenterImpl extends BaseFragmentPresenter implements IConfi
     @Override
     public void fetchConfig(Config config) {
         configView.fetchConfig(config);
+    }
+
+    @Override
+    public void initWorker() {
+        Observable.create(new ObservableOnSubscribe<Integer>() {
+            @Override
+            public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+                e.onNext(configModel.getWorkerSize());
+            }
+        })
+                .subscribeOn(Schedulers.io())
+                .compose(getProvider().<Integer>bindToLifecycle())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+                        if (integer == 0 && configView != null) {
+                            Toasty.info(EscortApp.getInstance().getApplicationContext(),"该机构下未找到操作员，您可以添加第一个操作员", 1 ,true).show();
+                            configView.initWorker();
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                });
     }
 
     @Override

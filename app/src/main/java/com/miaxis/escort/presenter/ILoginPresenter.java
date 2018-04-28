@@ -12,4 +12,5 @@ public interface ILoginPresenter extends IBasePresenter{
     void resumeTaskExe();
     void login();
     void loadConfig();
+    int loadWorkerSize();
 }

@@ -3,6 +3,7 @@ package com.miaxis.escort.view.fragment;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -20,10 +21,14 @@ import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.miaxis.escort.R;
 import com.miaxis.escort.app.EscortApp;
 import com.miaxis.escort.model.entity.Config;
+import com.miaxis.escort.model.entity.WorkerBean;
 import com.miaxis.escort.presenter.ConfigPresenterImpl;
 import com.miaxis.escort.presenter.IConfigPresenter;
+import com.miaxis.escort.util.StaticVariable;
 import com.miaxis.escort.view.activity.ConfigActivity;
 import com.miaxis.escort.view.activity.LoginActivity;
+import com.miaxis.escort.view.activity.WorkerDetailActivity;
+import com.miaxis.escort.view.activity.WorkerManageActivity;
 import com.miaxis.escort.view.viewer.IConfigView;
 
 import java.util.concurrent.TimeUnit;
@@ -149,6 +154,7 @@ public class ConfigFragment extends BaseFragment implements IConfigView{
     public void configSaveSuccess() {
         pdSaveConfig.dismiss();
         mListener.onConfigSave();
+        configPresenter.initWorker();
     }
 
     @Override
@@ -169,6 +175,17 @@ public class ConfigFragment extends BaseFragment implements IConfigView{
     @Override
     public void setProgressDialogMessage(String message) {
         pdSaveConfig.setContent(message);
+    }
+
+    @Override
+    public void initWorker() {
+        WorkerBean superWorker = new WorkerBean();
+        superWorker.setWorkno("admin");
+        superWorker.setName("超级操作员");
+        EscortApp.getInstance().put(StaticVariable.WORKER, superWorker);
+        Intent intent = new Intent(ConfigFragment.this.getActivity(), WorkerDetailActivity.class);
+        intent.putExtra(StaticVariable.FLAG, 1);
+        startActivity(intent);
     }
 
     @Override

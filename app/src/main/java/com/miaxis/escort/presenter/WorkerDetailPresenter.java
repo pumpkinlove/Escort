@@ -100,6 +100,14 @@ public class WorkerDetailPresenter extends BaseActivityPresenter implements IWor
                         return workerNet.delWorker(s);
                     }
                 })
+                .doOnNext(new Consumer<ResponseEntity>() {
+                    @Override
+                    public void accept(ResponseEntity responseEntity) throws Exception {
+                        if (StaticVariable.SUCCESS.equals(responseEntity.getCode())) {
+                            workerDetailModel.deleteLocal(workercode);
+                        }
+                    }
+                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResponseEntity>() {
                     @Override
