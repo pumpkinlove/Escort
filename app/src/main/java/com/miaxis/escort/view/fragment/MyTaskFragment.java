@@ -53,6 +53,7 @@ public class MyTaskFragment extends BaseFragment implements IMyTaskView ,VerifyT
 
     private String selecteTaskID = "";
     private int step = 1;
+    private WorkerBean workerBean;
 
     public MyTaskFragment() {
         // Required empty public constructor
@@ -75,6 +76,13 @@ public class MyTaskFragment extends BaseFragment implements IMyTaskView ,VerifyT
 
     @Override
     protected void initView() {
+        materialDialog = new MaterialDialog.Builder(this.getActivity())
+                .title("请稍后...")
+                .content("正在更新任务...")
+                .progress(true, 100)
+                .cancelable(false)
+                .show();
+        myTaskPresenter.downTask();
         taskAdapter = new TaskAdapter(getActivity(), new ArrayList<TaskBean>());
         rvTask.setAdapter(taskAdapter);
         rvTask.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -110,13 +118,6 @@ public class MyTaskFragment extends BaseFragment implements IMyTaskView ,VerifyT
                 myTaskPresenter.downTask();
             }
         });
-        materialDialog = new MaterialDialog.Builder(this.getActivity())
-                .title("请稍后...")
-                .content("正在更新任务...")
-                .progress(true, 100)
-                .cancelable(false)
-                .show();
-        myTaskPresenter.downTask();
     }
 
     @Override
@@ -193,6 +194,9 @@ public class MyTaskFragment extends BaseFragment implements IMyTaskView ,VerifyT
         intent.putExtra("task", taskBean);
         intent.putExtra("escort1st", escortBeanList.get(0));
         intent.putExtra("escort2nd", escortBeanList.get(1));
+        if (workerBean == null) {
+            workerBean = this.workerBean;
+        }
         intent.putExtra("verifyWorker", workerBean);
         startActivity(intent);
     }
@@ -202,6 +206,11 @@ public class MyTaskFragment extends BaseFragment implements IMyTaskView ,VerifyT
         verifyTaskDialogFragment.dismiss();
         selecteTaskID = "";
         step = 1;
+    }
+
+    @Override
+    public void updateWorker(WorkerBean workerBean) {
+        this.workerBean = workerBean;
     }
 
     @Override

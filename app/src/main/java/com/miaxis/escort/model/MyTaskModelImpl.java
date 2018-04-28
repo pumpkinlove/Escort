@@ -48,13 +48,13 @@ public class MyTaskModelImpl implements IMyTaskModel{
                         it.remove();
                     }
                 } else if ("3".equals(taskBean.getTasktype())) {
-                    if (!config.getOrgCode().equals(taskBean.getTaskcode().split("_")[0])) {
+                    if (!config.getOrgCode().equals(taskBean.getTaskcode().substring(0,10))) {
                         if ("3".equals(taskBean.getStatus())) {
                             it.remove();
                         }
                     }
                 } else if ("4".equals(taskBean.getTasktype())) {
-                    if (config.getOrgCode().equals(taskBean.getTaskcode().split("_")[0])) {
+                    if (config.getOrgCode().equals(taskBean.getTaskcode().substring(0,10))) {
                         if ("3".equals(taskBean.getStatus())) {
                             it.remove();
                         }

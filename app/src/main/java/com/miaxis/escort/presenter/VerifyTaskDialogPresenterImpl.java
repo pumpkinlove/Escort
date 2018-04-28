@@ -53,9 +53,12 @@ public class VerifyTaskDialogPresenterImpl extends BaseFragmentPresenter impleme
                     public void accept(TaskBean taskBean) throws Exception {
                         Device.openRfid(message);
                         try {
-                            Thread.sleep(1000);
+                            Thread.sleep(500);
                         }
                         catch (InterruptedException e) {
+                        }
+                        if (verifyTaskDialogView != null) {
+                            verifyTaskDialogView.playVoiceMessageOnUIThread("请验证车辆");
                         }
                     }
                 })
@@ -128,9 +131,12 @@ public class VerifyTaskDialogPresenterImpl extends BaseFragmentPresenter impleme
                                 throw new Exception("取消");
                             }
                             try {
-                                Thread.sleep(1000);
+                                Thread.sleep(500);
                             }
                             catch (InterruptedException e) {
+                            }
+                            if (verifyTaskDialogView != null) {
+                                verifyTaskDialogView.playVoiceMessageOnUIThread("请网点员工按指纹");
                             }
                             byte[] finger = new byte[2000+152*200];
                             byte[] tz = new byte[513];
@@ -206,9 +212,18 @@ public class VerifyTaskDialogPresenterImpl extends BaseFragmentPresenter impleme
                                 throw new Exception("取消");
                             }
                             try {
-                                Thread.sleep(1000);
+                                Thread.sleep(500);
                             }
                             catch (InterruptedException e) {
+                            }
+                            String str = "";
+                            if (verifyTaskDialogView != null) {
+                                if (escortBeanList.size() == 2) {
+                                    str = "第一个";
+                                } else if(escortBeanList.size() == 1) {
+                                    str = "第二个";
+                                }
+                                verifyTaskDialogView.playVoiceMessageOnUIThread("请" + str + "押运员按指纹");
                             }
                             byte[] finger = new byte[2000+152*200];
                             byte[] tz = new byte[513];

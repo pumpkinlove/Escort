@@ -323,12 +323,6 @@ public class UpTaskFragment extends BaseFragment implements IUpTaskView{
 
     @Override
     public void updateBox(List<BoxBean> boxBeanList) {
-        if (materialDialog.isShowing()) {
-            materialDialog.dismiss();
-        }
-        if (srlUpTaskBox.isRefreshing()) {
-            srlUpTaskBox.setRefreshing(false);
-        }
         if (boxBeanList != null) {
             boxAdapter.setDataList(boxBeanList);
             boxAdapter.clearSelected();

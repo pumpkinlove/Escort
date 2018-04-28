@@ -3,6 +3,7 @@ package com.miaxis.escort.view.fragment;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.BitmapFactory;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.view.ViewGroup;
@@ -24,8 +25,10 @@ import com.miaxis.escort.presenter.IVerifyTaskDialogPresenter;
 import com.miaxis.escort.presenter.VerifyTaskDialogPresenterImpl;
 import com.miaxis.escort.view.viewer.IVerifyTaskDialogView;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -37,7 +40,7 @@ import io.reactivex.functions.Consumer;
  * Created by 一非 on 2018/4/24.
  */
 
-public class VerifyTaskDialogFragment extends BaseDialogFragment implements IVerifyTaskDialogView{
+public class VerifyTaskDialogFragment extends BaseDialogFragment implements IVerifyTaskDialogView, TextToSpeech.OnInitListener{
 
     @BindView(R.id.tv_dialog_text)
     TextView tvDialigText;
@@ -55,6 +58,8 @@ public class VerifyTaskDialogFragment extends BaseDialogFragment implements IVer
     private List<EscortBean> escortBeanList;
     private List<EscortBean> mList;
     private WorkerBean workerBean;
+
+    private WeakReference<TextToSpeech> ttsRef;
 
     public VerifyTaskDialogFragment() {
 
@@ -84,11 +89,11 @@ public class VerifyTaskDialogFragment extends BaseDialogFragment implements IVer
             escortBeanList.add(taskEscortBean.getEscortBean());
             mList.add(taskEscortBean.getEscortBean());
         }
+        ttsRef = new WeakReference<TextToSpeech>(new TextToSpeech(this.getContext(), this));
     }
 
     @Override
     protected void initView() {
-        refreshStepView();
         RxView.clicks(btnDialogDismiss)
                 .throttleFirst(1000, TimeUnit.MILLISECONDS)
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -107,6 +112,9 @@ public class VerifyTaskDialogFragment extends BaseDialogFragment implements IVer
                                         verifyTaskDialogPresenter.pause();
                                         VerifyTaskDialogFragment.this.dismiss();
                                         listener.updateStep(step);
+                                        if (step > 2 && workerBean != null) {
+                                            listener.updateWorker(workerBean);
+                                        }
                                     }
                                 })
                                 .show();
@@ -138,19 +146,25 @@ public class VerifyTaskDialogFragment extends BaseDialogFragment implements IVer
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        refreshStepView();
+    }
+
     private void refreshStepView() {
         ivDialogPicture.setImageResource(R.drawable.background);
         if (step == 1) {
             tvDialigText.setText("验证车辆");
             verifyTaskDialogPresenter.verifyCar(taskBean);
         } else if (step == 2) {
-            tvDialigText.setText("验证操作员");
+            tvDialigText.setText("验证网点员工");
             verifyTaskDialogPresenter.verifyWorker();
         } else if (step ==3) {
-            tvDialigText.setText("验证押运员1");
+            tvDialigText.setText("验证押运员一");
             verifyTaskDialogPresenter.verifyEscort(mList);
         }else if (step == 4) {
-            tvDialigText.setText("验证押运员2");
+            tvDialigText.setText("验证押运员二");
             verifyTaskDialogPresenter.verifyEscort(mList);
         } else {
             tvDialigText.setText("验证完毕");
@@ -162,19 +176,24 @@ public class VerifyTaskDialogFragment extends BaseDialogFragment implements IVer
     public void verifySuccess() {
         Toasty.success(EscortApp.getInstance().getApplicationContext(), "验证成功", 0, true).show();
         if (step == 1) {
+            playVoiceMessage("车辆验证成功");
             if (taskBean.getCarPhoto() != null) {
                 ivDialogPicture.setImageBitmap(BitmapFactory.decodeByteArray(taskBean.getCarPhoto(), 0, taskBean.getCarPhoto().length));
             }
         } else if (step == 2) {
+            playVoiceMessage("网点员工验证通过");
             ivDialogPicture.setImageResource(R.mipmap.ic_launcher);
         } else if (step ==3) {
+            playVoiceMessage("验证通过");
         }else if (step == 4) {
+            playVoiceMessage("验证通过，验证完毕");
         }
         btnDialogNext.setEnabled(true);
     }
 
     @Override
     public void verifyFailed(String message) {
+        playVoiceMessage("失败，请取消后重试");
         Toasty.error(EscortApp.getInstance().getApplicationContext(), message, 0, true).show();
         closeDevice();
     }
@@ -231,15 +250,39 @@ public class VerifyTaskDialogFragment extends BaseDialogFragment implements IVer
     }
 
     @Override
+    public void onInit(int status) {
+        if (status == TextToSpeech.SUCCESS) {
+            ttsRef.get().setLanguage(Locale.CHINESE);
+        }
+    }
+
+    @Override
+    public void playVoiceMessage(final String message) {
+        ttsRef.get().speak(message, TextToSpeech.QUEUE_FLUSH, null, "login");
+    }
+
+    @Override
+    public void playVoiceMessageOnUIThread(final String message) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ttsRef.get().speak(message, TextToSpeech.QUEUE_FLUSH, null, "login");
+            }
+        });
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         verifyTaskDialogPresenter.doDestroy();
+        ttsRef.get().shutdown();
     }
 
     public interface OnVerifyTaskDialogListener {
         void updateStep(int step);
         void verifySuccess(TaskBean taskBean, WorkerBean workerBean, List<EscortBean> escortBeanList);
         void verifyFailed();
+        void updateWorker(WorkerBean workerBean);
     }
 
 }

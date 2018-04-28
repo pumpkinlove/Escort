@@ -13,4 +13,6 @@ public interface IVerifyTaskDialogView {
     void showToasty(String message);
     void removeVerified(EscortBean escortBean);
     void setVerifyWorker(WorkerBean worker);
+    void playVoiceMessage(String message);
+    void playVoiceMessageOnUIThread(String message);
 }

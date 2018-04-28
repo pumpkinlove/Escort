@@ -23,6 +23,8 @@ import com.miaxis.escort.view.viewer.IMyTaskView;
 import com.trello.rxlifecycle2.LifecycleProvider;
 import com.trello.rxlifecycle2.android.FragmentEvent;
 
+import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -33,6 +35,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -78,12 +84,38 @@ public class MyTaskPresenterImpl extends BaseFragmentPresenter implements IMyTas
 
     @Override
     public void downTask() {
+        //TODO:只有DownloadTask这个接口解析时间长达10S
         final Config config = (Config) EscortApp.getInstance().get(StaticVariable.CONFIG);
         final Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())//请求的结果转为实体类
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())  //适配RxJava2.0, RxJava1.x则为RxJavaCallAdapterFactory.create()
                 .baseUrl("http://" + config.getIp() + ":" + config.getPort())
                 .build();
+        /*new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Log.e("asd", "11111" + new Date().toString());
+                TaskNet taskNet = retrofit.create(TaskNet.class);
+                Log.e("asd", "2222222222" + new Date().toString());
+                Call<ResponseBody> call = taskNet.downTask(config.getOrgCode(), DateUtil.getToday());
+                call.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        try {
+                            Log.e("asd", "333333333" + new Date().toString() + response.body().string());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        t.printStackTrace();
+                    }
+                });
+                Log.e("asd", "4444444" + new Date().toString());
+            }
+        }).start();*/
         Observable.just(config)
                 .subscribeOn(Schedulers.io())
                 .compose(getProvider().<Config>bindToLifecycle())
@@ -91,6 +123,7 @@ public class MyTaskPresenterImpl extends BaseFragmentPresenter implements IMyTas
                 .flatMap(new Function<Config, Observable<ResponseEntity<TaskBean>>>() {
                     @Override
                     public Observable<ResponseEntity<TaskBean>> apply(Config config) throws Exception {
+                        Log.e("asd", "" + new Date().toString());
                         TaskNet taskNet = retrofit.create(TaskNet.class);
                         return  taskNet.downloadTask(config.getOrgCode(), DateUtil.getToday());
                     }
@@ -98,9 +131,9 @@ public class MyTaskPresenterImpl extends BaseFragmentPresenter implements IMyTas
                 .doOnNext(new Consumer<ResponseEntity<TaskBean>>() {
                     @Override
                     public void accept(ResponseEntity<TaskBean> taskBeanResponseEntity) throws Exception {
+                        Log.e("asd", "" + new Date().toString());
                         if (StaticVariable.SUCCESS.equals(taskBeanResponseEntity.getCode())) {
-                            List<TaskBean> taskBeans =taskBeanResponseEntity.getListData();
-                            myTaskModel.saveTask(taskBeans);
+                            myTaskModel.saveTask(taskBeanResponseEntity.getListData());
                         }
                     }
                 })
@@ -108,6 +141,7 @@ public class MyTaskPresenterImpl extends BaseFragmentPresenter implements IMyTas
                 .doOnNext(new Consumer<ResponseEntity<TaskBean>>() {
                     @Override
                     public void accept(ResponseEntity<TaskBean> taskBeanResponseEntity) throws Exception {
+                        Log.e("asd", "" + new Date().toString());
                         if (myTaskView != null) {
                             if (StaticVariable.SUCCESS.equals(taskBeanResponseEntity.getCode())) {
                                 myTaskView.setDialogMessage("下载任务成功，正在下载任务箱包信息...");

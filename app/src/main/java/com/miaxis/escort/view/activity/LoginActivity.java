@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Message;
+import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -24,6 +26,8 @@ import com.miaxis.escort.util.StaticVariable;
 import com.miaxis.escort.view.fragment.ConfigFragment;
 import com.miaxis.escort.view.viewer.ILoginView;
 
+import java.lang.ref.WeakReference;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -32,7 +36,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-public class LoginActivity extends BaseActivity implements ILoginView, ConfigFragment.OnConfigClickListener{
+public class LoginActivity extends BaseActivity implements ILoginView, ConfigFragment.OnConfigClickListener, TextToSpeech.OnInitListener {
 
     private ILoginPresenter loginPresenter;
 
@@ -49,6 +53,8 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
 
     private MaterialDialog materialDialog;
 
+    private WeakReference<TextToSpeech> ttsRef;
+
     @Override
     protected int setContentView() {
         return R.layout.activity_login;
@@ -58,7 +64,7 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
     protected void initData() {
         loginPresenter = new LoginPresenterImpl(this,this);
         loginPresenter.getPermissions(this);
-
+        ttsRef = new WeakReference<TextToSpeech>(new TextToSpeech(this, this));
     }
 
     @Override
@@ -86,10 +92,10 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
                 .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
-                        //TODO：员工列表为空时超级操作员
                         if (loginPresenter.loadWorkerSize() == 0) {
                             Toasty.error(EscortApp.getInstance().getApplicationContext(), "未找到员工信息，请尝试重新设置IP、端口和机构号",1, true).show();
                         } else {
+                            playVoiceMessage("请按手指");
                             loginPresenter.login();
                             //loginPresenter.initAppData();
                         }
@@ -100,6 +106,7 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
 
     @Override
     public void loginSuccess(WorkerBean workerBean) {
+        playVoiceMessage("指纹验证通过");
         Toasty.success(EscortApp.getInstance().getApplicationContext(), "欢迎您，" + workerBean.getName(), 0, true).show();
         EscortApp.getInstance().put(StaticVariable.WORKER, workerBean);
         EscortApp.getInstance().put(StaticVariable.CONFIG, EscortApp.getInstance().getDaoSession().getConfigDao().load(1L));
@@ -110,6 +117,7 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
     @Override
     public void loginFailed(String message) {
         //Toasty.error(this, message,0, true).show();
+        playVoiceMessage("登录失败，请重试");
         Toasty.error(this, "登录失败，请重试",0, true).show();
     }
 
@@ -156,6 +164,7 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
     protected void onDestroy() {
         super.onDestroy();
         loginPresenter.doDestroy();
+        ttsRef.get().shutdown();
     }
 
     @Override
@@ -180,4 +189,16 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
         Toasty.error(this, "拒绝权限将无法正常运行", 0, true).show();
         finish();
     }
+
+    @Override
+    public void onInit(int status) {
+        if (status == TextToSpeech.SUCCESS) {
+        ttsRef.get().setLanguage(Locale.CHINESE);
+    }
+}
+
+    public void playVoiceMessage(String message) {
+        ttsRef.get().speak(message, TextToSpeech.QUEUE_FLUSH, null, "login");
+    }
+
 }

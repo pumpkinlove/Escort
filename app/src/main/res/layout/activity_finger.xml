@@ -51,6 +51,7 @@
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:layout_gravity="center"
+        android:gravity="center"
         android:id="@+id/tv_tip"/>
 
     <Space
