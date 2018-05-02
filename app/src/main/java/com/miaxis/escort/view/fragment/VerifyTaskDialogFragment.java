@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.bumptech.glide.Glide;
 import com.device.Device;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.miaxis.escort.R;
@@ -178,7 +179,10 @@ public class VerifyTaskDialogFragment extends BaseDialogFragment implements IVer
         if (step == 1) {
             playVoiceMessage("车辆验证成功");
             if (taskBean.getCarPhoto() != null) {
-                ivDialogPicture.setImageBitmap(BitmapFactory.decodeByteArray(taskBean.getCarPhoto(), 0, taskBean.getCarPhoto().length));
+                //ivDialogPicture.setImageBitmap(BitmapFactory.decodeByteArray(taskBean.getCarPhoto(), 0, taskBean.getCarPhoto().length));
+                Glide.with(VerifyTaskDialogFragment.this)
+                        .load(taskBean.getCarPhoto())
+                        .into(ivDialogPicture);
             }
         } else if (step == 2) {
             playVoiceMessage("网点员工验证通过");

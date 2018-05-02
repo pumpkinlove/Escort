@@ -46,7 +46,7 @@ public class TaskBeanDao extends AbstractDao<TaskBean, String> {
         public final static Property Seculevel = new Property(19, String.class, "seculevel", false, "SECULEVEL");
         public final static Property Createtime = new Property(20, String.class, "createtime", false, "CREATETIME");
         public final static Property CarRfid = new Property(21, String.class, "carRfid", false, "CAR_RFID");
-        public final static Property CarPhoto = new Property(22, byte[].class, "carPhoto", false, "CAR_PHOTO");
+        public final static Property CarPhoto = new Property(22, String.class, "carPhoto", false, "CAR_PHOTO");
     }
 
     private DaoSession daoSession;
@@ -87,7 +87,7 @@ public class TaskBeanDao extends AbstractDao<TaskBean, String> {
                 "\"SECULEVEL\" TEXT," + // 19: seculevel
                 "\"CREATETIME\" TEXT," + // 20: createtime
                 "\"CAR_RFID\" TEXT," + // 21: carRfid
-                "\"CAR_PHOTO\" BLOB);"); // 22: carPhoto
+                "\"CAR_PHOTO\" TEXT);"); // 22: carPhoto
     }
 
     /** Drops the underlying database table. */
@@ -210,9 +210,9 @@ public class TaskBeanDao extends AbstractDao<TaskBean, String> {
             stmt.bindString(22, carRfid);
         }
  
-        byte[] carPhoto = entity.getCarPhoto();
+        String carPhoto = entity.getCarPhoto();
         if (carPhoto != null) {
-            stmt.bindBlob(23, carPhoto);
+            stmt.bindString(23, carPhoto);
         }
     }
 
@@ -330,9 +330,9 @@ public class TaskBeanDao extends AbstractDao<TaskBean, String> {
             stmt.bindString(22, carRfid);
         }
  
-        byte[] carPhoto = entity.getCarPhoto();
+        String carPhoto = entity.getCarPhoto();
         if (carPhoto != null) {
-            stmt.bindBlob(23, carPhoto);
+            stmt.bindString(23, carPhoto);
         }
     }
 
@@ -372,7 +372,7 @@ public class TaskBeanDao extends AbstractDao<TaskBean, String> {
             cursor.isNull(offset + 19) ? null : cursor.getString(offset + 19), // seculevel
             cursor.isNull(offset + 20) ? null : cursor.getString(offset + 20), // createtime
             cursor.isNull(offset + 21) ? null : cursor.getString(offset + 21), // carRfid
-            cursor.isNull(offset + 22) ? null : cursor.getBlob(offset + 22) // carPhoto
+            cursor.isNull(offset + 22) ? null : cursor.getString(offset + 22) // carPhoto
         );
         return entity;
     }
@@ -401,7 +401,7 @@ public class TaskBeanDao extends AbstractDao<TaskBean, String> {
         entity.setSeculevel(cursor.isNull(offset + 19) ? null : cursor.getString(offset + 19));
         entity.setCreatetime(cursor.isNull(offset + 20) ? null : cursor.getString(offset + 20));
         entity.setCarRfid(cursor.isNull(offset + 21) ? null : cursor.getString(offset + 21));
-        entity.setCarPhoto(cursor.isNull(offset + 22) ? null : cursor.getBlob(offset + 22));
+        entity.setCarPhoto(cursor.isNull(offset + 22) ? null : cursor.getString(offset + 22));
      }
     
     @Override

@@ -39,20 +39,20 @@
             android:inputType="number"
             android:singleLine="true" />
 
-        <EditText
-            android:id="@+id/et_orgCode"
-            android:theme="@style/my_style_input"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:textSize="15sp"
-            android:textColor="@color/white"
-            android:paddingLeft="10dp"
-            android:clickable="true"
-            android:hint="请填写机构编号"
-            android:maxLength="10"
-            android:inputType="number"
-            android:digits="0123456789"
-            android:singleLine="true" />
+        <!--<EditText-->
+            <!--android:id="@+id/et_orgCode"-->
+            <!--android:theme="@style/my_style_input"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:textSize="15sp"-->
+            <!--android:textColor="@color/white"-->
+            <!--android:paddingLeft="10dp"-->
+            <!--android:clickable="true"-->
+            <!--android:hint="请填写机构编号"-->
+            <!--android:maxLength="10"-->
+            <!--android:inputType="number"-->
+            <!--android:digits="0123456789"-->
+            <!--android:singleLine="true" />-->
 
         <LinearLayout
             android:orientation="horizontal"

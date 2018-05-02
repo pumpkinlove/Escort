@@ -7,6 +7,7 @@ import com.miaxis.escort.model.entity.Config;
 import com.miaxis.escort.model.entity.OpdateBean;
 import com.miaxis.escort.model.entity.WorkerBean;
 import com.miaxis.escort.presenter.IConfigPresenter;
+import com.miaxis.escort.util.DeviceInfoUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,5 +80,15 @@ public class ConfigModelImpl implements IConfigModel{
     @Override
     public int getWorkerSize() {
         return EscortApp.getInstance().getDaoSession().getWorkerBeanDao().loadAll().size();
+    }
+
+    @Override
+    public String getEquipmentcode() {
+        return DeviceInfoUtils.getImei(EscortApp.getInstance().getApplicationContext());
+    }
+
+    @Override
+    public String getMac() {
+        return DeviceInfoUtils.getLocalMac();
     }
 }

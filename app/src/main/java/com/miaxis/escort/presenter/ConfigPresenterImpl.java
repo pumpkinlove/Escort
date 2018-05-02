@@ -10,6 +10,7 @@ import com.miaxis.escort.model.IConfigModel;
 import com.miaxis.escort.model.entity.BankBean;
 import com.miaxis.escort.model.entity.BoxBean;
 import com.miaxis.escort.model.entity.Config;
+import com.miaxis.escort.model.entity.Equipment;
 import com.miaxis.escort.model.entity.WorkerBean;
 import com.miaxis.escort.model.retrofit.BankNet;
 import com.miaxis.escort.model.retrofit.BoxNet;
@@ -24,6 +25,7 @@ import es.dmoral.toasty.Toasty;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
@@ -47,8 +49,8 @@ public class ConfigPresenterImpl extends BaseFragmentPresenter implements IConfi
     }
 
     @Override
-    public void configSave(String ip, String port, String orgCode) {
-        final Config config = new Config(1L, ip, port, orgCode);
+    public void configSave(String ip, String port) {
+        final Config config = new Config(1L, ip, port, null);
         final Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())//请求的结果转为实体类
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())  //适配RxJava2.0, RxJava1.x则为RxJavaCallAdapterFactory.create()
@@ -67,35 +69,39 @@ public class ConfigPresenterImpl extends BaseFragmentPresenter implements IConfi
                 .doOnNext(new Consumer<Config>() {
                     @Override
                     public void accept(Config config) throws Exception {
-                        if (configView != null) {
-                            configView.setProgressDialogMessage("清空数据成功，正在保存设置...");
-                        }
-                    }
-                })
-                .observeOn(Schedulers.io())
-                .doOnNext(new Consumer<Config>() {
-                    @Override
-                    public void accept(Config config) throws Exception {
-                        configModel.saveConfig(config);
-                    }
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(new Consumer<Config>() {
-                    @Override
-                    public void accept(Config config) throws Exception {
                         EscortApp.getInstance().put(StaticVariable.CONFIG, config);
                         if (configView != null) {
-                            configView.setProgressDialogMessage("设置保存成功，正在下载银行信息...");
+                            configView.setProgressDialogMessage("清空数据成功，正在下载机构信息...");
                         }
                     }
                 })
                 .observeOn(Schedulers.io())
-                .flatMap(new Function<Config, Observable<ResponseEntity<BankBean>>>() {
+                .flatMap(new Function<Config, ObservableSource<ResponseEntity<String>>>() {
                     @Override
-                    public Observable<ResponseEntity<BankBean>> apply(Config config) throws Exception {
-                        BankNet net = retrofit.create(BankNet.class);
-                        Observable<ResponseEntity<BankBean>> o = net.downloadBank(config.getOrgCode());
-                        return o;
+                    public ObservableSource<ResponseEntity<String>> apply(Config config) throws Exception {
+                        Equipment equipment = new Equipment();
+                        equipment.setEquipmentcode(configModel.getEquipmentcode());
+                        equipment.setMac(configModel.getMac());
+                        BankNet bankNet = retrofit.create(BankNet.class);
+                        return bankNet.addPos(new Gson().toJson(equipment));
+                    }
+                })
+                .doOnNext(new Consumer<ResponseEntity<String>>() {
+                    @Override
+                    public void accept(ResponseEntity<String> stringResponseEntity) throws Exception {
+                        if (StaticVariable.SUCCESS.equals(stringResponseEntity.getCode())) {
+                            config.setOrgCode(stringResponseEntity.getData());
+                            configModel.saveConfig(config);
+                        } else {
+                            throw new Exception(stringResponseEntity.getMessage());
+                        }
+                    }
+                })
+                .flatMap(new Function<ResponseEntity<String>, ObservableSource<ResponseEntity<BankBean>>>() {
+                    @Override
+                    public ObservableSource<ResponseEntity<BankBean>> apply(ResponseEntity<String> stringResponseEntity) throws Exception {
+                        BankNet bankNet = retrofit.create(BankNet.class);
+                        return bankNet.downloadBank(stringResponseEntity.getData());
                     }
                 })
                 .doOnNext(new Consumer<ResponseEntity<BankBean>>() {
@@ -179,7 +185,7 @@ public class ConfigPresenterImpl extends BaseFragmentPresenter implements IConfi
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         if (configView != null) {
-                            configView.setProgressDialogMessage("出现错误");
+                            configView.setProgressDialogMessage(throwable.getMessage());
                             configView.configSaveFailed();
                         }
                     }

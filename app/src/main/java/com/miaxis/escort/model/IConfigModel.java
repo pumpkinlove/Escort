@@ -21,4 +21,6 @@ public interface IConfigModel {
     List<OpdateBean> loadBoxOpdate();
     void saveBox(List<BoxBean> boxBeanList);
     int getWorkerSize();
+    String getEquipmentcode();
+    String getMac();
 }

@@ -38,6 +38,7 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Function3;
@@ -57,8 +58,8 @@ public class ConfigFragment extends BaseFragment implements IConfigView{
     EditText etIp;
     @BindView(R.id.et_port)
     EditText etPort;
-    @BindView(R.id.et_orgCode)
-    EditText etOrgCode;
+    /*@BindView(R.id.et_orgCode)
+    EditText etOrgCode;*/
     @BindView(R.id.btn_confirm)
     Button btnConfirm;
     @BindView(R.id.btn_cancel)
@@ -117,11 +118,10 @@ public class ConfigFragment extends BaseFragment implements IConfigView{
                 });
         Observable<CharSequence> observableIp = RxTextView.textChanges(etIp);
         Observable<CharSequence> observablePort = RxTextView.textChanges(etPort);
-        Observable<CharSequence> observableOrgCode = RxTextView.textChanges(etOrgCode);
-        Observable.combineLatest(observableIp, observablePort, observableOrgCode, new Function3<CharSequence, CharSequence, CharSequence, Boolean>() {
+        Observable.combineLatest(observableIp, observablePort, new BiFunction<CharSequence, CharSequence, Boolean>(){
             @Override
-            public Boolean apply(CharSequence ip, CharSequence port, CharSequence orgCode) throws Exception {
-                return !ip.toString().isEmpty() && !port.toString().isEmpty() && !orgCode.toString().isEmpty();
+            public Boolean apply(CharSequence ip, CharSequence port) throws Exception {
+                return !ip.toString().isEmpty() && !port.toString().isEmpty();
             }
         })
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -144,8 +144,7 @@ public class ConfigFragment extends BaseFragment implements IConfigView{
                         pdSaveConfig.setContent("正在清空数据...");
                         pdSaveConfig.show();
                         configPresenter.configSave(etIp.getText().toString(),
-                                etPort.getText().toString(),
-                                etOrgCode.getText().toString());
+                                etPort.getText().toString());
                     }
                 });
     }
@@ -169,7 +168,6 @@ public class ConfigFragment extends BaseFragment implements IConfigView{
         }
         etIp.setText(config.getIp());
         etPort.setText(config.getPort());
-        etOrgCode.setText(config.getOrgCode());
     }
 
     @Override

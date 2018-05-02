@@ -42,7 +42,7 @@ public class TaskBean  implements Serializable {
 	private String seculevel;
 	private String createtime;
 	private String carRfid;
-	private byte[] carPhoto;
+	private String carPhoto;
     @ToMany(joinProperties = {@JoinProperty(name = "id", referencedName = "taskid")})
     private List<TaskBoxBean> boxList;
     @ToMany(joinProperties = {@JoinProperty(name = "id", referencedName = "taskid")})
@@ -53,12 +53,12 @@ public class TaskBean  implements Serializable {
 				/** Used for active entity operations. */
 				@Generated(hash = 281453257)
 				private transient TaskBeanDao myDao;
-				@Generated(hash = 1011287573)
+				@Generated(hash = 297599945)
 				public TaskBean(String id, String taskcode, String taskseq, String deptno, String carid,
 						String plateno, String taskdate, String begintime, String endtime, String status,
 						String statusName, String exetime, String createuser, String createusername,
 						String opuser, String opusername, String opdate, String tasktype, String tasklevel,
-						String seculevel, String createtime, String carRfid, byte[] carPhoto) {
+						String seculevel, String createtime, String carRfid, String carPhoto) {
 					this.id = id;
 					this.taskcode = taskcode;
 					this.taskseq = taskseq;
@@ -159,7 +159,7 @@ public class TaskBean  implements Serializable {
 					} else if ("5".equals(status)) {
 						statusName="已注销";
 					}
-					return statusName;
+					return this.statusName;
 				}
 				public void setStatusName(String statusName) {
 					this.statusName = statusName;
@@ -206,6 +206,7 @@ public class TaskBean  implements Serializable {
 				public void setTasktype(String tasktype) {
 					this.tasktype = tasktype;
 				}
+
 				public String getTasklevel() {
 					return this.tasklevel;
 				}
@@ -230,10 +231,10 @@ public class TaskBean  implements Serializable {
 				public void setCarRfid(String carRfid) {
 					this.carRfid = carRfid;
 				}
-				public byte[] getCarPhoto() {
+				public String getCarPhoto() {
 					return this.carPhoto;
 				}
-				public void setCarPhoto(byte[] carPhoto) {
+				public void setCarPhoto(String carPhoto) {
 					this.carPhoto = carPhoto;
 				}
 				/**

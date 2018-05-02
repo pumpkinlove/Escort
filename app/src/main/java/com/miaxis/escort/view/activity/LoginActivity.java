@@ -62,6 +62,8 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
 
     @Override
     protected void initData() {
+        //TODO:网点员工默认图片更换
+        //TODO:主界面按返回键退出
         loginPresenter = new LoginPresenterImpl(this,this);
         loginPresenter.getPermissions(this);
         ttsRef = new WeakReference<TextToSpeech>(new TextToSpeech(this, this));
@@ -93,7 +95,7 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
                     @Override
                     public void accept(Object o) throws Exception {
                         if (loginPresenter.loadWorkerSize() == 0) {
-                            Toasty.error(EscortApp.getInstance().getApplicationContext(), "未找到员工信息，请尝试重新设置IP、端口和机构号",1, true).show();
+                            Toasty.error(EscortApp.getInstance().getApplicationContext(), "未找到员工信息，请尝试重新设置IP和端口",1, true).show();
                         } else {
                             playVoiceMessage("请按手指");
                             loginPresenter.login();

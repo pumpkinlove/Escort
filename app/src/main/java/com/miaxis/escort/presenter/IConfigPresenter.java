@@ -7,7 +7,7 @@ import com.miaxis.escort.model.entity.Config;
  */
 
 public interface IConfigPresenter extends IBasePresenter{
-    void configSave(String ip, String port, String orgCode);
+    void configSave(String ip, String port);
     void configSaveSuccess();
     void configSaveFailed();
     void loadConfig();
