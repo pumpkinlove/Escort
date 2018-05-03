@@ -6,18 +6,14 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toolbar;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -37,6 +33,7 @@ import com.miaxis.escort.view.viewer.ISystemView;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -60,8 +57,8 @@ public class SystemFragment extends BaseFragment implements ISystemView{
     LinearLayout llUpdate;
     @BindView(R.id.ll_about)
     LinearLayout llAbout;
-    @BindView(R.id.btn_logout)
-    Button btnLogout;
+    @BindView(R.id.ll_logout)
+    LinearLayout llLogout;
 
     private OnFragmentInteractionListener mListener;
     private ISystemPresenter systemPresenter;
@@ -166,7 +163,7 @@ public class SystemFragment extends BaseFragment implements ISystemView{
                         systemPresenter.updateApp();
                     }
                 });
-        RxView.clicks(btnLogout)
+        RxView.clicks(llLogout)
                 .throttleFirst(1, TimeUnit.SECONDS)
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .compose(this.bindToLifecycle())
@@ -315,13 +312,14 @@ public class SystemFragment extends BaseFragment implements ISystemView{
         File file = new File(path);
         if (file.exists()) {
             Uri uriForFile = FileProvider.getUriForFile(context, "com.miaxis.escort.fileprovider", file);
-
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.setDataAndType(uriForFile, "application/vnd.android.package-archive");
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             startActivity(intent);
+        } else {
+            Toasty.error(EscortApp.getInstance().getApplicationContext(), "下载文件不存在", 0, true).show();
         }
     }
 

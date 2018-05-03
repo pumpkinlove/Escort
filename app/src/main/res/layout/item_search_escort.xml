@@ -48,7 +48,7 @@
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:layout_below="@id/civ_search_escort_image"
-        android:background="@color/lightgray"
+        android:background="@color/gray_light"
         android:id="@+id/view" />
 
 </RelativeLayout>

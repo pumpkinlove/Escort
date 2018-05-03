@@ -17,6 +17,8 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             android:gravity="right"
+            app:titleTextColor="@color/colorTitleText"
+            app:theme="@style/ThemeOverlay.AppCompat.Light"
             app:popupTheme="@style/AppTheme.PopupOverlay" >
 
         </android.support.v7.widget.Toolbar>
@@ -63,7 +65,7 @@
     </LinearLayout>
 
     <View
-        android:background="@color/lightgray"
+        android:background="@color/gray_light"
         android:layout_width="match_parent"
         android:layout_marginTop="8dp"
         android:layout_height="1px"/>
@@ -91,7 +93,7 @@
             android:gravity="right|center"/>
 
         <ImageView
-            android:src="@mipmap/zicon_arrow"
+            android:src="@mipmap/gray_right_arrow"
             android:layout_gravity="end|center_vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -99,7 +101,7 @@
     </LinearLayout>
 
     <View
-        android:background="@color/lightgray"
+        android:background="@color/gray_light"
         android:layout_width="match_parent"
         android:layout_height="1px"/>
 
@@ -126,7 +128,7 @@
             android:gravity="right|center"/>
 
         <ImageView
-            android:src="@mipmap/zicon_arrow"
+            android:src="@mipmap/gray_right_arrow"
             android:layout_gravity="end|center_vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -134,7 +136,7 @@
     </LinearLayout>
 
     <View
-        android:background="@color/lightgray"
+        android:background="@color/gray_light"
         android:layout_width="match_parent"
         android:layout_height="1px"/>
 

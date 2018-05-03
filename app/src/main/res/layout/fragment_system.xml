@@ -1,58 +1,199 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/gray_bg"
     android:orientation="vertical">
 
-    <FrameLayout
+    <View
+        android:background="@color/gray_light"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+
+    <LinearLayout
+        android:layout_marginTop="@dimen/activity_padding"
+        android:layout_marginBottom="@dimen/activity_padding"
+        android:padding="@dimen/content_padding"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal"
+        android:background="@drawable/white_btn_bg"
+        android:clickable="true"
+        android:focusable="true"
+        android:elevation="@dimen/common_elevation">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_image"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:src="@mipmap/ic_launcher_round"
+            app:civ_border_width="3dp"
+            app:civ_border_color="#FFFFFFFF"
+            android:focusable="false"/>
+
+        <LinearLayout
+            android:layout_marginStart="@dimen/content_padding"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:focusable="false">
+
+            <TextView
+                android:hint="员工姓名"
+                android:id="@+id/tv_worker_name"
+                android:textSize="20sp"
+                android:textColor="@color/white"
+                android:layout_gravity="start|top"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:hint="员工编号"
+                android:id="@+id/tv_worker_code"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                android:layout_gravity="start|bottom"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:background="@color/white"
+        android:elevation="@dimen/common_elevation"
+        android:padding="@dimen/activity_padding"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
-            android:src="@drawable/background"
-            android:scaleType="matrix"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
         <LinearLayout
-            android:layout_width="match_parent"
+            android:id="@+id/ll_task_list"
+            android:orientation="vertical"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="horizontal"
-            android:background="#00ffffff">
-
-            <View
-                android:layout_width="70px"
-                android:layout_height="match_parent"
-                />
+            android:layout_weight="1"
+            android:focusable="true"
+            android:clickable="true">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/profile_image"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:src="@mipmap/ic_launcher_round"
-                app:civ_border_width="3dp"
-                app:civ_border_color="#FFFFFFFF"/>
+                android:focusable="false"/>
 
             <TextView
-                android:hint="检察员姓名"
-                android:id="@+id/tv_inspector_name"
-                android:textSize="20sp"
-                android:textColor="@color/white"
-                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/content_padding"
+                android:text="任务查询"
                 android:gravity="center"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
         </LinearLayout>
 
-    </FrameLayout>
+        <LinearLayout
+            android:id="@+id/ll_box_list"
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:focusable="true"
+            android:clickable="true">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:src="@mipmap/ic_launcher_round"
+                android:focusable="false"/>
+
+            <TextView
+                android:layout_marginTop="@dimen/content_padding"
+                android:text="箱包查询"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_escort_list"
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:focusable="true"
+            android:clickable="true">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:src="@mipmap/ic_launcher_round"
+                android:focusable="false"/>
+
+            <TextView
+                android:layout_marginTop="@dimen/content_padding"
+                android:text="押运员查询"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_operator_list"
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:focusable="true"
+            android:clickable="true">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:src="@mipmap/ic_launcher_round"
+                android:focusable="false"/>
+
+            <TextView
+                android:layout_marginTop="@dimen/content_padding"
+                android:text="操作员管理"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
 
     <View
-        android:background="@color/lightgray"
+        android:background="@color/gray_light"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/activity_padding" />
+
+    <View
+        android:background="@color/gray_light"
         android:layout_width="match_parent"
         android:layout_height="1px"/>
 
@@ -62,7 +203,7 @@
         style="@style/l_personal_item">
 
         <ImageView
-            android:src="@mipmap/opsearch"
+            android:src="@mipmap/tasksearch"
             android:layout_gravity="center_vertical"
             android:scaleType="fitCenter"
             android:layout_width="wrap_content"
@@ -73,7 +214,7 @@
             android:text="业务查询"/>
 
         <ImageView
-            android:src="@mipmap/zicon_arrow"
+            android:src="@mipmap/gray_right_arrow"
             android:layout_gravity="end|center_vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -81,7 +222,7 @@
     </LinearLayout>
 
     <View
-        android:background="@color/lightgray"
+        android:background="@color/gray_light"
         android:layout_width="match_parent"
         android:layout_height="1px"/>
 
@@ -102,7 +243,7 @@
             android:text="操作员管理"/>
 
         <ImageView
-            android:src="@mipmap/zicon_arrow"
+            android:src="@mipmap/gray_right_arrow"
             android:layout_gravity="end|center_vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -110,7 +251,16 @@
     </LinearLayout>
 
     <View
-        android:background="@color/lightgray"
+        android:background="@color/gray_light"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/activity_padding" />
+
+    <View
+        android:background="@color/gray_light"
         android:layout_width="match_parent"
         android:layout_height="1px"/>
 
@@ -120,7 +270,7 @@
         style="@style/l_personal_item">
 
         <ImageView
-            android:src="@mipmap/opsearch"
+            android:src="@mipmap/user_about"
             android:layout_gravity="center_vertical"
             android:scaleType="fitCenter"
             android:layout_width="wrap_content"
@@ -131,7 +281,7 @@
             android:text="设置"/>
 
         <ImageView
-            android:src="@mipmap/zicon_arrow"
+            android:src="@mipmap/gray_right_arrow"
             android:layout_gravity="end|center_vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -139,7 +289,7 @@
     </LinearLayout>
 
     <View
-        android:background="@color/lightgray"
+        android:background="@color/gray_light"
         android:layout_width="match_parent"
         android:layout_height="1px"/>
 
@@ -149,7 +299,7 @@
         style="@style/l_personal_item">
 
         <ImageView
-            android:src="@mipmap/opsearch"
+            android:src="@mipmap/user_collect"
             android:layout_gravity="center_vertical"
             android:scaleType="fitCenter"
             android:layout_width="wrap_content"
@@ -159,16 +309,10 @@
             style="@style/tv_personal_item"
             android:text="恢复出厂设置"/>
 
-        <ImageView
-            android:src="@mipmap/zicon_arrow"
-            android:layout_gravity="end|center_vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
     </LinearLayout>
 
     <View
-        android:background="@color/lightgray"
+        android:background="@color/gray_light"
         android:layout_width="match_parent"
         android:layout_height="1px"/>
 
@@ -178,7 +322,7 @@
         style="@style/l_personal_item">
 
         <ImageView
-            android:src="@mipmap/opsearch"
+            android:src="@mipmap/user_recommended"
             android:layout_gravity="center_vertical"
             android:scaleType="fitCenter"
             android:layout_width="wrap_content"
@@ -188,16 +332,10 @@
             style="@style/tv_personal_item"
             android:text="更新"/>
 
-        <ImageView
-            android:src="@mipmap/zicon_arrow"
-            android:layout_gravity="end|center_vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
     </LinearLayout>
 
     <View
-        android:background="@color/lightgray"
+        android:background="@color/gray_light"
         android:layout_width="match_parent"
         android:layout_height="1px"/>
 
@@ -207,7 +345,7 @@
         style="@style/l_personal_item">
 
         <ImageView
-            android:src="@mipmap/opsearch"
+            android:src="@mipmap/user_help"
             android:layout_gravity="center_vertical"
             android:scaleType="fitCenter"
             android:layout_width="wrap_content"
@@ -217,29 +355,35 @@
             style="@style/tv_personal_item"
             android:text="关于"/>
 
-        <ImageView
-            android:src="@mipmap/zicon_arrow"
-            android:layout_gravity="end|center_vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
     </LinearLayout>
 
     <View
-        android:background="@color/lightgray"
+        android:background="@color/gray_light"
         android:layout_width="match_parent"
         android:layout_height="1px"/>
 
-    <Button
-        style="@style/style_orange_btn"
-        android:id="@+id/btn_logout"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20.0dip"
-        android:layout_marginLeft="20.0dip"
-        android:layout_marginRight="20.0dip"
-        android:layout_marginTop="20.0dip"
-        android:background="@drawable/login_button_selector"
-        android:text="退出登陆" />
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/activity_padding" />
+
+    <LinearLayout
+        android:id="@+id/ll_logout"
+        android:orientation="horizontal"
+        style="@style/l_personal_item">
+
+        <ImageView
+            android:src="@mipmap/opsearch"
+            android:visibility="invisible"
+            android:layout_gravity="center_vertical"
+            android:scaleType="fitCenter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            style="@style/tv_personal_item"
+            android:textColor="@color/red"
+            android:text="退出登录"/>
+
+    </LinearLayout>
 
 </LinearLayout>

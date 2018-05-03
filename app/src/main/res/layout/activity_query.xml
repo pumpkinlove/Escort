@@ -16,12 +16,14 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            app:titleTextColor="@color/colorTitleText"
+            app:theme="@style/ThemeOverlay.AppCompat.Light"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"/>
 
     </android.support.design.widget.AppBarLayout>
 
     <View
-        android:background="@color/lightgray"
+        android:background="@color/gray_light"
         android:layout_width="match_parent"
         android:layout_height="1px"/>
 
@@ -31,7 +33,7 @@
         style="@style/l_personal_item">
 
         <ImageView
-            android:src="@mipmap/opsearch"
+            android:src="@mipmap/essearch"
             android:layout_gravity="center_vertical"
             android:scaleType="fitCenter"
             android:layout_width="wrap_content"
@@ -42,7 +44,7 @@
             android:text="押运员查询"/>
 
         <ImageView
-            android:src="@mipmap/zicon_arrow"
+            android:src="@mipmap/gray_right_arrow"
             android:layout_gravity="end|center_vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -50,7 +52,7 @@
     </LinearLayout>
 
     <View
-        android:background="@color/lightgray"
+        android:background="@color/gray_light"
         android:layout_width="match_parent"
         android:layout_height="1px"/>
 
@@ -60,7 +62,7 @@
         style="@style/l_personal_item">
 
         <ImageView
-            android:src="@mipmap/opsearch"
+            android:src="@mipmap/tasksearch"
             android:layout_gravity="center_vertical"
             android:scaleType="fitCenter"
             android:layout_width="wrap_content"
@@ -71,7 +73,7 @@
             android:text="任务查询"/>
 
         <ImageView
-            android:src="@mipmap/zicon_arrow"
+            android:src="@mipmap/gray_right_arrow"
             android:layout_gravity="end|center_vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -79,7 +81,7 @@
     </LinearLayout>
 
     <View
-        android:background="@color/lightgray"
+        android:background="@color/gray_light"
         android:layout_width="match_parent"
         android:layout_height="1px"/>
 
@@ -89,7 +91,7 @@
         style="@style/l_personal_item">
 
         <ImageView
-            android:src="@mipmap/opsearch"
+            android:src="@mipmap/boxsearch"
             android:layout_gravity="center_vertical"
             android:scaleType="fitCenter"
             android:layout_width="wrap_content"
@@ -100,7 +102,7 @@
             android:text="箱包查询"/>
 
         <ImageView
-            android:src="@mipmap/zicon_arrow"
+            android:src="@mipmap/gray_right_arrow"
             android:layout_gravity="end|center_vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -108,7 +110,7 @@
     </LinearLayout>
 
     <View
-        android:background="@color/lightgray"
+        android:background="@color/gray_light"
         android:layout_width="match_parent"
         android:layout_height="1px"/>
 

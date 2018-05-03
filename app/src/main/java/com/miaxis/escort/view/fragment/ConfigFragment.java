@@ -1,6 +1,7 @@
 package com.miaxis.escort.view.fragment;
 
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -98,6 +99,7 @@ public class ConfigFragment extends BaseFragment implements IConfigView{
         configPresenter.loadConfig();
     }
 
+    @SuppressLint("CheckResult")
     @Override
     protected void initView() {
         pdSaveConfig = new MaterialDialog.Builder(this.getActivity())
@@ -130,7 +132,7 @@ public class ConfigFragment extends BaseFragment implements IConfigView{
                     @Override
                     public void accept(Boolean b) throws Exception {
                         if (b != null) {
-                            btnConfirm.setEnabled(b.booleanValue());
+                            btnConfirm.setEnabled(b);
                         }
                     }
                 });

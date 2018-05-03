@@ -1,94 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="30dp"
-    android:background="#00000000">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardBackgroundColor="@color/aero_light"
+    app:cardCornerRadius="5dp"
+    app:cardPreventCornerOverlap="false"
+    app:contentPadding="@dimen/activity_padding">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#00000000"
         android:orientation="vertical" >
+
         <EditText
             android:id="@+id/et_ip"
-            android:theme="@style/my_style_input"
+            style="@style/style_config_input"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:textSize="15sp"
-            android:textColor="@color/white"
-            android:paddingLeft="10dp"
-            android:clickable="true"
-            android:hint="请填写ip地址"
+            android:hint="@string/input_ip"
             android:inputType="number"
             android:digits="1234567890."
-            android:maxLength="20"
-            android:singleLine="true" />
+            android:maxLength="20"/>
 
         <EditText
             android:id="@+id/et_port"
-            android:theme="@style/my_style_input"
+            style="@style/style_config_input"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:textSize="15sp"
-            android:textColor="@color/white"
-            android:paddingLeft="10dp"
-            android:clickable="true"
-            android:gravity="center_vertical|left"
-            android:hint="请填写端口号"
-            android:inputType="number"
-            android:singleLine="true" />
+            android:hint="@string/input_port"
+            android:inputType="number"/>
 
         <!--<EditText-->
             <!--android:id="@+id/et_orgCode"-->
-            <!--android:theme="@style/my_style_input"-->
+            <!--style="@style/style_config_input"-->
             <!--android:layout_width="match_parent"-->
             <!--android:layout_height="50dp"-->
-            <!--android:textSize="15sp"-->
-            <!--android:textColor="@color/white"-->
-            <!--android:paddingLeft="10dp"-->
-            <!--android:clickable="true"-->
-            <!--android:hint="请填写机构编号"-->
+            <!--android:hint="@string/input_org_code"-->
             <!--android:maxLength="10"-->
             <!--android:inputType="number"-->
-            <!--android:digits="0123456789"-->
-            <!--android:singleLine="true" />-->
+            <!--android:digits="0123456789" />-->
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/common_text_height" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/common_text_height" />
 
         <LinearLayout
             android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:paddingTop="90dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <Button
-                android:layout_marginEnd="5dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
+                style="@style/style_config_button"
                 android:id="@+id/btn_confirm"
                 android:layout_weight="1"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:background="@drawable/line_frame_button_ripper"
-                android:gravity="center"
-                android:text="保存"
-                android:textColor="#ffffff"
-                android:textSize="15sp"
-                style="?android:attr/borderlessButtonStyle"/>
+                android:text="保存"/>
+
+            <Space
+                android:layout_width="@dimen/activity_padding"
+                android:layout_height="match_parent" />
+
             <Button
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
+                style="@style/style_config_button"
                 android:id="@+id/btn_cancel"
                 android:layout_weight="1"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:background="@drawable/line_frame_button_ripper"
-                android:gravity="center"
-                android:text="取消"
-                android:textColor="#ffffff"
-                android:textSize="15sp"
-                style="?android:attr/borderlessButtonStyle" />
+                android:text="取消"/>
+
         </LinearLayout>
 
     </LinearLayout>
 
-</FrameLayout>
+</android.support.v7.widget.CardView>

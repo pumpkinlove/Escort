@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_upload_task"
+        android:enabled="true"
+        android:icon="@drawable/tab_icon_up_task"
+        android:title="@string/upload_task"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_my_task"
+        android:enabled="true"
+        android:icon="@drawable/tab_icon_my_task"
+        android:title="@string/my_task"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_setting"
+        android:enabled="true"
+        android:icon="@drawable/tab_icon_setting"
+        android:title="@string/system_setting"
+        app:showAsAction="ifRoom" />
+</menu>

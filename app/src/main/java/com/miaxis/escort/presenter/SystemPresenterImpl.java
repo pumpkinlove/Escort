@@ -1,5 +1,6 @@
 package com.miaxis.escort.presenter;
 
+import android.annotation.SuppressLint;
 import android.os.Environment;
 import android.util.Log;
 
@@ -45,6 +46,7 @@ public class SystemPresenterImpl extends BaseFragmentPresenter implements ISyste
         this.systemView = systemView;
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void clearAll() {
         Observable.just(0)
@@ -75,6 +77,7 @@ public class SystemPresenterImpl extends BaseFragmentPresenter implements ISyste
                 });
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void updateApp() {
         Config config = (Config) EscortApp.getInstance().get(StaticVariable.CONFIG);

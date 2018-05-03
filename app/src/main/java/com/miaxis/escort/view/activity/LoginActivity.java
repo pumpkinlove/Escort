@@ -1,5 +1,6 @@
 package com.miaxis.escort.view.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -10,8 +11,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,14 +33,11 @@ import butterknife.BindView;
 import es.dmoral.toasty.Toasty;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 public class LoginActivity extends BaseActivity implements ILoginView, ConfigFragment.OnConfigClickListener, TextToSpeech.OnInitListener {
 
     private ILoginPresenter loginPresenter;
 
-    @BindView(R.id.ll_login)
-    LinearLayout llLogin;
     @BindView(R.id.fl_config)
     FrameLayout flConfig;
     @BindView(R.id.iv_config)
@@ -69,9 +65,10 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
         ttsRef = new WeakReference<TextToSpeech>(new TextToSpeech(this, this));
     }
 
+    @SuppressLint("CheckResult")
     @Override
     protected void initView() {
-        tvVersion.setText(tvVersion.getText() + getVersion());
+        tvVersion.append(getVersion());
         materialDialog = new MaterialDialog.Builder(this)
                 .content("")
                 .progress(true, 100)
@@ -97,9 +94,9 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
                         if (loginPresenter.loadWorkerSize() == 0) {
                             Toasty.error(EscortApp.getInstance().getApplicationContext(), "未找到员工信息，请尝试重新设置IP和端口",1, true).show();
                         } else {
-                            playVoiceMessage("请按手指");
-                            loginPresenter.login();
-                            //loginPresenter.initAppData();
+//                            playVoiceMessage("请按手指");
+//                            loginPresenter.login();
+                            loginPresenter.initAppData();
                         }
                     }
                 });
@@ -140,14 +137,14 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
     @Override
     public void showLoginView() {
         ivConfig.setVisibility(View.VISIBLE);
-        llLogin.setVisibility(View.VISIBLE);
+        btnLogin.setVisibility(View.VISIBLE);
         flConfig.setVisibility(View.GONE);
     }
 
     @Override
     public void showConfigView() {
         ivConfig.setVisibility(View.INVISIBLE);
-        llLogin.setVisibility(View.GONE);
+        btnLogin.setVisibility(View.GONE);
         flConfig.setVisibility(View.VISIBLE);
         getSupportFragmentManager().beginTransaction().replace(R.id.fl_config, ConfigFragment.newInstance()).commit();
     }

@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Escort</string>
-    <string name="version">浙江中正智能有限公司  版本号：</string>
-    <string name="login">登录</string>
+    <string name="version">版本号：</string>
+    <string name="login">登 录</string>
     <string name="appbar_scrolling_view_behavior" translatable="false">android.support.design.widget.AppBarLayout$ScrollingViewBehavior</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -13,4 +13,21 @@
 		<b>智能押运终端</b>	    \n
 	    \n
 		<b>有任何建议或者反馈可以随时联系官方客服</b></string>
+    <string name="company_info">浙江中正智能科技有限公司</string>
+    <string name="input_ip">请填写ip地址</string>
+    <string name="input_port">请填写端口号</string>
+    <string name="input_org_code">请填写机构编号</string>
+    <string name="upload_task">申报任务</string>
+    <string name="my_task">我的任务</string>
+    <string name="system_setting">系统设置</string>
+    <string name="cancel">取消</string>
+    <string name="save_logout">保存并退出</string>
+    <string name="task_type">任务类型</string>
+
+    <string-array name="title">
+        <item>@string/upload_task</item>
+        <item>@string/my_task</item>
+        <item>@string/system_setting</item>
+    </string-array>
+
 </resources>

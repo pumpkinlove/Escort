@@ -146,7 +146,7 @@
         android:layout_width="match_parent"
         android:layout_height="2px"
         android:layout_marginTop="8dp"
-        android:background="@color/lightgray"/>
+        android:background="@color/gray_light"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/srl_up_task_box"

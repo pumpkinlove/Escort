@@ -14,36 +14,43 @@
             style="@style/style_input"
             android:layout_width="match_parent"
             android:clickable="true"
-            android:hint="请填写ip地址"
+            android:hint="@string/input_ip"
             android:inputType="number"
             android:digits="1234567890."
             android:maxLength="20"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:focusable="true" />
 
         <EditText
             android:id="@+id/et_port"
             style="@style/style_input"
             android:layout_width="match_parent"
             android:clickable="true"
-            android:gravity="center_vertical|left"
-            android:hint="请填写端口号"
+            android:gravity="center_vertical|start"
+            android:hint="@string/input_port"
             android:inputType="number"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:focusable="true" />
 
         <!--<EditText-->
             <!--android:id="@+id/et_orgCode"-->
             <!--style="@style/style_input"-->
             <!--android:layout_width="fill_parent"-->
             <!--android:clickable="true"-->
-            <!--android:hint="请填写机构编号"-->
+            <!--android:hint="@string/input_org_code"-->
             <!--android:maxLength="10"-->
             <!--android:inputType="number"-->
             <!--android:digits="0123456789"-->
-            <!--android:singleLine="true" />-->
+            <!--android:singleLine="true"-->
+            <!--android:focusable="true" />-->
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/common_text_height" />
 
         <LinearLayout
             android:orientation="horizontal"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <Button
                 android:layout_marginEnd="5dp"
@@ -52,12 +59,12 @@
                 android:id="@+id/btn_confirm"
                 android:layout_weight="1"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/common_button_height"
                 android:background="@drawable/blue_btn_bg"
                 android:gravity="center"
-                android:text="保存并退出"
-                android:textColor="#ffffff"
-                android:textSize="15sp"
+                android:text="@string/save_logout"
+                android:textColor="@color/white_dark"
+                android:textSize="@dimen/button_text_size"
                 style="?android:attr/borderlessButtonStyle"/>
             <Button
                 android:layout_marginStart="5dp"
@@ -66,12 +73,12 @@
                 android:id="@+id/btn_cancel"
                 android:layout_weight="1"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/common_button_height"
                 android:background="@drawable/blue_btn_bg"
                 android:gravity="center"
-                android:text="取消"
-                android:textColor="#ffffff"
-                android:textSize="15sp"
+                android:text="@string/cancel"
+                android:textColor="@color/white_dark"
+                android:textSize="@dimen/button_text_size"
                 style="?android:attr/borderlessButtonStyle" />
         </LinearLayout>
 

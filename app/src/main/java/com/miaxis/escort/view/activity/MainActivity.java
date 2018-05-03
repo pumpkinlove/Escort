@@ -1,16 +1,15 @@
 package com.miaxis.escort.view.activity;
 
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.view.MenuItem;
 
-import com.jakewharton.rxbinding2.view.RxView;
 import com.miaxis.escort.R;
 import com.miaxis.escort.adapter.MainFragmentAdapter;
 import com.miaxis.escort.view.fragment.MyTaskFragment;
@@ -20,29 +19,34 @@ import com.miaxis.escort.view.fragment.UpTaskFragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindArray;
+import butterknife.BindColor;
 import butterknife.BindView;
 
 public class MainActivity extends BaseActivity implements UpTaskFragment.OnFragmentInteractionListener,
-                                                            MyTaskFragment.OnFragmentInteractionListener,
-                                                            SystemFragment.OnFragmentInteractionListener{
+        MyTaskFragment.OnFragmentInteractionListener,
+        SystemFragment.OnFragmentInteractionListener, BottomNavigationView.OnNavigationItemSelectedListener, ViewPager.OnPageChangeListener {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.vp_main)
     ViewPager vpMain;
-    @BindView(R.id.tl_main)
-    TabLayout tlMain;
+
+    @BindColor(R.color.blue_band_dark)
+    int cBandBlueDark;
+    @BindView(R.id.bnv_main)
+    BottomNavigationView bnvMain;
+
+    @BindArray(R.array.title)
+    String[] titles;
 
     private MainFragmentAdapter adapter;
-
-    private List<Drawable> normalIconList;
-    private List<Drawable> pressedIconList;
 
     private UpTaskFragment upTaskFragment;
     private MyTaskFragment myTaskFragment;
     private SystemFragment systemFragment;
+    private MenuItem menuItem;
 
-    public static final String[] TITLES = {"申报任务", "我的任务", "系统服务"};
 
     @Override
     protected int setContentView() {
@@ -51,14 +55,6 @@ public class MainActivity extends BaseActivity implements UpTaskFragment.OnFragm
 
     @Override
     protected void initData() {
-        normalIconList = new ArrayList<>();
-        normalIconList.add(getResources().getDrawable(R.drawable.tab_uptask_normal));
-        normalIconList.add(getResources().getDrawable(R.drawable.tab_mytask_normal));
-        normalIconList.add(getResources().getDrawable(R.drawable.tab_icon_setting_normal));
-        pressedIconList = new ArrayList<>();
-        pressedIconList.add(getResources().getDrawable(R.drawable.tab_uptask_pressed));
-        pressedIconList.add(getResources().getDrawable(R.drawable.tab_mytask_pressd));
-        pressedIconList.add(getResources().getDrawable(R.drawable.tab_icon_setting_pressed));
         List<Fragment> fragmentList = new ArrayList<>();
         upTaskFragment = UpTaskFragment.newInstance();
         fragmentList.add(upTaskFragment);
@@ -72,52 +68,10 @@ public class MainActivity extends BaseActivity implements UpTaskFragment.OnFragm
     @Override
     protected void initView() {
         vpMain.setAdapter(adapter);
-        vpMain.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tlMain));
-        tlMain.setupWithViewPager(vpMain, true);
+        vpMain.addOnPageChangeListener(this);
         vpMain.setOffscreenPageLimit(20);
-        initTabLayout();
         vpMain.setCurrentItem(1);
-        tlMain.getTabAt(1).select();
-    }
-
-    private void initTabLayout() {
-
-        for (int i = 0; i < tlMain.getTabCount(); i++) {
-            TabLayout.Tab tab = tlMain.getTabAt(i);
-            if (tab != null) {
-                tab.setIcon(normalIconList.get(i));
-                tab.setText(TITLES[i]);
-            }
-        }
-        tlMain.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                for (int i = 0; i < tlMain.getTabCount(); i++) {
-                    TabLayout.Tab mTab = tlMain.getTabAt(i);
-                    if (mTab != null) {
-                        mTab.setIcon(normalIconList.get(i));
-                    }
-                }
-                int position = tab.getPosition();
-                toolbar.setVisibility(View.VISIBLE);
-                tab.setIcon(pressedIconList.get(position));
-                toolbar.setTitle(TITLES[position]);
-                tab.setText(TITLES[position]);
-                if (position == 2) {
-                    toolbar.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
+        bnvMain.setOnNavigationItemSelectedListener(this);
     }
 
     @Override
@@ -143,5 +97,45 @@ public class MainActivity extends BaseActivity implements UpTaskFragment.OnFragm
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_upload_task:
+                vpMain.setCurrentItem(0);
+                break;
+            case R.id.action_my_task:
+                vpMain.setCurrentItem(1);
+                break;
+            case R.id.action_setting:
+                vpMain.setCurrentItem(2);
+                break;
+        }
+        return false;
+
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        toolbar.setTitle(titles[position]);
+        if (menuItem != null) {
+            menuItem.setChecked(false);
+        } else {
+            bnvMain.getMenu().getItem(0).setChecked(false);
+        }
+        menuItem = bnvMain.getMenu().getItem(position);
+        menuItem.setChecked(true);
+
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
     }
 }

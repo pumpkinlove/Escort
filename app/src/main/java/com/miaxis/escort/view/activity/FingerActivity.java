@@ -15,6 +15,8 @@ import com.miaxis.escort.presenter.IFingerPresenter;
 import com.miaxis.escort.util.StaticVariable;
 import com.miaxis.escort.view.viewer.IFingerView;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
@@ -47,6 +49,7 @@ public class FingerActivity extends BaseActivity implements IFingerView{
     protected void initView() {
         toolbar.setTitle("押运员查询");
         setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         RxView.clicks(btnCancel)
                 .subscribeOn(AndroidSchedulers.mainThread())

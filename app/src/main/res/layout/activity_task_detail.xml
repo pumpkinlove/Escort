@@ -17,13 +17,15 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
+            app:titleTextColor="@color/colorTitleText"
+            app:theme="@style/ThemeOverlay.AppCompat.Light"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
 
     <View
         android:layout_width="wrap_content"
-        android:layout_height="2px"
+        android:layout_height="1px"
         android:background="@color/black"/>
 
     <LinearLayout
@@ -33,7 +35,7 @@
 
         <TextView
             android:text="类型"
-            android:background="@color/lightgray"
+            android:background="@color/gray_light"
             android:gravity="center"
             android:layout_width="0dp"
             android:layout_weight="2"
@@ -58,7 +60,7 @@
 
         <TextView
             android:text="状态"
-            android:background="@color/lightgray"
+            android:background="@color/gray_light"
             android:gravity="center"
             android:layout_width="0dp"
             android:layout_weight="2"
@@ -90,7 +92,7 @@
 
         <TextView
             android:text="押运员1"
-            android:background="@color/lightgray"
+            android:background="@color/gray_light"
             android:gravity="center"
             android:layout_width="0dp"
             android:layout_weight="2"
@@ -115,7 +117,7 @@
 
         <TextView
             android:text="车辆"
-            android:background="@color/lightgray"
+            android:background="@color/gray_light"
             android:gravity="center"
             android:layout_width="0dp"
             android:layout_weight="2"
@@ -147,7 +149,7 @@
 
         <TextView
             android:text="押运员2"
-            android:background="@color/lightgray"
+            android:background="@color/gray_light"
             android:gravity="center"
             android:layout_width="0dp"
             android:layout_weight="2"
@@ -172,7 +174,7 @@
 
         <TextView
             android:text="操作员"
-            android:background="@color/lightgray"
+            android:background="@color/gray_light"
             android:gravity="center"
             android:layout_width="0dp"
             android:layout_weight="2"
@@ -204,7 +206,7 @@
 
         <TextView
             android:text="日期"
-            android:background="@color/lightgray"
+            android:background="@color/gray_light"
             android:gravity="center"
             android:layout_width="0dp"
             android:layout_weight="1"

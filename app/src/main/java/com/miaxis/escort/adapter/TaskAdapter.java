@@ -45,7 +45,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
         TaskBean taskBean = dataList.get(position);
         taskBean.__setDaoSession(EscortApp.getInstance().getDaoSession());
         holder.tvTaskType.setText(StaticVariable.getTasktypeName(taskBean.getTasktype(), taskBean.getTasklevel()));
-        holder.tvTaskCarId.setText(taskBean.getCarid());
+        holder.tvTaskCarId.setText(taskBean.getPlateno());
         holder.tvTaskBoxCount.setText("" + taskBean.getBoxList().size());
         holder.tvTaskDate.setText(taskBean.getOpdate());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
