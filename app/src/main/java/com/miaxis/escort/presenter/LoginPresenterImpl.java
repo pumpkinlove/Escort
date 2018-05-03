@@ -224,7 +224,7 @@ public class LoginPresenterImpl extends BaseActivityPresenter implements ILoginP
                                 if (mbFinger == null || mbFinger.equals("")) {
                                     continue;
                                 }
-                                int result = Device.verifyBinFinger(Base64.decode(mbFinger,Base64.DEFAULT), bytes, 3);
+                                int result = Device.verifyBinFinger(Base64.decode(mbFinger,Base64.NO_WRAP), bytes, 3);
                                 //int result = Device.verifyFinger(mbFinger, new String(Base64.encode(bytes, Base64.NO_WRAP)), 3);
                                 if (result == 0) {
                                     return worker;

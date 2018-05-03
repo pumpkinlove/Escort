@@ -164,7 +164,7 @@ public class VerifyTaskDialogPresenterImpl extends BaseFragmentPresenter impleme
                                     if (mbFinger == null || mbFinger.equals("")) {
                                         continue;
                                     }
-                                    result = Device.verifyBinFinger(Base64.decode(mbFinger, Base64.DEFAULT), tz, 3);
+                                    result = Device.verifyBinFinger(Base64.decode(mbFinger, Base64.NO_WRAP), tz, 3);
                                     if (result == 0) {
                                         return worker;
                                     }
@@ -241,7 +241,7 @@ public class VerifyTaskDialogPresenterImpl extends BaseFragmentPresenter impleme
                                     if (mbFinger == null || mbFinger.equals("")) {
                                         continue;
                                     }
-                                    result = Device.verifyBinFinger(Base64.decode(mbFinger, Base64.DEFAULT), tz, 3);
+                                    result = Device.verifyBinFinger(Base64.decode(mbFinger, Base64.NO_WRAP), tz, 3);
                                     if (result == 0) {
                                         return escortBean;
                                     }

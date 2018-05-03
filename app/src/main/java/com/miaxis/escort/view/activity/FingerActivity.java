@@ -4,9 +4,11 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.jakewharton.rxbinding2.view.RxView;
 import com.miaxis.escort.R;
 import com.miaxis.escort.presenter.FingerPresenterImpl;
 import com.miaxis.escort.presenter.IFingerPresenter;
@@ -14,6 +16,8 @@ import com.miaxis.escort.util.StaticVariable;
 import com.miaxis.escort.view.viewer.IFingerView;
 
 import butterknife.BindView;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 
 public class FingerActivity extends BaseActivity implements IFingerView{
 
@@ -23,6 +27,8 @@ public class FingerActivity extends BaseActivity implements IFingerView{
     ImageView ivFinger;
     @BindView(R.id.tv_tip)
     TextView tvTip;
+    @BindView(R.id.btn_cancel)
+    Button btnCancel;
 
     private IFingerPresenter fingerPresenter;
 
@@ -42,6 +48,16 @@ public class FingerActivity extends BaseActivity implements IFingerView{
         toolbar.setTitle("押运员查询");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        RxView.clicks(btnCancel)
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .compose(this.bindToLifecycle())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        onBackPressed();
+                    }
+                });
     }
 
     @Override
