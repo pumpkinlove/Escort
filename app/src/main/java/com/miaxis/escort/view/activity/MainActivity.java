@@ -1,30 +1,30 @@
 package com.miaxis.escort.view.activity;
 
-        import android.graphics.drawable.Drawable;
-        import android.net.Uri;
-        import android.support.design.widget.TabLayout;
-        import android.support.v4.app.Fragment;
-        import android.support.v4.view.ViewPager;
-        import android.support.v7.app.AppCompatActivity;
-        import android.os.Bundle;
-        import android.support.v7.widget.Toolbar;
-        import android.view.View;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
 
-        import com.jakewharton.rxbinding2.view.RxView;
-        import com.miaxis.escort.R;
-        import com.miaxis.escort.adapter.MainFragmentAdapter;
-        import com.miaxis.escort.view.fragment.MyTaskFragment;
-        import com.miaxis.escort.view.fragment.SystemFragment;
-        import com.miaxis.escort.view.fragment.UpTaskFragment;
+import com.jakewharton.rxbinding2.view.RxView;
+import com.miaxis.escort.R;
+import com.miaxis.escort.adapter.MainFragmentAdapter;
+import com.miaxis.escort.view.fragment.MyTaskFragment;
+import com.miaxis.escort.view.fragment.SystemFragment;
+import com.miaxis.escort.view.fragment.UpTaskFragment;
 
-        import java.util.ArrayList;
-        import java.util.List;
+import java.util.ArrayList;
+import java.util.List;
 
-        import butterknife.BindView;
+import butterknife.BindView;
 
 public class MainActivity extends BaseActivity implements UpTaskFragment.OnFragmentInteractionListener,
-        MyTaskFragment.OnFragmentInteractionListener,
-        SystemFragment.OnFragmentInteractionListener{
+                                                            MyTaskFragment.OnFragmentInteractionListener,
+                                                            SystemFragment.OnFragmentInteractionListener{
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
