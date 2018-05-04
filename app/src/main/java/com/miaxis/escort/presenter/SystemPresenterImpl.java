@@ -10,6 +10,8 @@ import com.liulishuo.filedownloader.FileDownloadListener;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.miaxis.escort.app.EscortApp;
 import com.miaxis.escort.model.entity.Config;
+import com.miaxis.escort.model.entity.WorkerBean;
+import com.miaxis.escort.model.local.greenDao.gen.WorkerBeanDao;
 import com.miaxis.escort.model.retrofit.AppNet;
 import com.miaxis.escort.model.retrofit.ResponseEntity;
 import com.miaxis.escort.util.StaticVariable;
@@ -169,6 +171,12 @@ public class SystemPresenterImpl extends BaseFragmentPresenter implements ISyste
                     protected void warn(BaseDownloadTask task) {
                     }
                 }).start();
+    }
+
+    @Override
+    public void showCurWorker() {
+        WorkerBean workerBean = (WorkerBean) EscortApp.getInstance().get(StaticVariable.WORKER);
+        systemView.showCurWorker(workerBean);
     }
 
     @Override

@@ -5,6 +5,12 @@ package com.miaxis.escort.util;
  */
 
 public class StaticVariable {
+
+    public static final int TASK_TYPE_COMMON_GET_BOX = 1;
+    public static final int TASK_TYPE_COMMON_GIVE_BOX = 2;
+    public static final int TASK_TYPE_TEMP_GET_BOX = 3;
+    public static final int TASK_TYPE_TEMP_GIVE_BOX = 4;
+
     public static final String CONFIG = "config";
     public static final String WORKER = "worker";
     public static final String SUCCESS = "200";

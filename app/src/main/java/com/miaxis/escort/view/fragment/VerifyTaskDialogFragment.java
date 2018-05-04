@@ -1,11 +1,13 @@
 package com.miaxis.escort.view.fragment;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -93,6 +95,7 @@ public class VerifyTaskDialogFragment extends BaseDialogFragment implements IVer
         ttsRef = new WeakReference<TextToSpeech>(new TextToSpeech(this.getContext(), this));
     }
 
+    @SuppressLint("CheckResult")
     @Override
     protected void initView() {
         RxView.clicks(btnDialogDismiss)
@@ -154,6 +157,7 @@ public class VerifyTaskDialogFragment extends BaseDialogFragment implements IVer
     }
 
     private void refreshStepView() {
+        Log.e("===", "refreshStepView");
         ivDialogPicture.setImageResource(R.drawable.background);
         if (step == 1) {
             tvDialigText.setText("验证车辆");
@@ -186,7 +190,7 @@ public class VerifyTaskDialogFragment extends BaseDialogFragment implements IVer
             }
         } else if (step == 2) {
             playVoiceMessage("网点员工验证通过");
-            ivDialogPicture.setImageResource(R.mipmap.ic_launcher);
+            ivDialogPicture.setImageResource(R.mipmap.timg);
         } else if (step ==3) {
             playVoiceMessage("验证通过");
         }else if (step == 4) {

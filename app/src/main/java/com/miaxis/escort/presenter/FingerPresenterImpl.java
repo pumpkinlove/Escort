@@ -99,7 +99,7 @@ public class FingerPresenterImpl extends BaseActivityPresenter implements IFinge
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
                 }
-                r = com.device.Device.verifyBinFinger(mb, tz[3], 3);
+                r = com.device.Device.verifyFinger(new String(mb).trim(), new String(tz[3]).trim(), 3);
                 if (r != 0) {
                     if (fingerView != null) {
                         String error = newGBKString(message);
@@ -107,9 +107,8 @@ public class FingerPresenterImpl extends BaseActivityPresenter implements IFinge
                     }
                     return;
                 }
-                String str = new String(Base64.encode(mb, Base64.NO_WRAP));
                 if (fingerView != null) {
-                    fingerView.register(str);
+                    fingerView.register(new String(mb));
                 }
                 Device.closeFinger(message);
                 Device.closeRfid(message);

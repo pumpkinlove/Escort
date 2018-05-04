@@ -17,7 +17,7 @@ public class Device {
 	public native static int FeatureToTemp(byte[] tz1, byte[] tz2, 
 			byte[] tz3, byte[] mb, byte[] message);
 	public native static int verifyFinger(String mbFinger, String tzFinger, int level);
-	public native static int verifyBinFinger(byte[] mbFinger, byte[] tzFinger, int level);
+//	public native static int verifyBinFinger(byte[] mbFinger, byte[] tzFinger, int level);
 
 	public native static int getRfid(int timeout, byte[] epc, byte[] epcid, byte[] message);
 	public native static int cancel();

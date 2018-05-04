@@ -1,9 +1,11 @@
 package com.miaxis.escort.presenter;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.text.TextUtils;
 import android.util.Base64;
 
 import com.device.Device;
@@ -45,7 +47,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * Created by 一非 on 2018/4/8.
  */
-
+@SuppressLint("CheckResult")
 public class LoginPresenterImpl extends BaseActivityPresenter implements ILoginPresenter {
 
     private ILoginView loginView;
@@ -205,11 +207,11 @@ public class LoginPresenterImpl extends BaseActivityPresenter implements ILoginP
                         byte[] tz = new byte[513];
                         int result = Device.getImage(10000, finger, message);
                         if (result != 0) {
-                            throw new Exception(new String(message, "GBK"));
+                            throw new Exception(new String(message, "GBK").trim());
                         }
                         result = Device.ImageToFeature(finger, tz, message);
                         if (result != 0) {
-                            throw new Exception(new String(message, "GBK"));
+                            throw new Exception(new String(message, "GBK").trim());
                         }
                         return tz;
                     }
@@ -224,8 +226,8 @@ public class LoginPresenterImpl extends BaseActivityPresenter implements ILoginP
                                 if (mbFinger == null || mbFinger.equals("")) {
                                     continue;
                                 }
-                                int result = Device.verifyBinFinger(Base64.decode(mbFinger,Base64.NO_WRAP), bytes, 3);
-                                //int result = Device.verifyFinger(mbFinger, new String(Base64.encode(bytes, Base64.NO_WRAP)), 3);
+                                int result = Device.verifyFinger(mbFinger.trim(), new String(bytes).trim(), 3);
+
                                 if (result == 0) {
                                     return worker;
                                 }

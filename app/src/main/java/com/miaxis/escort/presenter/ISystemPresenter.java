@@ -1,5 +1,7 @@
 package com.miaxis.escort.presenter;
 
+import com.miaxis.escort.model.entity.WorkerBean;
+
 import java.net.URL;
 
 /**
@@ -10,4 +12,5 @@ public interface ISystemPresenter extends IBasePresenter{
     void clearAll();
     void updateApp();
     void download(URL url, String path);
+    void showCurWorker();
 }

@@ -138,4 +138,8 @@ public class MainActivity extends BaseActivity implements UpTaskFragment.OnFragm
     public void onPageScrollStateChanged(int state) {
 
     }
+
+    @Override
+    public void onBackPressed() {
+    }
 }

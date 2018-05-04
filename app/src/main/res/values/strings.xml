@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Escort</string>
+    <string name="app_name">押运终端</string>
     <string name="version">版本号：</string>
     <string name="login">登 录</string>
     <string name="appbar_scrolling_view_behavior" translatable="false">android.support.design.widget.AppBarLayout$ScrollingViewBehavior</string>

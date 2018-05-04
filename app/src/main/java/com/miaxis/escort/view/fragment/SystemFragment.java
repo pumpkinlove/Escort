@@ -21,12 +21,16 @@ import com.jakewharton.rxbinding2.view.RxView;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.miaxis.escort.R;
 import com.miaxis.escort.app.EscortApp;
+import com.miaxis.escort.model.entity.WorkerBean;
 import com.miaxis.escort.presenter.ISystemPresenter;
 import com.miaxis.escort.presenter.SystemPresenterImpl;
 import com.miaxis.escort.util.StaticVariable;
 import com.miaxis.escort.view.activity.ConfigActivity;
 import com.miaxis.escort.view.activity.LoginActivity;
 import com.miaxis.escort.view.activity.QueryActivity;
+import com.miaxis.escort.view.activity.SearchBoxActivity;
+import com.miaxis.escort.view.activity.SearchEscortActivity;
+import com.miaxis.escort.view.activity.SearchTaskActivity;
 import com.miaxis.escort.view.activity.WorkerManageActivity;
 import com.miaxis.escort.view.viewer.ISystemView;
 
@@ -45,8 +49,12 @@ import retrofit2.http.Url;
 
 public class SystemFragment extends BaseFragment implements ISystemView{
 
-    @BindView(R.id.ll_query)
-    LinearLayout llQuery;
+    @BindView(R.id.ll_task_list)
+    LinearLayout llTaskList;
+    @BindView(R.id.ll_box_list)
+    LinearLayout llBoxList;
+    @BindView(R.id.ll_escort_list)
+    LinearLayout llEscortList;
     @BindView(R.id.ll_worker_manage)
     LinearLayout llWorkerManage;
     @BindView(R.id.ll_config)
@@ -59,6 +67,11 @@ public class SystemFragment extends BaseFragment implements ISystemView{
     LinearLayout llAbout;
     @BindView(R.id.ll_logout)
     LinearLayout llLogout;
+
+    @BindView(R.id.tv_worker_name)
+    TextView tvWorkerName;
+    @BindView(R.id.tv_worker_code)
+    TextView tvWorkerCode;
 
     private OnFragmentInteractionListener mListener;
     private ISystemPresenter systemPresenter;
@@ -86,17 +99,42 @@ public class SystemFragment extends BaseFragment implements ISystemView{
     @SuppressLint("CheckResult")
     @Override
     protected void initView() {
-        RxView.clicks(llQuery)
+        RxView.clicks(llTaskList)
                 .throttleFirst(1, TimeUnit.SECONDS)
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .compose(this.bindToLifecycle())
                 .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
-                        Intent intent = new Intent(SystemFragment.this.getActivity(), QueryActivity.class);
+                        Intent intent = new Intent(SystemFragment.this.getActivity(), SearchTaskActivity.class);
                         startActivity(intent);
                     }
                 });
+
+        RxView.clicks(llBoxList)
+                .throttleFirst(1, TimeUnit.SECONDS)
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .compose(this.bindToLifecycle())
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        Intent intent = new Intent(SystemFragment.this.getActivity(), SearchBoxActivity.class);
+                        startActivity(intent);
+                    }
+                });
+
+        RxView.clicks(llEscortList)
+                .throttleFirst(1, TimeUnit.SECONDS)
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .compose(this.bindToLifecycle())
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        Intent intent = new Intent(SystemFragment.this.getActivity(), SearchEscortActivity.class);
+                        startActivity(intent);
+                    }
+                });
+
         RxView.clicks(llWorkerManage)
                 .throttleFirst(1, TimeUnit.SECONDS)
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -108,6 +146,7 @@ public class SystemFragment extends BaseFragment implements ISystemView{
                         startActivity(intent);
                     }
                 });
+
         RxView.clicks(llConfig)
                 .throttleFirst(1, TimeUnit.SECONDS)
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -119,6 +158,7 @@ public class SystemFragment extends BaseFragment implements ISystemView{
                         startActivity(intent);
                     }
                 });
+
         RxView.clicks(llClearAll)
                 .throttleFirst(1, TimeUnit.SECONDS)
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -153,6 +193,7 @@ public class SystemFragment extends BaseFragment implements ISystemView{
                                 .show();
                     }
                 });
+
         RxView.clicks(llUpdate)
                 .throttleFirst(1, TimeUnit.SECONDS)
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -163,6 +204,7 @@ public class SystemFragment extends BaseFragment implements ISystemView{
                         systemPresenter.updateApp();
                     }
                 });
+
         RxView.clicks(llLogout)
                 .throttleFirst(1, TimeUnit.SECONDS)
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -213,6 +255,8 @@ public class SystemFragment extends BaseFragment implements ISystemView{
                                 .show();
                     }
                 });
+
+        systemPresenter.showCurWorker();
     }
 
     private String getVersion() {
@@ -311,16 +355,24 @@ public class SystemFragment extends BaseFragment implements ISystemView{
         Toasty.success(EscortApp.getInstance().getApplicationContext(), "下载成功", 0, true).show();
         File file = new File(path);
         if (file.exists()) {
-            Uri uriForFile = FileProvider.getUriForFile(context, "com.miaxis.escort.fileprovider", file);
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.setDataAndType(uriForFile, "application/vnd.android.package-archive");
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-            startActivity(intent);
+//            Uri uriForFile = FileProvider.getUriForFile(context, "com.miaxis.escort.fileprovider", file);
+//            Intent intent = new Intent(Intent.ACTION_VIEW);
+//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            intent.setDataAndType(uriForFile, "application/vnd.android.package-archive");
+////            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+////            intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+//            startActivity(intent);
+            installApk(file);
         } else {
             Toasty.error(EscortApp.getInstance().getApplicationContext(), "下载文件不存在", 0, true).show();
         }
+    }
+
+    protected void installApk(File file) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(Uri.fromFile(file),
+                "application/vnd.android.package-archive");
+        startActivity(intent);
     }
 
     @Override
@@ -334,6 +386,12 @@ public class SystemFragment extends BaseFragment implements ISystemView{
             materialDialog.dismiss();
         }
         Toasty.error(EscortApp.getInstance().getApplicationContext(), "取消下载", 0, true).show();
+    }
+
+    @Override
+    public void showCurWorker(WorkerBean workerBean) {
+        tvWorkerCode.setText(workerBean.getWorkno().trim());
+        tvWorkerName.setText(workerBean.getName().trim());
     }
 
     @Override

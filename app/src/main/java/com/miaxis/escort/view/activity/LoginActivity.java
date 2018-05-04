@@ -94,9 +94,9 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
                         if (loginPresenter.loadWorkerSize() == 0) {
                             Toasty.error(EscortApp.getInstance().getApplicationContext(), "未找到员工信息，请尝试重新设置IP和端口",1, true).show();
                         } else {
-//                            playVoiceMessage("请按手指");
-//                            loginPresenter.login();
-                            loginPresenter.initAppData();
+                            playVoiceMessage("请按手指");
+                            loginPresenter.login();
+//                            loginPresenter.initAppData();
                         }
                     }
                 });

@@ -1,6 +1,7 @@
 package com.miaxis.escort.presenter;
 
-import android.util.Base64;
+import android.annotation.SuppressLint;
+import android.util.Log;
 
 import com.device.Device;
 import com.miaxis.escort.app.EscortApp;
@@ -25,7 +26,7 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * Created by 一非 on 2018/4/27.
  */
-
+@SuppressLint("CheckResult")
 public class VerifyTaskDialogPresenterImpl extends BaseFragmentPresenter implements IVerifyTaskDialogPresenter{
 
     private IVerifyTaskDialogView verifyTaskDialogView;
@@ -164,7 +165,7 @@ public class VerifyTaskDialogPresenterImpl extends BaseFragmentPresenter impleme
                                     if (mbFinger == null || mbFinger.equals("")) {
                                         continue;
                                     }
-                                    result = Device.verifyBinFinger(Base64.decode(mbFinger, Base64.NO_WRAP), tz, 3);
+                                    result = Device.verifyFinger(mbFinger.trim(), new String(tz).trim(), 3);
                                     if (result == 0) {
                                         return worker;
                                     }
@@ -241,7 +242,7 @@ public class VerifyTaskDialogPresenterImpl extends BaseFragmentPresenter impleme
                                     if (mbFinger == null || mbFinger.equals("")) {
                                         continue;
                                     }
-                                    result = Device.verifyBinFinger(Base64.decode(mbFinger, Base64.NO_WRAP), tz, 3);
+                                    result = Device.verifyFinger(mbFinger.trim(), new String(tz).trim(), 3);
                                     if (result == 0) {
                                         return escortBean;
                                     }
