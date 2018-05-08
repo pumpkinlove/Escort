@@ -44,9 +44,12 @@ public class TaskDetailAdapter extends RecyclerView.Adapter<TaskDetailAdapter.My
         TaskBoxBean taskBoxBean = dataList.get(position);
         taskBoxBean.__setDaoSession(EscortApp.getInstance().getDaoSession());
         BoxBean boxBean = taskBoxBean.getBox();
-        holder.tvTaskDetailBoxName.setText(boxBean.getBoxname());
-        holder.tvTaskDetailBoxCode.setText(boxBean.getBoxcode());
-        holder.tvTaskDetailStatus.setText(boxBean.getStatusName());
+        holder.tvTaskDetailBoxCode.setText(taskBoxBean.getBoxcode());
+        try {
+            holder.tvTaskDetailBoxName.setText(boxBean.getBoxname());
+            holder.tvTaskDetailStatus.setText(boxBean.getStatusName());
+        } catch (Exception e) {
+        }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

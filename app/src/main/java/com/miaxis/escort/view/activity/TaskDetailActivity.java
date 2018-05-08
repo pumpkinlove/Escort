@@ -83,13 +83,16 @@ public class TaskDetailActivity extends BaseActivity implements ITaskDetailView{
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         tvTaskDetailType.setText(StaticVariable.getTasktypeName(taskBean.getTasktype(), taskBean.getTasklevel()));
         tvTaskDetailStatus.setText(taskBean.getStatusName());
-        taskBean.__setDaoSession(EscortApp.getInstance().getDaoSession());
-        TaskEscortBean taskEscortBean1 = taskBean.getEscortList().get(0);
-        TaskEscortBean taskEscortBean2 = taskBean.getEscortList().get(1);
-        taskEscortBean1.__setDaoSession(EscortApp.getInstance().getDaoSession());
-        taskEscortBean2.__setDaoSession(EscortApp.getInstance().getDaoSession());
-        tvTaskDetailEscort1.setText(taskEscortBean1.getEscortBean().getName());
-        tvTaskDetailEscort2.setText(taskEscortBean2.getEscortBean().getName());
+        try {
+            taskBean.__setDaoSession(EscortApp.getInstance().getDaoSession());
+            TaskEscortBean taskEscortBean1 = taskBean.getEscortList().get(0);
+            TaskEscortBean taskEscortBean2 = taskBean.getEscortList().get(1);
+            taskEscortBean1.__setDaoSession(EscortApp.getInstance().getDaoSession());
+            taskEscortBean2.__setDaoSession(EscortApp.getInstance().getDaoSession());
+            tvTaskDetailEscort1.setText(taskEscortBean1.getEscortBean().getName());
+            tvTaskDetailEscort2.setText(taskEscortBean2.getEscortBean().getName());
+        } catch (Exception e) {
+        }
         tvTaskDetailCar1.setText(taskBean.getPlateno());
         tvTaskDetailWorker.setText(taskBean.getOpusername());
         tvTaskDetailDate.setText(taskBean.getTaskdate());

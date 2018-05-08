@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.JoinProperty;
+import org.greenrobot.greendao.annotation.OrderBy;
 import org.greenrobot.greendao.annotation.ToMany;
 import org.greenrobot.greendao.DaoException;
 import com.miaxis.escort.model.local.greenDao.gen.DaoSession;

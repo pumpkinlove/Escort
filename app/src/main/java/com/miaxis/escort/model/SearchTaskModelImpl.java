@@ -15,6 +15,7 @@ public class SearchTaskModelImpl implements ISearchTaskModel{
     @Override
     public List<TaskBean> queryTaskByDate(String date) {
         return EscortApp.getInstance().getDaoSession().getTaskBeanDao().queryBuilder()
-                .where(TaskBeanDao.Properties.Taskdate.eq(date)).list();
+                .where(TaskBeanDao.Properties.Taskdate.eq(date))
+                .orderDesc(TaskBeanDao.Properties.Taskcode).list();
     }
 }

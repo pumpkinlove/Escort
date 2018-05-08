@@ -14,7 +14,7 @@ public class BootRestartReceiver extends BroadcastReceiver
     private final String ACTION = "android.intent.action.BOOT_COMPLETED";
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (intent.getAction().equals(ACTION));
+        if (intent.getAction().equals(ACTION))
         {
             Intent intent2 = new Intent(context, LoginActivity.class);
             intent2.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
