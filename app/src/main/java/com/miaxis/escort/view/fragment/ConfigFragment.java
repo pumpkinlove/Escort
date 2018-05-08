@@ -25,12 +25,15 @@ import com.miaxis.escort.model.entity.Config;
 import com.miaxis.escort.model.entity.WorkerBean;
 import com.miaxis.escort.presenter.ConfigPresenterImpl;
 import com.miaxis.escort.presenter.IConfigPresenter;
+import com.miaxis.escort.util.DeviceInfoUtils;
 import com.miaxis.escort.util.StaticVariable;
 import com.miaxis.escort.view.activity.ConfigActivity;
 import com.miaxis.escort.view.activity.LoginActivity;
 import com.miaxis.escort.view.activity.WorkerDetailActivity;
 import com.miaxis.escort.view.activity.WorkerManageActivity;
 import com.miaxis.escort.view.viewer.IConfigView;
+
+import org.w3c.dom.Text;
 
 import java.util.concurrent.TimeUnit;
 
@@ -61,6 +64,8 @@ public class ConfigFragment extends BaseFragment implements IConfigView{
     EditText etPort;
     /*@BindView(R.id.et_orgCode)
     EditText etOrgCode;*/
+    @BindView(R.id.tv_device_info)
+    TextView tvDeviceInfo;
     @BindView(R.id.btn_confirm)
     Button btnConfirm;
     @BindView(R.id.btn_cancel)
@@ -102,6 +107,7 @@ public class ConfigFragment extends BaseFragment implements IConfigView{
     @SuppressLint("CheckResult")
     @Override
     protected void initView() {
+        tvDeviceInfo.setText("设备编号：" + DeviceInfoUtils.getImei(this.getActivity()));
         pdSaveConfig = new MaterialDialog.Builder(this.getActivity())
                 .title("请稍后...")
                 .content("")

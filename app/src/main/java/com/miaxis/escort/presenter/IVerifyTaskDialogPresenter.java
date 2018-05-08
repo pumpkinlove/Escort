@@ -13,5 +13,8 @@ public interface IVerifyTaskDialogPresenter extends IBasePresenter{
     void verifyCar(TaskBean taskBean);
     void verifyWorker();
     void verifyEscort(List<EscortBean> escortBeanList);
-    void pause();
+    void carPause();
+    void workerPause();
+    void escortPause();
+    void initPause();
 }

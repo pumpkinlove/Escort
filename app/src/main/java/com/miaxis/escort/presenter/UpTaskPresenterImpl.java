@@ -20,6 +20,7 @@ import com.miaxis.escort.view.viewer.IUpTaskView;
 import com.trello.rxlifecycle2.LifecycleProvider;
 import com.trello.rxlifecycle2.android.FragmentEvent;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -116,26 +117,21 @@ public class UpTaskPresenterImpl extends BaseFragmentPresenter implements IUpTas
 
     @Override
     public void downBox() {
-        Observable.create(new ObservableOnSubscribe<List<String>>() {
-            @Override
-            public void subscribe(ObservableEmitter<List<String>> e) throws Exception {
-                e.onNext(upTaskModel.loadBoxCode());
-            }
-        })
+        Observable.just(0)
                 .subscribeOn(Schedulers.io())
-                .compose(getProvider().<List<String>>bindToLifecycle())
+                .compose(getProvider().<Integer>bindToLifecycle())
                 .observeOn(Schedulers.io())
-                .flatMap(new Function<List<String>, ObservableSource<ResponseEntity<BoxBean>>>() {
+                .flatMap(new Function<Integer, ObservableSource<ResponseEntity<BoxBean>>>() {
                     @Override
-                    public ObservableSource<ResponseEntity<BoxBean>> apply(List<String> boxCodeList) throws Exception {
+                    public ObservableSource<ResponseEntity<BoxBean>> apply(Integer integer) throws Exception {
                         Config config = (Config) EscortApp.getInstance().get(StaticVariable.CONFIG);
-                        final Retrofit retrofit = new Retrofit.Builder()
+                        Retrofit retrofit = new Retrofit.Builder()
                                 .addConverterFactory(GsonConverterFactory.create())//请求的结果转为实体类
                                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())  //适配RxJava2.0, RxJava1.x则为RxJavaCallAdapterFactory.create()
                                 .baseUrl("http://" + config.getIp() + ":" + config.getPort())
                                 .build();
                         BoxNet boxNet = retrofit.create(BoxNet.class);
-                        return boxNet.updateBox(new Gson().toJson(boxCodeList));
+                        return boxNet.downloadBox(config.getOrgCode(), new Gson().toJson(new ArrayList<OpdateBean>()));
                     }
                 })
                 .doOnNext(new Consumer<ResponseEntity<BoxBean>>() {
@@ -162,6 +158,52 @@ public class UpTaskPresenterImpl extends BaseFragmentPresenter implements IUpTas
                         }
                     }
                 });
+//        Observable.create(new ObservableOnSubscribe<List<String>>() {
+//            @Override
+//            public void subscribe(ObservableEmitter<List<String>> e) throws Exception {
+//                e.onNext(upTaskModel.loadBoxCode());
+//            }
+//        })
+//                .subscribeOn(Schedulers.io())
+//                .compose(getProvider().<List<String>>bindToLifecycle())
+//                .observeOn(Schedulers.io())
+//                .flatMap(new Function<List<String>, ObservableSource<ResponseEntity<BoxBean>>>() {
+//                    @Override
+//                    public ObservableSource<ResponseEntity<BoxBean>> apply(List<String> boxCodeList) throws Exception {
+//                        Config config = (Config) EscortApp.getInstance().get(StaticVariable.CONFIG);
+//                        final Retrofit retrofit = new Retrofit.Builder()
+//                                .addConverterFactory(GsonConverterFactory.create())//请求的结果转为实体类
+//                                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())  //适配RxJava2.0, RxJava1.x则为RxJavaCallAdapterFactory.create()
+//                                .baseUrl("http://" + config.getIp() + ":" + config.getPort())
+//                                .build();
+//                        BoxNet boxNet = retrofit.create(BoxNet.class);
+//                        return boxNet.updateBox(new Gson().toJson(boxCodeList));
+//                    }
+//                })
+//                .doOnNext(new Consumer<ResponseEntity<BoxBean>>() {
+//                    @Override
+//                    public void accept(ResponseEntity<BoxBean> boxBeanResponseEntity) throws Exception {
+//                        if (StaticVariable.SUCCESS.equals(boxBeanResponseEntity.getCode())) {
+//                            upTaskModel.saveBoxList(boxBeanResponseEntity.getListData());
+//                        }
+//                    }
+//                })
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Consumer<ResponseEntity<BoxBean>>() {
+//                    @Override
+//                    public void accept(ResponseEntity<BoxBean> boxBeanResponseEntity) throws Exception {
+//                        if (upTaskView != null) {
+//                            upTaskView.downBoxSuccess();
+//                        }
+//                    }
+//                }, new Consumer<Throwable>() {
+//                    @Override
+//                    public void accept(Throwable throwable) throws Exception {
+//                        if (upTaskView != null) {
+//                            upTaskView.downBoxFailed(throwable.getMessage());
+//                        }
+//                    }
+//                });
     }
 
     @Override

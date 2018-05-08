@@ -86,6 +86,7 @@ public class VerifyTaskDialogFragment extends BaseDialogFragment implements IVer
         escortBeanList = new ArrayList<>();
         mList = new ArrayList<>();
         verifyTaskDialogPresenter = new VerifyTaskDialogPresenterImpl(this, this);
+        verifyTaskDialogPresenter.initPause();
         taskBean.__setDaoSession(EscortApp.getInstance().getDaoSession());
         for (TaskEscortBean taskEscortBean : taskBean.getEscortList()) {
             taskEscortBean.__setDaoSession(EscortApp.getInstance().getDaoSession());
@@ -113,7 +114,13 @@ public class VerifyTaskDialogFragment extends BaseDialogFragment implements IVer
                                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                                     @Override
                                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                        verifyTaskDialogPresenter.pause();
+                                        if (step == 1) {
+                                            verifyTaskDialogPresenter.carPause();
+                                        } else if (step == 2) {
+                                            verifyTaskDialogPresenter.workerPause();
+                                        } else {
+                                            verifyTaskDialogPresenter.escortPause();
+                                        }
                                         VerifyTaskDialogFragment.this.dismiss();
                                         listener.updateStep(step);
                                         if (step > 2 && workerBean != null) {
@@ -134,7 +141,6 @@ public class VerifyTaskDialogFragment extends BaseDialogFragment implements IVer
                     public void accept(Object o) throws Exception {
                         step++;
                         refreshStepView();
-                        btnDialogNext.setEnabled(false);
                     }
                 });
     }
@@ -158,11 +164,14 @@ public class VerifyTaskDialogFragment extends BaseDialogFragment implements IVer
 
     private void refreshStepView() {
         Log.e("===", "refreshStepView");
+        btnDialogNext.setEnabled(false);
         ivDialogPicture.setImageResource(R.drawable.background);
         if (step == 1) {
             tvDialigText.setText("验证车辆");
             verifyTaskDialogPresenter.verifyCar(taskBean);
+            btnDialogNext.setEnabled(true);
         } else if (step == 2) {
+            verifyTaskDialogPresenter.carPause();
             tvDialigText.setText("验证网点员工");
             verifyTaskDialogPresenter.verifyWorker();
         } else if (step ==3) {

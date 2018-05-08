@@ -90,7 +90,7 @@ public class TaskDetailActivity extends BaseActivity implements ITaskDetailView{
         taskEscortBean2.__setDaoSession(EscortApp.getInstance().getDaoSession());
         tvTaskDetailEscort1.setText(taskEscortBean1.getEscortBean().getName());
         tvTaskDetailEscort2.setText(taskEscortBean2.getEscortBean().getName());
-        tvTaskDetailCar1.setText(taskBean.getCarid());
+        tvTaskDetailCar1.setText(taskBean.getPlateno());
         tvTaskDetailWorker.setText(taskBean.getOpusername());
         tvTaskDetailDate.setText(taskBean.getTaskdate());
         taskDetailAdapter = new TaskDetailAdapter(this, taskBean.getBoxList());

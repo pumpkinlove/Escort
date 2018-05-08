@@ -30,7 +30,9 @@ import io.reactivex.schedulers.Schedulers;
 public class VerifyTaskDialogPresenterImpl extends BaseFragmentPresenter implements IVerifyTaskDialogPresenter{
 
     private IVerifyTaskDialogView verifyTaskDialogView;
-    private boolean pause = false;
+    private boolean carPause = false;
+    private boolean workerPause = false;
+    private boolean escortPause = false;
 
     public VerifyTaskDialogPresenterImpl(LifecycleProvider<FragmentEvent> provider, IVerifyTaskDialogView verifyTaskDialogView) {
         super(provider);
@@ -38,8 +40,25 @@ public class VerifyTaskDialogPresenterImpl extends BaseFragmentPresenter impleme
     }
 
     @Override
-    public void pause() {
-        pause = true;
+    public void carPause() {
+        carPause = true;
+    }
+
+    @Override
+    public void workerPause() {
+        workerPause = true;
+    }
+
+    @Override
+    public void escortPause() {
+        escortPause = true;
+    }
+
+    @Override
+    public void initPause() {
+        carPause = false;
+        workerPause = false;
+        escortPause = false;
     }
 
     @Override
@@ -68,8 +87,8 @@ public class VerifyTaskDialogPresenterImpl extends BaseFragmentPresenter impleme
                     public void accept(TaskBean taskBean) throws Exception {
                         boolean b = false;
                         while (true) {
-                            if (pause) {
-                                pause = false;
+                            if (carPause) {
+                                carPause = false;
                                 throw new Exception("取消验证");
                             }
                             if (b) {
@@ -109,9 +128,10 @@ public class VerifyTaskDialogPresenterImpl extends BaseFragmentPresenter impleme
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        if (verifyTaskDialogView != null) {
+                        /*if (verifyTaskDialogView != null) {
                             verifyTaskDialogView.verifyFailed(throwable.getMessage());
-                        }
+                        }*/
+                        //Device.closeRfid(message);
                     }
                 });
     }
@@ -128,7 +148,8 @@ public class VerifyTaskDialogPresenterImpl extends BaseFragmentPresenter impleme
                     public WorkerBean apply(Integer integer) throws Exception {
                         while (true) {
                             Device.openFinger(message);
-                            if (pause) {
+                            if (workerPause) {
+                                workerPause = false;
                                 throw new Exception("取消");
                             }
                             try {
@@ -209,7 +230,8 @@ public class VerifyTaskDialogPresenterImpl extends BaseFragmentPresenter impleme
                     public EscortBean apply(Integer integer) throws Exception {
                         while (true) {
                             Device.openFinger(message);
-                            if (pause) {
+                            if (escortPause) {
+                                escortPause = false;
                                 throw new Exception("取消");
                             }
                             try {

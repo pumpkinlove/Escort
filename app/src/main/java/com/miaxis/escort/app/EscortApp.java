@@ -69,4 +69,8 @@ public class EscortApp extends Application{
         return map.get(key);
     }
 
+    public void clearMap() {
+        map.clear();
+    }
+
 }

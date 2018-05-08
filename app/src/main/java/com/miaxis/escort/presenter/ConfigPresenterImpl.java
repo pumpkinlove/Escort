@@ -85,6 +85,7 @@ public class ConfigPresenterImpl extends BaseFragmentPresenter implements IConfi
                         Equipment equipment = new Equipment();
                         equipment.setEquipmentcode(configModel.getEquipmentcode());
                         equipment.setMac(configModel.getMac());
+                        configModel.saveConfig(config);
                         BankNet bankNet = retrofit.create(BankNet.class);
                         return bankNet.addPos(new Gson().toJson(equipment));
                     }

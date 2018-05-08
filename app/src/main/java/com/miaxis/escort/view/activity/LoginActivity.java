@@ -107,6 +107,7 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
     public void loginSuccess(WorkerBean workerBean) {
         playVoiceMessage("指纹验证通过");
         Toasty.success(EscortApp.getInstance().getApplicationContext(), "欢迎您，" + workerBean.getName(), 0, true).show();
+        EscortApp.getInstance().clearMap();
         EscortApp.getInstance().put(StaticVariable.WORKER, workerBean);
         EscortApp.getInstance().put(StaticVariable.CONFIG, EscortApp.getInstance().getDaoSession().getConfigDao().load(1L));
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -117,7 +118,8 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
     public void loginFailed(String message) {
         //Toasty.error(this, message,0, true).show();
         playVoiceMessage("登录失败，请重试");
-        Toasty.error(this, "登录失败，请重试",0, true).show();
+        //Toasty.error(this, "登录失败，请重试",0, true).show();
+        Toasty.error(this, message,0, true).show();
     }
 
     private String getVersion() {

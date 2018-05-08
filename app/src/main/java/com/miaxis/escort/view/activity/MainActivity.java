@@ -86,7 +86,7 @@ public class MainActivity extends BaseActivity implements UpTaskFragment.OnFragm
 
     @Override
     public void onMyTaskFragmentInteraction() {
-
+        upTaskFragment.updateBoxFromDatabase();
     }
 
     @Override

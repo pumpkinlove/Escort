@@ -46,6 +46,13 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/common_text_height" />
 
+        <TextView
+            android:id="@+id/tv_device_info"
+            android:layout_width="match_parent"
+            android:textSize="15sp"
+            android:textColor="@color/white"
+            android:layout_height="wrap_content" />
+
         <Space
             android:layout_width="match_parent"
             android:layout_height="@dimen/common_text_height" />

@@ -35,7 +35,11 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
+        <receiver android:name="com.miaxis.escort.view.broadcast.BootRestartReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
         <activity
             android:name=".view.activity.MainActivity"
             android:windowSoftInputMode="adjustPan|stateHidden" />

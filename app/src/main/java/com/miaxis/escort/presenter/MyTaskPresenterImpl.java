@@ -156,7 +156,7 @@ public class MyTaskPresenterImpl extends BaseFragmentPresenter implements IMyTas
                     @Override
                     public Observable<ResponseEntity<BoxBean>> apply(ResponseEntity<TaskBean> taskBeanResponseEntity) throws Exception {
                         BoxNet boxNet = retrofit.create(BoxNet.class);
-                        return boxNet.downloadBox(config.getOrgCode(), new Gson().toJson(myTaskModel.getBoxOpdateByTaskDate(DateUtil.getToday())));
+                        return boxNet.downloadBox("", new Gson().toJson(myTaskModel.getBoxOpdateByTaskDate(DateUtil.getToday())));
                     }
                 })
                 .doOnNext(new Consumer<ResponseEntity<BoxBean>>() {
@@ -175,7 +175,7 @@ public class MyTaskPresenterImpl extends BaseFragmentPresenter implements IMyTas
                             if (StaticVariable.SUCCESS.equals(boxBeanResponseEntity.getCode())) {
                                 myTaskView.setDialogMessage("下载任务箱包完成，正在下载押运员信息...");
                             } else {
-                                myTaskView.setDialogMessage(boxBeanResponseEntity.getMessage());
+                                myTaskView.setDialogMessage("下载任务箱包完成，正在下载押运员信息...");
                             }
                         }
                     }
@@ -204,7 +204,7 @@ public class MyTaskPresenterImpl extends BaseFragmentPresenter implements IMyTas
                             if (StaticVariable.SUCCESS.equals(escortBeanResponseEntity.getCode())) {
                                 myTaskView.setDialogMessage("下载押运员信息成功，正在更新箱包信息...");
                             } else {
-                                myTaskView.setDialogMessage(escortBeanResponseEntity.getMessage());
+                                myTaskView.setDialogMessage("下载押运员信息成功，正在更新箱包信息...");
                             }
                         }
                     }
@@ -214,7 +214,7 @@ public class MyTaskPresenterImpl extends BaseFragmentPresenter implements IMyTas
                     @Override
                     public ObservableSource<ResponseEntity<BoxBean>> apply(ResponseEntity<EscortBean> escortBeanResponseEntity) throws Exception {
                         BoxNet boxNet = retrofit.create(BoxNet.class);
-                        return boxNet.downloadBox(config.getOrgCode(), new Gson().toJson(myTaskModel.getBoxOpdate()));
+                        return boxNet.downloadBox("", new Gson().toJson(myTaskModel.getBoxOpdate()));
                     }
                 })
                 .doOnNext(new Consumer<ResponseEntity<BoxBean>>() {
@@ -233,7 +233,7 @@ public class MyTaskPresenterImpl extends BaseFragmentPresenter implements IMyTas
                             if (StaticVariable.SUCCESS.equals(boxBeanResponseEntity.getCode())) {
                                 myTaskView.setDialogMessage("更新箱包成功，正在初始化...");
                             } else {
-                                myTaskView.setDialogMessage(boxBeanResponseEntity.getMessage());
+                                myTaskView.setDialogMessage("更新箱包成功，正在初始化...");
                             }
                         }
                     }

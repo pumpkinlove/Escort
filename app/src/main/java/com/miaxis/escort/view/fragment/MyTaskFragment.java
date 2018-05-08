@@ -141,6 +141,7 @@ public class MyTaskFragment extends BaseFragment implements IMyTaskView ,VerifyT
         }
         Toasty.success(this.getActivity(), "更新成功",0, true).show();
         myTaskPresenter.loadTask();
+        mListener.onMyTaskFragmentInteraction();
     }
 
     @Override

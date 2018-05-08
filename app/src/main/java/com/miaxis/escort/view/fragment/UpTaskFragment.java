@@ -249,8 +249,8 @@ public class UpTaskFragment extends BaseFragment implements IUpTaskView{
                                         taskUpBean.setTasktype(StaticVariable.upTaskTypeTurnToString(selectedType));
                                         taskUpBean.setDeptno(config.getOrgCode());
                                         taskUpBean.setDeptno2(etTemporaryBank.getText().toString());
-                                        taskUpBean.setOpuser(workerBean.getOpuser());
-                                        taskUpBean.setOpusername(workerBean.getOpusername());
+                                        taskUpBean.setOpuser(workerBean.getWorkno());
+                                        taskUpBean.setOpusername(workerBean.getName());
                                         taskUpBean.setTaskdate(tvDate.getText().toString().substring(0,10));
                                         upTaskPresenter.upTask(taskUpBean, boxAdapter.getSelectedTaskBoxList(taskUpBean.getTaskcode()));
                                     }
@@ -356,6 +356,10 @@ public class UpTaskFragment extends BaseFragment implements IUpTaskView{
     public void onDestroy() {
         super.onDestroy();
         upTaskPresenter.doDestroy();
+    }
+
+    public void updateBoxFromDatabase() {
+        upTaskPresenter.loadBox();
     }
 
     public void onButtonPressed() {
