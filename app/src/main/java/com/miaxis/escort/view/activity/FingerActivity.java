@@ -47,7 +47,7 @@ public class FingerActivity extends BaseActivity implements IFingerView{
 
     @Override
     protected void initView() {
-        toolbar.setTitle("押运员查询");
+        toolbar.setTitle("采集指纹");
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

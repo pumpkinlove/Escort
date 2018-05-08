@@ -6,14 +6,9 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="help_dialog_text">
-        <i>公司: 浙江中正智能科技有限公司</i>	    \n
-	    \n
-		<i>联系：service@miaxis.com</i>	    \n
-	    \n
-		<b>智能押运终端</b>	    \n
-	    \n
+		<b>智能押运终端</b>
 		<b>有任何建议或者反馈可以随时联系官方客服</b></string>
-    <string name="company_info">浙江中正智能科技有限公司</string>
+    <string name="company_info"></string>
     <string name="input_ip">请填写ip地址</string>
     <string name="input_port">请填写端口号</string>
     <string name="input_org_code">请填写机构编号</string>

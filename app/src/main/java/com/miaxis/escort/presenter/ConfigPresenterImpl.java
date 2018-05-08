@@ -1,5 +1,6 @@
 package com.miaxis.escort.presenter;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -48,6 +49,7 @@ public class ConfigPresenterImpl extends BaseFragmentPresenter implements IConfi
         this.configModel = new ConfigModelImpl(this);
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void configSave(String ip, String port) {
         final Config config = new Config(1L, ip, port, null);
@@ -79,6 +81,7 @@ public class ConfigPresenterImpl extends BaseFragmentPresenter implements IConfi
                 .flatMap(new Function<Config, ObservableSource<ResponseEntity<String>>>() {
                     @Override
                     public ObservableSource<ResponseEntity<String>> apply(Config config) throws Exception {
+                        configModel.saveConfig(config);
                         Equipment equipment = new Equipment();
                         equipment.setEquipmentcode(configModel.getEquipmentcode());
                         equipment.setMac(configModel.getMac());
