@@ -370,9 +370,11 @@ public class SystemFragment extends BaseFragment implements ISystemView{
 
     protected void installApk(File file) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setDataAndType(Uri.fromFile(file),
                 "application/vnd.android.package-archive");
         startActivity(intent);
+        android.os.Process.killProcess(android.os.Process.myPid());
     }
 
     @Override
