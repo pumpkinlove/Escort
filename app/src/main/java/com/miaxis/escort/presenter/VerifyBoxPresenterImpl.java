@@ -1,6 +1,8 @@
 package com.miaxis.escort.presenter;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.device.Device;
 import com.google.gson.Gson;
@@ -35,7 +37,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * Created by 一非 on 2018/4/20.
  */
-
+@SuppressLint("CheckResult")
 public class VerifyBoxPresenterImpl extends BaseActivityPresenter implements IVerifyBoxPresenter{
 
     private IVerifyBoxView verifyBoxView;
@@ -47,6 +49,7 @@ public class VerifyBoxPresenterImpl extends BaseActivityPresenter implements IVe
         this.verifyBoxView = verifyBoxView;
         verifyBoxModel = new VerifyBoxModelImpl();
     }
+
 
     @Override
     public void loadBox(TaskBean taskBean) {
@@ -187,11 +190,13 @@ public class VerifyBoxPresenterImpl extends BaseActivityPresenter implements IVe
                 .subscribe(new Consumer<List<BoxBean>>() {
                     @Override
                     public void accept(List<BoxBean> boxBeanList) throws Exception {
+                        Toasty.info(EscortApp.getInstance(), "扫描完毕", Toast.LENGTH_SHORT);
                         Device.closeRfid(message);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        Toasty.error(EscortApp.getInstance(), "扫描完毕", Toast.LENGTH_SHORT);
                         Device.closeRfid(message);
                     }
                 });

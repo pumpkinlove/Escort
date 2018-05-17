@@ -1,6 +1,12 @@
 package com.miaxis.escort.view.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.media.SoundPool;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,7 +38,9 @@ import com.miaxis.escort.util.StaticVariable;
 import com.miaxis.escort.view.viewer.IVerifyBoxView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -67,6 +75,8 @@ public class VerifyBoxActivity extends BaseActivity implements IVerifyBoxView {
     private VerifyBoxAdapter verifyBoxAdapter;
     private IVerifyBoxPresenter verifyBoxPresenter;
     private MaterialDialog materialDialog;
+    private SoundPool spBeep;
+    private Map<Integer, Integer> soundMap;
 
     @Override
     protected int setContentView() {
@@ -81,8 +91,12 @@ public class VerifyBoxActivity extends BaseActivity implements IVerifyBoxView {
         escort2nd = (EscortBean) getIntent().getSerializableExtra("escort2nd");
         verifyWorker = (WorkerBean) getIntent().getSerializableExtra("verifyWorker");
         verifyBoxPresenter.loadBox(task);
+        spBeep = new SoundPool(21, AudioManager.STREAM_MUSIC, 0);
+        soundMap = new HashMap<>();
+        soundMap.put(1, spBeep.load(this, R.raw.my_beep, 1));
     }
 
+    @SuppressLint("CheckResult")
     @Override
     protected void initView() {
         materialDialog = new MaterialDialog.Builder(this)
@@ -111,12 +125,7 @@ public class VerifyBoxActivity extends BaseActivity implements IVerifyBoxView {
                     @Override
                     public void accept(final Object o) throws Exception {
                         if (btnVerifyStart.getText().toString().equals("开始验证")) {
-                            llPrompt.setVisibility(View.VISIBLE);
-                            tvVerifyBoxCount.setText("" + verifyBoxAdapter.getCheckSize());
-                            updateUnverified();
-                            Toasty.info(VerifyBoxActivity.this, "开始验证", 0, true).show();
-                            verifyBoxPresenter.verifyBox(verifyBoxAdapter.getDataListCopy());
-                            btnVerifyStart.setText("结束验证");
+                            startVerify();
                         } else if (btnVerifyStart.getText().toString().equals("结束验证")) {
                             new MaterialDialog.Builder(VerifyBoxActivity.this)
                                     .title("确认结束验证？")
@@ -173,6 +182,23 @@ public class VerifyBoxActivity extends BaseActivity implements IVerifyBoxView {
                                 .show();
                     }
                 });
+
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startVerify();
+    }
+
+    private void startVerify() {
+        llPrompt.setVisibility(View.VISIBLE);
+        tvVerifyBoxCount.setText("" + verifyBoxAdapter.getCheckSize());
+        updateUnverified();
+        Toasty.info(VerifyBoxActivity.this, "开始验证", 0, true).show();
+        verifyBoxPresenter.verifyBox(verifyBoxAdapter.getDataListCopy());
+        btnVerifyStart.setText("结束验证");
     }
 
     @Override
@@ -225,13 +251,14 @@ public class VerifyBoxActivity extends BaseActivity implements IVerifyBoxView {
             public void run() {
                 verifyBoxAdapter.setBoxCheck(boxBean);
                 verifyBoxAdapter.notifyDataSetChanged();
-                Toasty.success(VerifyBoxActivity.this, "已完成", Toast.LENGTH_SHORT, true).show();
                 if (verifyBoxAdapter.isAllCheck()) {
+                    Toasty.success(VerifyBoxActivity.this, "物品验证完成", Toast.LENGTH_LONG, true).show();
                     btnVerifyComplete.setEnabled(true);
                 } else {
                     btnVerifyComplete.setEnabled(false);
                 }
                 tvVerifyBoxCount.setText("" + verifyBoxAdapter.getCheckSize());
+                spBeep.play(soundMap.get(1), 1.0f, 1.0f, 1, 0, 1.0f);
                 updateUnverified();
             }
         });

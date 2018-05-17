@@ -62,7 +62,7 @@
             android:gravity="center"
             android:singleLine="true"
             android:ellipsize="end"
-            android:background="@drawable/orange_check_bg"
+            android:background="@drawable/check_bg_orange"
             android:text="常规网点接箱"/>
 
         <View
@@ -80,7 +80,7 @@
             android:gravity="center"
             android:singleLine="true"
             android:ellipsize="end"
-            android:background="@drawable/orange_check_bg"
+            android:background="@drawable/check_bg_orange"
             android:text="常规网点送箱"/>
 
     </LinearLayout>
@@ -102,7 +102,7 @@
             android:gravity="center"
             android:singleLine="true"
             android:ellipsize="end"
-            android:background="@drawable/orange_check_bg"
+            android:background="@drawable/check_bg_orange"
             android:text="临时网点接箱"/>
 
         <View
@@ -120,7 +120,7 @@
             android:gravity="center"
             android:singleLine="true"
             android:ellipsize="end"
-            android:background="@drawable/orange_check_bg"
+            android:background="@drawable/check_bg_orange"
             android:text="临时网点送箱"/>
 
     </LinearLayout>

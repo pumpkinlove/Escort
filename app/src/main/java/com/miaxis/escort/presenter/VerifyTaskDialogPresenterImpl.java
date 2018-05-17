@@ -204,8 +204,8 @@ public class VerifyTaskDialogPresenterImpl extends BaseFragmentPresenter impleme
                     public void accept(WorkerBean workerBean) throws Exception {
                         Device.closeFinger(message);
                         if (verifyTaskDialogView != null) {
-                            verifyTaskDialogView.verifySuccess();
                             verifyTaskDialogView.setVerifyWorker(workerBean);
+                            verifyTaskDialogView.verifySuccess();
                         }
                     }
                 }, new Consumer<Throwable>() {

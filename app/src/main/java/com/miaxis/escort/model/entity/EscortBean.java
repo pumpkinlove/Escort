@@ -1,18 +1,13 @@
 package com.miaxis.escort.model.entity;
 
-import com.miaxis.escort.util.StringConverter;
-
-import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 
 import java.io.Serializable;
-import java.util.List;
 import org.greenrobot.greendao.annotation.Generated;
 
 @Entity
-public class EscortBean implements Serializable
-{
+public class EscortBean implements Serializable {
 
 	private static final long serialVersionUID = -7089709531880954805L;
 	private String id;

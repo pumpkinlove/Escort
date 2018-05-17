@@ -210,15 +210,17 @@ public class ConfigPresenterImpl extends BaseFragmentPresenter implements IConfi
         }
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void loadConfig() {
-        Observable.create(new ObservableOnSubscribe<Config>() {
-            @Override
-            public void subscribe(ObservableEmitter<Config> e) throws Exception {
-                Config config = configModel.loadConfig();
-                e.onNext(config);
-            }
-        })
+        Observable
+                .create(new ObservableOnSubscribe<Config>() {
+                    @Override
+                    public void subscribe(ObservableEmitter<Config> e) throws Exception {
+                        Config config = configModel.loadConfig();
+                        e.onNext(config);
+                    }
+                })
                 .subscribeOn(Schedulers.io())
                 .compose(getProvider().<Config>bindUntilEvent(FragmentEvent.DESTROY))
                 .observeOn(AndroidSchedulers.mainThread())
@@ -242,6 +244,7 @@ public class ConfigPresenterImpl extends BaseFragmentPresenter implements IConfi
         configView.fetchConfig(config);
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void initWorker() {
         Observable.create(new ObservableOnSubscribe<Integer>() {

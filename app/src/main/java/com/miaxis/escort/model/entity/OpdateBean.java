@@ -5,8 +5,7 @@ import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
 
 @Entity
-public class OpdateBean
-{
+public class OpdateBean {
 	@Id
 	private String id;
 	private String opdate; /* 操作时间 */
