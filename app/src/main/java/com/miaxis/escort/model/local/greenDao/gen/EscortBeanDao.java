@@ -44,7 +44,7 @@ public class EscortBeanDao extends AbstractDao<EscortBean, String> {
         public final static Property Opdate = new Property(17, String.class, "opdate", false, "OPDATE");
         public final static Property Status = new Property(18, String.class, "status", false, "STATUS");
         public final static Property Password = new Property(19, String.class, "password", false, "PASSWORD");
-        public final static Property Photo = new Property(20, byte[].class, "photo", false, "PHOTO");
+        public final static Property PhotoUrl = new Property(20, String.class, "photoUrl", false, "PHOTO_URL");
     }
 
 
@@ -80,7 +80,7 @@ public class EscortBeanDao extends AbstractDao<EscortBean, String> {
                 "\"OPDATE\" TEXT," + // 17: opdate
                 "\"STATUS\" TEXT," + // 18: status
                 "\"PASSWORD\" TEXT," + // 19: password
-                "\"PHOTO\" BLOB);"); // 20: photo
+                "\"PHOTO_URL\" TEXT);"); // 20: photoUrl
     }
 
     /** Drops the underlying database table. */
@@ -193,9 +193,9 @@ public class EscortBeanDao extends AbstractDao<EscortBean, String> {
             stmt.bindString(20, password);
         }
  
-        byte[] photo = entity.getPhoto();
-        if (photo != null) {
-            stmt.bindBlob(21, photo);
+        String photoUrl = entity.getPhotoUrl();
+        if (photoUrl != null) {
+            stmt.bindString(21, photoUrl);
         }
     }
 
@@ -303,9 +303,9 @@ public class EscortBeanDao extends AbstractDao<EscortBean, String> {
             stmt.bindString(20, password);
         }
  
-        byte[] photo = entity.getPhoto();
-        if (photo != null) {
-            stmt.bindBlob(21, photo);
+        String photoUrl = entity.getPhotoUrl();
+        if (photoUrl != null) {
+            stmt.bindString(21, photoUrl);
         }
     }
 
@@ -337,7 +337,7 @@ public class EscortBeanDao extends AbstractDao<EscortBean, String> {
             cursor.isNull(offset + 17) ? null : cursor.getString(offset + 17), // opdate
             cursor.isNull(offset + 18) ? null : cursor.getString(offset + 18), // status
             cursor.isNull(offset + 19) ? null : cursor.getString(offset + 19), // password
-            cursor.isNull(offset + 20) ? null : cursor.getBlob(offset + 20) // photo
+            cursor.isNull(offset + 20) ? null : cursor.getString(offset + 20) // photoUrl
         );
         return entity;
     }
@@ -364,7 +364,7 @@ public class EscortBeanDao extends AbstractDao<EscortBean, String> {
         entity.setOpdate(cursor.isNull(offset + 17) ? null : cursor.getString(offset + 17));
         entity.setStatus(cursor.isNull(offset + 18) ? null : cursor.getString(offset + 18));
         entity.setPassword(cursor.isNull(offset + 19) ? null : cursor.getString(offset + 19));
-        entity.setPhoto(cursor.isNull(offset + 20) ? null : cursor.getBlob(offset + 20));
+        entity.setPhotoUrl(cursor.isNull(offset + 20) ? null : cursor.getString(offset + 20));
      }
     
     @Override

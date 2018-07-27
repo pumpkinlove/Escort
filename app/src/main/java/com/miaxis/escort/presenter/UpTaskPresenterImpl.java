@@ -109,7 +109,7 @@ public class UpTaskPresenterImpl extends BaseFragmentPresenter implements IUpTas
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         if (upTaskView != null) {
-                            upTaskView.upTaskFailed(throwable.getMessage());
+                            upTaskView.upTaskFailed("网络错误");
                         }
                     }
                 });
@@ -154,7 +154,7 @@ public class UpTaskPresenterImpl extends BaseFragmentPresenter implements IUpTas
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         if (upTaskView != null) {
-                            upTaskView.downBoxFailed(throwable.getMessage());
+                            upTaskView.downBoxFailed("网络错误");
                         }
                     }
                 });

@@ -1,5 +1,6 @@
 package com.miaxis.escort.view.viewer;
 
+import com.miaxis.escort.model.entity.BankBean;
 import com.miaxis.escort.model.entity.WorkerBean;
 
 /**
@@ -15,4 +16,5 @@ public interface ILoginView extends IBaseView {
     void loginFailed(String message);
     void setDialogMessage(String message);
     void loadConfigFailed();
+    void loadBank(BankBean bankBean);
 }

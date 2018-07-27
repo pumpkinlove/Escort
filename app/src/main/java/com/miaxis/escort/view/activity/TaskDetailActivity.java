@@ -23,6 +23,8 @@ import com.miaxis.escort.model.entity.BoxBean;
 import com.miaxis.escort.model.entity.EscortBean;
 import com.miaxis.escort.model.entity.TaskBean;
 import com.miaxis.escort.model.entity.TaskEscortBean;
+import com.miaxis.escort.model.entity.TaskExeLog;
+import com.miaxis.escort.model.local.greenDao.gen.TaskExeLogDao;
 import com.miaxis.escort.presenter.ITaskDetailPresenter;
 import com.miaxis.escort.presenter.TaskDetailPresenterImpl;
 import com.miaxis.escort.util.StaticVariable;
@@ -83,18 +85,40 @@ public class TaskDetailActivity extends BaseActivity implements ITaskDetailView{
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         tvTaskDetailType.setText(StaticVariable.getTasktypeName(taskBean.getTasktype(), taskBean.getTasklevel()));
         tvTaskDetailStatus.setText(taskBean.getStatusName());
-        try {
-            taskBean.__setDaoSession(EscortApp.getInstance().getDaoSession());
-            TaskEscortBean taskEscortBean1 = taskBean.getEscortList().get(0);
-            TaskEscortBean taskEscortBean2 = taskBean.getEscortList().get(1);
-            taskEscortBean1.__setDaoSession(EscortApp.getInstance().getDaoSession());
-            taskEscortBean2.__setDaoSession(EscortApp.getInstance().getDaoSession());
-            tvTaskDetailEscort1.setText(taskEscortBean1.getEscortBean().getName());
-            tvTaskDetailEscort2.setText(taskEscortBean2.getEscortBean().getName());
-        } catch (Exception e) {
+        if (taskBean.getStatusName().equals("已完成")) {
+            TaskExeLog taskExeLog = EscortApp.getInstance().getDaoSession().getTaskExeLogDao().queryBuilder()
+                    .where(TaskExeLogDao.Properties.TaskCode.eq(taskBean.getTaskcode())).unique();
+            if (taskExeLog != null) {
+                String[] escortNames = taskExeLog.getEscortName().split(",");
+                tvTaskDetailEscort1.setText(escortNames[0]);
+                if (escortNames.length >= 2) {
+                    tvTaskDetailEscort2.setText(escortNames[1]);
+                }
+            } else {
+                try {
+                    taskBean.__setDaoSession(EscortApp.getInstance().getDaoSession());
+                    TaskEscortBean taskEscortBean1 = taskBean.getEscortList().get(0);
+                    TaskEscortBean taskEscortBean2 = taskBean.getEscortList().get(1);
+                    taskEscortBean1.__setDaoSession(EscortApp.getInstance().getDaoSession());
+                    taskEscortBean2.__setDaoSession(EscortApp.getInstance().getDaoSession());
+                    tvTaskDetailEscort1.setText(taskEscortBean1.getEscortBean().getName());
+                    tvTaskDetailEscort2.setText(taskEscortBean2.getEscortBean().getName());
+                } catch (Exception e) {
+                }
+            }
+        } else {
+            try {
+                taskBean.__setDaoSession(EscortApp.getInstance().getDaoSession());
+                TaskEscortBean taskEscortBean1 = taskBean.getEscortList().get(0);
+                TaskEscortBean taskEscortBean2 = taskBean.getEscortList().get(1);
+                taskEscortBean1.__setDaoSession(EscortApp.getInstance().getDaoSession());
+                taskEscortBean2.__setDaoSession(EscortApp.getInstance().getDaoSession());
+                tvTaskDetailEscort1.setText(taskEscortBean1.getEscortBean().getName());
+                tvTaskDetailEscort2.setText(taskEscortBean2.getEscortBean().getName());
+            } catch (Exception e) {
+            }
         }
         tvTaskDetailCar1.setText(taskBean.getPlateno());
-        tvTaskDetailWorker.setText(taskBean.getOpusername());
         tvTaskDetailDate.setText(taskBean.getTaskdate());
         taskDetailAdapter = new TaskDetailAdapter(this, taskBean.getBoxList());
         rvTaskDetail.setAdapter(taskDetailAdapter);

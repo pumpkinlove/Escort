@@ -54,12 +54,15 @@ public class TaskBean  implements Serializable {
 				/** Used for active entity operations. */
 				@Generated(hash = 281453257)
 				private transient TaskBeanDao myDao;
+
+
+
 				@Generated(hash = 297599945)
 				public TaskBean(String id, String taskcode, String taskseq, String deptno, String carid,
 						String plateno, String taskdate, String begintime, String endtime, String status,
-						String statusName, String exetime, String createuser, String createusername,
-						String opuser, String opusername, String opdate, String tasktype, String tasklevel,
-						String seculevel, String createtime, String carRfid, String carPhoto) {
+						String statusName, String exetime, String createuser, String createusername, String opuser,
+						String opusername, String opdate, String tasktype, String tasklevel, String seculevel,
+						String createtime, String carRfid, String carPhoto) {
 					this.id = id;
 					this.taskcode = taskcode;
 					this.taskseq = taskseq;
@@ -87,6 +90,9 @@ public class TaskBean  implements Serializable {
 				@Generated(hash = 1443476586)
 				public TaskBean() {
 				}
+
+
+				
 				public String getId() {
 					return this.id;
 				}

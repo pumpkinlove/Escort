@@ -72,7 +72,7 @@ public class VerifyTaskDialogFragment extends BaseDialogFragment implements IVer
     @BindView(R.id.ll_car)
     LinearLayout llCar;
 
-    private int step;
+    private int step = 1;
     private TaskBean taskBean;
     private OnVerifyTaskDialogListener listener;
     private IVerifyTaskDialogPresenter verifyTaskDialogPresenter;
@@ -108,7 +108,7 @@ public class VerifyTaskDialogFragment extends BaseDialogFragment implements IVer
         taskBean.__setDaoSession(EscortApp.getInstance().getDaoSession());
         for (TaskEscortBean taskEscortBean : taskBean.getEscortList()) {
             taskEscortBean.__setDaoSession(EscortApp.getInstance().getDaoSession());
-            escortBeanList.add(taskEscortBean.getEscortBean());
+//            escortBeanList.add(taskEscortBean.getEscortBean());
             mList.add(taskEscortBean.getEscortBean());
         }
         ttsRef = new WeakReference<TextToSpeech>(new TextToSpeech(this.getContext(), this));
@@ -133,15 +133,13 @@ public class VerifyTaskDialogFragment extends BaseDialogFragment implements IVer
                                     @Override
                                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                         if (step == 1) {
-                                            verifyTaskDialogPresenter.carPause();
-                                        } else if (step == 2) {
                                             verifyTaskDialogPresenter.workerPause();
-                                        } else {
+                                        } else if (step == 2) {
                                             verifyTaskDialogPresenter.escortPause();
                                         }
                                         VerifyTaskDialogFragment.this.dismiss();
                                         listener.updateStep(step);
-                                        if (step > 2 && workerBean != null) {
+                                        if (step > 1 && workerBean != null) {
                                             listener.updateWorker(workerBean);
                                         }
                                     }
@@ -184,31 +182,35 @@ public class VerifyTaskDialogFragment extends BaseDialogFragment implements IVer
         Log.e("===", "refreshStepView");
         btnDialogNext.setEnabled(false);
         if (step == 1) {
-            llCar.setVisibility(View.VISIBLE);
-            tvWorkerName.setVisibility(View.GONE);
-            llEscorts.setVisibility(View.GONE);
-            tvDialigText.setText("验证车辆");
-            verifyTaskDialogPresenter.verifyCar(taskBean);
-            btnDialogNext.setEnabled(true);
-        } else if (step == 2) {
+//            llCar.setVisibility(View.VISIBLE);
+//            tvWorkerName.setVisibility(View.GONE);
+//            llEscorts.setVisibility(View.GONE);
+//            tvDialigText.setText("验证车辆");
+//            verifyTaskDialogPresenter.verifyCar(taskBean);
+//            btnDialogNext.setEnabled(true);
+//        } else if (step == 2) {
             llCar.setVisibility(View.GONE);
             tvWorkerName.setVisibility(View.VISIBLE);
             llEscorts.setVisibility(View.GONE);
             verifyTaskDialogPresenter.carPause();
             tvDialigText.setText("验证网点员工");
             verifyTaskDialogPresenter.verifyWorker();
-        } else if (step == 3) {
+        } else if (step == 2) {
             llCar.setVisibility(View.GONE);
             tvWorkerName.setVisibility(View.GONE);
             llEscorts.setVisibility(View.VISIBLE);
             tvDialigText.setText("验证押运员一");
             verifyTaskDialogPresenter.verifyEscort(mList);
-        } else if (step == 4) {
-            llCar.setVisibility(View.GONE);
-            tvWorkerName.setVisibility(View.GONE);
-            llEscorts.setVisibility(View.VISIBLE);
-            tvDialigText.setText("验证押运员二");
-            verifyTaskDialogPresenter.verifyEscort(mList);
+//        } else if (step == 4) {
+//            llCar.setVisibility(View.GONE);
+//            tvWorkerName.setVisibility(View.GONE);
+//            llEscorts.setVisibility(View.VISIBLE);
+//            tvDialigText.setText("验证押运员二");
+//            verifyTaskDialogPresenter.verifyEscort(mList);
+        }else if (step == 3) {
+            btnDialogNext.setEnabled(true);
+            tvDialigText.setText("验证完毕");
+            listener.verifySuccess(taskBean, workerBean, escortBeanList);
         } else {
             tvDialigText.setText("验证完毕");
             listener.verifySuccess(taskBean, workerBean, escortBeanList);
@@ -219,25 +221,26 @@ public class VerifyTaskDialogFragment extends BaseDialogFragment implements IVer
     public void verifySuccess() {
         Toasty.success(EscortApp.getInstance().getApplicationContext(), "验证成功", 0, true).show();
         if (step == 1) {
-            playVoiceMessage("车辆验证成功");
-            if (taskBean.getCarPhoto() != null) {
-                Glide.with(VerifyTaskDialogFragment.this)
-                        .load(taskBean.getCarPhoto())
-                        .into(ivDialogPicture1);
-                tvCarPlateNo.setText(taskBean.getPlateno());
-            }
-        } else if (step == 2) {
+//            playVoiceMessage("车辆验证成功");
+//            if (taskBean.getCarPhoto() != null) {
+//                Glide.with(VerifyTaskDialogFragment.this)
+//                        .load(taskBean.getCarPhoto())
+//                        .into(ivCarPhoto);
+//                tvCarPlateNo.setText(taskBean.getPlateno());
+//            }
+//        } else if (step == 2) {
             playVoiceMessage("通过");
             tvWorkerName.setText(workerBean.getName());
             btnDialogNext.setText("下一步");
             btnDialogNext.performClick();
-        } else if (step == 3) {
-            playVoiceMessage("通过");
-            btnDialogNext.performClick();
-            btnDialogNext.setText("下一步");
-        } else if (step == 4) {
+        } else if (step == 2) {
+//            playVoiceMessage("通过");
+//            btnDialogNext.performClick();
+//            btnDialogNext.setText("下一步");
+//        } else if (step == 4) {
             playVoiceMessage("通过");
             btnDialogNext.setText("确认人员");
+//            step++;
         }
         btnDialogNext.setEnabled(true);
     }
@@ -267,14 +270,17 @@ public class VerifyTaskDialogFragment extends BaseDialogFragment implements IVer
 
     @Override
     public void removeVerified(EscortBean escortBean) {
-        byte[] bmpData = escortBean.getPhoto();
-        Bitmap bmp = BitmapFactory.decodeByteArray(bmpData, 0, bmpData.length);
-        if (step == 3) {
-            ivDialogPicture1.setImageBitmap(bmp);
+        //单押运员 无车 验证时 step改为2   双押运员 有车 验证应该为3
+        if (step == 2 || step == 3) {
+            //ivDialogPicture1.setImageBitmap(bmp);
+            Glide.with(this).load(escortBean.getPhotoUrl()).into(ivDialogPicture1);
         } else if (step == 4) {
-            ivDialogPicture2.setImageBitmap(bmp);
+            //ivDialogPicture2.setImageBitmap(bmp);
+            Glide.with(this).load(escortBean.getPhotoUrl()).into(ivDialogPicture2);
         }
+
         mList.remove(escortBean);
+        escortBeanList.add(escortBean);
     }
 
     @Override

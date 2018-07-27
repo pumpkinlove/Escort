@@ -1,12 +1,14 @@
 package com.miaxis.escort.view.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.media.SoundPool;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -78,6 +80,15 @@ public class VerifyBoxActivity extends BaseActivity implements IVerifyBoxView {
     private SoundPool spBeep;
     private Map<Integer, Integer> soundMap;
 
+    public static Intent newInstance(Context context, TaskBean taskBean, ArrayList<WorkerBean> workerBeanList, ArrayList<EscortBean> escortBeanList) {
+        Intent intent = new Intent(context, VerifyBoxActivity.class);
+        Bundle bundle = new Bundle();
+        intent.putExtra("task", taskBean);
+        intent.putExtra("worker", workerBeanList);
+        intent.putExtra("escort", escortBeanList);
+        return intent;
+    }
+
     @Override
     protected int setContentView() {
         return R.layout.activity_verify_box;
@@ -87,9 +98,11 @@ public class VerifyBoxActivity extends BaseActivity implements IVerifyBoxView {
     protected void initData() {
         verifyBoxPresenter = new VerifyBoxPresenterImpl(this, this);
         task = (TaskBean) getIntent().getSerializableExtra("task");
-        escort1st = (EscortBean) getIntent().getSerializableExtra("escort1st");
-        escort2nd = (EscortBean) getIntent().getSerializableExtra("escort2nd");
-        verifyWorker = (WorkerBean) getIntent().getSerializableExtra("verifyWorker");
+        ArrayList<WorkerBean> workerBeanList = (ArrayList<WorkerBean>) getIntent().getSerializableExtra("worker");
+        ArrayList<EscortBean> escortBeanArrayList = (ArrayList<EscortBean>) getIntent().getSerializableExtra("escort");
+        escort1st = escortBeanArrayList.get(0);
+        escort2nd = escortBeanArrayList.get(1);
+        verifyWorker = workerBeanList.get(0);
         verifyBoxPresenter.loadBox(task);
         spBeep = new SoundPool(21, AudioManager.STREAM_MUSIC, 0);
         soundMap = new HashMap<>();
@@ -160,13 +173,12 @@ public class VerifyBoxActivity extends BaseActivity implements IVerifyBoxView {
                                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                         materialDialog.show();
                                         Config config = (Config) EscortApp.getInstance().get(StaticVariable.CONFIG);
-                                        WorkerBean workerBean = (WorkerBean) EscortApp.getInstance().get(StaticVariable.WORKER);
                                         TaskExeBean taskExeBean = new TaskExeBean();
                                         taskExeBean.setTaskno(task.getTaskcode());
                                         taskExeBean.setTasktype(task.getTasktype());
                                         taskExeBean.setDeptno(config.getOrgCode());
-                                        taskExeBean.setWorkno(workerBean.getWorkno() + "," + verifyWorker.getWorkno());
-                                        taskExeBean.setWorkname(workerBean.getName() + "," + verifyWorker.getName());
+                                        taskExeBean.setWorkno(verifyWorker.getWorkno());
+                                        taskExeBean.setWorkname(verifyWorker.getName());
                                         taskExeBean.setEscode1(escort1st.getEscortno());
                                         taskExeBean.setEsname1(escort1st.getName());
                                         taskExeBean.setEscode2(escort2nd.getEscortno());
@@ -185,12 +197,6 @@ public class VerifyBoxActivity extends BaseActivity implements IVerifyBoxView {
 
     }
 
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        startVerify();
-    }
 
     private void startVerify() {
         llPrompt.setVisibility(View.VISIBLE);

@@ -123,7 +123,7 @@ public class SystemPresenterImpl extends BaseFragmentPresenter implements ISyste
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         if (systemView != null) {
-                            systemView.downAppMessageFailed(throwable.getMessage());
+                            systemView.downAppMessageFailed("网络错误");
                         }
                     }
                 });

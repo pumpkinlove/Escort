@@ -171,15 +171,15 @@ public class VerifyTaskDialogPresenterImpl extends BaseFragmentPresenter impleme
                                 throw new Exception(new String(message, "GBK"));
                             }
                             List<WorkerBean> workerBeanList = EscortApp.getInstance().getDaoSession().getWorkerBeanDao().loadAll();
-                            Iterator<WorkerBean> iterator = workerBeanList.iterator();
-                            WorkerBean self = (WorkerBean) EscortApp.getInstance().get(StaticVariable.WORKER);
-                            while (iterator.hasNext()) {
-                                WorkerBean mWorkerBean = iterator.next();
-                                if (mWorkerBean.getWorkno().equals(self.getWorkno())) {
-                                    iterator.remove();
-                                    break;
-                                }
-                            }
+//                            Iterator<WorkerBean> iterator = workerBeanList.iterator();
+//                            WorkerBean self = (WorkerBean) EscortApp.getInstance().get(StaticVariable.WORKER);
+//                            while (iterator.hasNext()) {
+//                                WorkerBean mWorkerBean = iterator.next();
+//                                if (mWorkerBean.getWorkno().equals(self.getWorkno())) {
+//                                    iterator.remove();
+//                                    break;
+//                                }
+//                            }
                             for (WorkerBean worker : workerBeanList) {
                                 for (int i = 0; i < 10; i++) {
                                     String mbFinger = worker.getFinger(i);
@@ -241,12 +241,12 @@ public class VerifyTaskDialogPresenterImpl extends BaseFragmentPresenter impleme
                             }
                             String str = "";
                             if (verifyTaskDialogView != null) {
-                                if (escortBeanList.size() == 2) {
-                                    str = "第一个";
-                                } else if(escortBeanList.size() == 1) {
-                                    str = "第二个";
-                                }
-                                verifyTaskDialogView.playVoiceMessageOnUIThread("请" + str + "押运员按指纹");
+//                                if (escortBeanList.size() == 2) {
+//                                    str = "第一个";
+//                                } else if(escortBeanList.size() == 1) {
+//                                    str = "第二个";
+//                                }
+                                verifyTaskDialogView.playVoiceMessageOnUIThread("请押运员按指纹");
                             }
                             byte[] finger = new byte[2000+152*200];
                             byte[] tz = new byte[513];

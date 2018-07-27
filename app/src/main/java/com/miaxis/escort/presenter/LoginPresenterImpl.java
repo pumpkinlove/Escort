@@ -7,6 +7,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 
 import com.device.Device;
 import com.google.gson.Gson;
@@ -14,6 +15,7 @@ import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.miaxis.escort.app.EscortApp;
 import com.miaxis.escort.model.ILoginModel;
 import com.miaxis.escort.model.LoginModelImpl;
+import com.miaxis.escort.model.entity.BankBean;
 import com.miaxis.escort.model.entity.Config;
 import com.miaxis.escort.model.entity.EscortBean;
 import com.miaxis.escort.model.entity.TaskBean;
@@ -233,7 +235,7 @@ public class LoginPresenterImpl extends BaseActivityPresenter implements ILoginP
                                 }
                             }
                         }
-                        return null;
+                        throw new Exception("未找到指纹匹配的员工！");
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
@@ -285,6 +287,35 @@ public class LoginPresenterImpl extends BaseActivityPresenter implements ILoginP
     @Override
     public int loadWorkerSize() {
         return loginModel.loadWorkerSize();
+    }
+
+    @Override
+    public void loadBank() {
+        Observable.create(new ObservableOnSubscribe<BankBean>() {
+            @Override
+            public void subscribe(ObservableEmitter<BankBean> e) throws Exception {
+                e.onNext(loginModel.loadBank());
+            }
+        })
+                .subscribeOn(Schedulers.io())
+                .compose(getProvider().<BankBean>bindToLifecycle())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<BankBean>() {
+                    @Override
+                    public void accept(BankBean bankBean) throws Exception {
+                        if (loginView != null) {
+                            loginView.loadBank(bankBean);
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        if (loginView != null) {
+                            loginView.loadBank(null);
+                        }
+                        Log.e("asd", "获取银行信息出错");
+                    }
+                });
     }
 
     @Override

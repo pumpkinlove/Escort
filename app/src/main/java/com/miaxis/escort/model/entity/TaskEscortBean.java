@@ -8,8 +8,8 @@ import org.greenrobot.greendao.annotation.ToOne;
 import java.io.Serializable;
 import org.greenrobot.greendao.DaoException;
 import com.miaxis.escort.model.local.greenDao.gen.DaoSession;
-import com.miaxis.escort.model.local.greenDao.gen.EscortBeanDao;
 import com.miaxis.escort.model.local.greenDao.gen.TaskEscortBeanDao;
+import com.miaxis.escort.model.local.greenDao.gen.EscortBeanDao;
 
 @Entity
 public class TaskEscortBean implements Serializable

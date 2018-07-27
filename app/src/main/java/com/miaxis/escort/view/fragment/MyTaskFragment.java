@@ -38,7 +38,7 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 
-public class MyTaskFragment extends BaseFragment implements IMyTaskView ,VerifyTaskDialogFragment.OnVerifyTaskDialogListener{
+public class MyTaskFragment extends BaseFragment implements IMyTaskView {
 
     @BindView(R.id.rv_task)
     RecyclerView rvTask;
@@ -49,11 +49,7 @@ public class MyTaskFragment extends BaseFragment implements IMyTaskView ,VerifyT
     private OnFragmentInteractionListener mListener;
     private IMyTaskPresenter myTaskPresenter;
     private MaterialDialog materialDialog;
-    private VerifyTaskDialogFragment verifyTaskDialogFragment;
-
-    private String selecteTaskID = "";
-    private int step = 1;
-    private WorkerBean workerBean;
+    private ExecuteTaskDialogFragment executeTaskDialogFragment;
 
     public MyTaskFragment() {
         // Required empty public constructor
@@ -83,6 +79,7 @@ public class MyTaskFragment extends BaseFragment implements IMyTaskView ,VerifyT
                 .cancelable(false)
                 .show();
         myTaskPresenter.downTask();
+//        step = 1;
         taskAdapter = new TaskAdapter(getActivity(), new ArrayList<TaskBean>());
         rvTask.setAdapter(taskAdapter);
         rvTask.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -96,16 +93,8 @@ public class MyTaskFragment extends BaseFragment implements IMyTaskView ,VerifyT
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                //TODO:确保押运员数量，操作员数量
                                 TaskBean taskBean = taskAdapter.getDataList().get(position);
-                                if (!selecteTaskID.equals(taskBean.getTaskcode())) {
-                                    step = 1;
-                                    selecteTaskID = taskBean.getTaskcode();
-                                }
-                                verifyTaskDialogFragment = VerifyTaskDialogFragment.newInstance(
-                                        taskBean, step, MyTaskFragment.this);
-                                verifyTaskDialogFragment.show(getChildFragmentManager(), "verifyTaskDialogFragment");
-                                verifyTaskDialogFragment.setCancelable(false);
+                                ExecuteTaskDialogFragment.newInstance(taskBean).show(getChildFragmentManager(), "asd");
                             }
                         })
                         .show();
@@ -179,39 +168,6 @@ public class MyTaskFragment extends BaseFragment implements IMyTaskView ,VerifyT
     public void refreshTaskAfterUpTask() {
         materialDialog.show();
         myTaskPresenter.downTask();
-    }
-
-    @Override
-    public void updateStep(int step) {
-        this.step = step;
-    }
-
-    @Override
-    public void verifySuccess(TaskBean taskBean, WorkerBean workerBean, List<EscortBean> escortBeanList) {
-        verifyTaskDialogFragment.dismiss();
-        selecteTaskID = "";
-        step = 1;
-        Intent intent = new Intent(MyTaskFragment.this.getActivity(), VerifyBoxActivity.class);
-        intent.putExtra("task", taskBean);
-        intent.putExtra("escort1st", escortBeanList.get(0));
-        intent.putExtra("escort2nd", escortBeanList.get(1));
-        if (workerBean == null) {
-            workerBean = this.workerBean;
-        }
-        intent.putExtra("verifyWorker", workerBean);
-        startActivity(intent);
-    }
-
-    @Override
-    public void verifyFailed() {
-        verifyTaskDialogFragment.dismiss();
-        selecteTaskID = "";
-        step = 1;
-    }
-
-    @Override
-    public void updateWorker(WorkerBean workerBean) {
-        this.workerBean = workerBean;
     }
 
     @Override

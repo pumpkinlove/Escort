@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.miaxis.escort.R;
 import com.miaxis.escort.model.entity.EscortBean;
 
@@ -28,8 +29,10 @@ public class SearchEscortAdapter extends RecyclerView.Adapter<SearchEscortAdapte
 
     private LayoutInflater layoutInflater;
     private OnItemClickListener mOnItemClickListener;
+    private Context context;
 
     public SearchEscortAdapter(Context context, List<EscortBean> dataList) {
+        this.context = context;
         this.dataList = dataList;
         layoutInflater = LayoutInflater.from(context);
     }
@@ -44,7 +47,7 @@ public class SearchEscortAdapter extends RecyclerView.Adapter<SearchEscortAdapte
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         EscortBean escortBean = dataList.get(position);
         //TODO:押运员无法更新
-        holder.civSearchEscortImage.setImageBitmap(BitmapFactory.decodeByteArray(escortBean.getPhoto(), 0, escortBean.getPhoto().length));
+        Glide.with(context).load(escortBean.getPhotoUrl()).into(holder.civSearchEscortImage);
         holder.tvSearchEscortName.setText(escortBean.getName());
         holder.tvSearchEscortCode.setText(escortBean.getEscortno());
         holder.tvSearchEscortPhone.setText(escortBean.getPhone());

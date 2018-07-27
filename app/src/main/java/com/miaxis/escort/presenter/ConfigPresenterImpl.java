@@ -189,7 +189,7 @@ public class ConfigPresenterImpl extends BaseFragmentPresenter implements IConfi
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         if (configView != null) {
-                            configView.setProgressDialogMessage(throwable.getMessage());
+                            configView.setProgressDialogMessage("");
                             configView.configSaveFailed();
                         }
                     }

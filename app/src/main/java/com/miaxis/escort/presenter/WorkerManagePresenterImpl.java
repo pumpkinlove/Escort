@@ -91,7 +91,7 @@ public class WorkerManagePresenterImpl extends BaseActivityPresenter implements 
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         if (workerManageView != null) {
-                            workerManageView.downWorkerFailed(throwable.getMessage());
+                            workerManageView.downWorkerFailed("网络错误");
                         }
                         Toasty.error(EscortApp.getInstance().getApplicationContext(), "刷新失败",0, true).show();
                     }

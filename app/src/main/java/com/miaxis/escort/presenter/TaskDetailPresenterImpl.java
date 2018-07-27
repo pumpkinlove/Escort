@@ -79,7 +79,7 @@ public class TaskDetailPresenterImpl extends BaseActivityPresenter implements IT
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        taskDetailView.deleteFailed(throwable.getMessage());
+                        taskDetailView.deleteFailed("网络错误");
                     }
                 });
     }

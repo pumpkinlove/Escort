@@ -35,13 +35,14 @@ public class EscortBean implements Serializable {
 	 * 押运员密码
 	 */
 	private String password;
-	private byte[] photo;
-	@Generated(hash = 598023511)
+	private String photoUrl;
+
+	@Generated(hash = 1702749048)
 	public EscortBean(String id, String escortno, String idcard, String name,
 			String phone, String finger0, String finger1, String finger2, String finger3,
 			String finger4, String finger5, String finger6, String finger7,
 			String finger8, String finger9, String opuser, String opusername,
-			String opdate, String status, String password, byte[] photo) {
+			String opdate, String status, String password, String photoUrl) {
 		this.id = id;
 		this.escortno = escortno;
 		this.idcard = idcard;
@@ -62,11 +63,12 @@ public class EscortBean implements Serializable {
 		this.opdate = opdate;
 		this.status = status;
 		this.password = password;
-		this.photo = photo;
+		this.photoUrl = photoUrl;
 	}
 	@Generated(hash = 2047371612)
 	public EscortBean() {
 	}
+
 	public String getId() {
 		return this.id;
 	}
@@ -187,12 +189,6 @@ public class EscortBean implements Serializable {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public byte[] getPhoto() {
-		return this.photo;
-	}
-	public void setPhoto(byte[] photo) {
-		this.photo = photo;
-	}
 	public String getFinger(int i) {
 		if (i == 0) {
 			return getFinger0();
@@ -216,5 +212,11 @@ public class EscortBean implements Serializable {
 			return getFinger9();
 		}
 		return null;
+	}
+	public String getPhotoUrl() {
+		return this.photoUrl;
+	}
+	public void setPhotoUrl(String photoUrl) {
+		this.photoUrl = photoUrl;
 	}
 }

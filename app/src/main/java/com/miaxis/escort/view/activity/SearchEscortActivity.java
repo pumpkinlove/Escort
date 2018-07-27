@@ -1,5 +1,6 @@
 package com.miaxis.escort.view.activity;
 
+import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import com.miaxis.escort.R;
 import com.miaxis.escort.adapter.SearchEscortAdapter;
 import com.miaxis.escort.app.EscortApp;
 import com.miaxis.escort.model.entity.EscortBean;
+import com.miaxis.escort.model.local.greenDao.gen.TaskBeanDao;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +69,19 @@ public class SearchEscortActivity extends BaseActivity {
         Observable.create(new ObservableOnSubscribe<List<EscortBean>>() {
             @Override
             public void subscribe(ObservableEmitter<List<EscortBean>> e) throws Exception {
-                e.onNext(EscortApp.getInstance().getDaoSession().getEscortBeanDao().loadAll());
+                String sql =  "SELECT DISTINCT e.* from ESCORT_BEAN e,TASK_ESCORT_BEAN te where e.ESCORTNO=te.ESCODE and exists(select 1 from TASK_BEAN t where t.id=te.TASKID and t.status!=4)";
+                Cursor cursor = EscortApp.getInstance().getDaoSession().getDatabase().rawQuery(sql.toString(), new String[]{});
+                // 获取查询结果
+                List<EscortBean> escortBeanList = new ArrayList<>();
+                while (cursor.moveToNext()){
+                    EscortBean escortBean = new EscortBean();
+                    escortBean.setEscortno(cursor.getString(1));
+                    escortBean.setName(cursor.getString(3));
+                    escortBean.setPhotoUrl(cursor.getString(20));
+                    escortBeanList.add(escortBean);
+                }
+                cursor.close();
+                e.onNext(escortBeanList);
             }
         })
                 .subscribeOn(Schedulers.io())

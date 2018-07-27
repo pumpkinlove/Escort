@@ -1,6 +1,7 @@
 package com.miaxis.escort.model;
 
 import com.miaxis.escort.app.EscortApp;
+import com.miaxis.escort.model.entity.BankBean;
 import com.miaxis.escort.model.entity.Config;
 import com.miaxis.escort.model.entity.EscortBean;
 import com.miaxis.escort.model.entity.OpdateBean;
@@ -32,11 +33,17 @@ public class LoginModelImpl implements ILoginModel{
 
     @Override
     public List<WorkerBean> loadWorker() {
-        return EscortApp.getInstance().getDaoSession().getWorkerBeanDao().loadAll();
+        return EscortApp.getInstance().getDaoSession().getWorkerBeanDao().queryBuilder()
+                .where(WorkerBeanDao.Properties.Status.notEq("未上传")).list();
     }
 
     @Override
     public int loadWorkerSize() {
         return EscortApp.getInstance().getDaoSession().getWorkerBeanDao().loadAll().size();
+    }
+
+    @Override
+    public BankBean loadBank() {
+        return EscortApp.getInstance().getDaoSession().getBankBeanDao().loadAll().get(0);
     }
 }

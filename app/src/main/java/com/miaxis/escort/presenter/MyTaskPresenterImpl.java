@@ -1,5 +1,6 @@
 package com.miaxis.escort.presenter;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -82,6 +83,7 @@ public class MyTaskPresenterImpl extends BaseFragmentPresenter implements IMyTas
                 });
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void downTask() {
         //TODO:只有DownloadTask这个接口解析时间长达10S
@@ -185,6 +187,8 @@ public class MyTaskPresenterImpl extends BaseFragmentPresenter implements IMyTas
                     @Override
                     public Observable<ResponseEntity<EscortBean>> apply(ResponseEntity<BoxBean> boxBeanResponseEntity) throws Exception {
                         EscortNet escortNet = retrofit.create(EscortNet.class);
+                        //确保押运员更新，清空押运员后再下载
+                        //EscortApp.getInstance().getDaoSession().getEscortBeanDao().deleteAll();
                         return escortNet.downloadEscort(new Gson().toJson(myTaskModel.getEscortOpdate(DateUtil.getToday())));
                     }
                 })
@@ -249,7 +253,7 @@ public class MyTaskPresenterImpl extends BaseFragmentPresenter implements IMyTas
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         if (myTaskView != null) {
-                            myTaskView.downTaskFailed(throwable.getMessage());
+                            myTaskView.downTaskFailed("网络错误");
                         }
                     }
                 });

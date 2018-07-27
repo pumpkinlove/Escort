@@ -23,7 +23,8 @@ public class WorkerDetailModel implements IWorkerDetailModel{
     @Override
     public boolean isDuplicate(String workno) {
         WorkerBean workerBean = EscortApp.getInstance().getDaoSession().getWorkerBeanDao().queryBuilder()
-                .where(WorkerBeanDao.Properties.Workno.eq(workno)).unique();
+                .where(WorkerBeanDao.Properties.Workno.eq(workno))
+                .where(WorkerBeanDao.Properties.Status.notEq("未上传")).unique();
         if (workerBean != null) {
             return false;
         }

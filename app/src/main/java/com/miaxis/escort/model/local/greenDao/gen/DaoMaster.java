@@ -34,6 +34,8 @@ public class DaoMaster extends AbstractDaoMaster {
         TempDeptBeanDao.createTable(db, ifNotExists);
         UpdateInfoDao.createTable(db, ifNotExists);
         WorkerBeanDao.createTable(db, ifNotExists);
+        TaskExeLogDao.createTable(db, ifNotExists);
+        TaskLogBeanDao.createTable(db, ifNotExists);
     }
 
     /** Drops underlying database table using DAOs. */
@@ -51,6 +53,8 @@ public class DaoMaster extends AbstractDaoMaster {
         TempDeptBeanDao.dropTable(db, ifExists);
         UpdateInfoDao.dropTable(db, ifExists);
         WorkerBeanDao.dropTable(db, ifExists);
+        TaskExeLogDao.dropTable(db, ifExists);
+        TaskLogBeanDao.dropTable(db, ifExists);
     }
 
     /**
@@ -82,6 +86,8 @@ public class DaoMaster extends AbstractDaoMaster {
         registerDaoClass(TempDeptBeanDao.class);
         registerDaoClass(UpdateInfoDao.class);
         registerDaoClass(WorkerBeanDao.class);
+        registerDaoClass(TaskExeLogDao.class);
+        registerDaoClass(TaskLogBeanDao.class);
     }
 
     public DaoSession newSession() {

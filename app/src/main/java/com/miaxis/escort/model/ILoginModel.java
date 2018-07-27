@@ -1,5 +1,6 @@
 package com.miaxis.escort.model;
 
+import com.miaxis.escort.model.entity.BankBean;
 import com.miaxis.escort.model.entity.Config;
 import com.miaxis.escort.model.entity.EscortBean;
 import com.miaxis.escort.model.entity.OpdateBean;
@@ -18,4 +19,5 @@ public interface ILoginModel {
     void deleteTaskExe(TaskExeBean taskExeBean);
     List<WorkerBean> loadWorker();
     int loadWorkerSize();
+    BankBean loadBank();
 }

@@ -10,12 +10,9 @@ import com.miaxis.escort.model.entity.OpdateBean;
 import com.miaxis.escort.model.entity.TaskBean;
 import com.miaxis.escort.model.entity.TaskBoxBean;
 import com.miaxis.escort.model.entity.TaskEscortBean;
-import com.miaxis.escort.model.local.greenDao.gen.BoxBeanDao;
-import com.miaxis.escort.model.local.greenDao.gen.EscortBeanDao;
 import com.miaxis.escort.model.local.greenDao.gen.TaskBeanDao;
 import com.miaxis.escort.model.local.greenDao.gen.TaskBoxBeanDao;
 import com.miaxis.escort.model.local.greenDao.gen.TaskEscortBeanDao;
-import com.miaxis.escort.presenter.IMyTaskPresenter;
 import com.miaxis.escort.util.DateUtil;
 import com.miaxis.escort.util.StaticVariable;
 

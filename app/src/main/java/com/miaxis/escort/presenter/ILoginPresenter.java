@@ -13,4 +13,5 @@ public interface ILoginPresenter extends IBasePresenter{
     void login();
     void loadConfig();
     int loadWorkerSize();
+    void loadBank();
 }

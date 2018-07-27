@@ -50,6 +50,10 @@ public class StaticVariable {
             return "临时接箱";
         } else if (tasktype.equals("4")) {
             return "临时送箱";
+        } else if (tasktype.equals("7")) {
+            return "现金送箱";
+        } else if (tasktype.equals("8")) {
+            return "现金接箱";
         } else {
             return tasktype;
         }

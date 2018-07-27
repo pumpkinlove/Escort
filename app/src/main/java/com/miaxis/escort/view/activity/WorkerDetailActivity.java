@@ -70,6 +70,9 @@ public class WorkerDetailActivity extends BaseActivity implements IWorkerDetailV
             workerBean = new WorkerBean();
         } else {
             workerBean = (WorkerBean) getIntent().getSerializableExtra(StaticVariable.WORKER);
+            //----------------------------------------
+            finger1 = workerBean.getFinger1();
+            finger2 = workerBean.getFinger2();
         }
     }
 
@@ -86,7 +89,12 @@ public class WorkerDetailActivity extends BaseActivity implements IWorkerDetailV
             tvFirstCollect.setText("已采集");
             tvSecondCollect.setText("已采集");
             etWorkerCode.setEnabled(false);
-            etWorkerCode.setText(workerBean.getWorkno());
+            int worknoLength = workerBean.getWorkno().length();
+            if (worknoLength > 4) {
+                etWorkerCode.setText(workerBean.getWorkno().substring(worknoLength - 4, worknoLength));
+            } else {
+                etWorkerCode.setText(workerBean.getWorkno());
+            }
             etWorkerName.setEnabled(false);
             etWorkerName.setText(workerBean.getName());
             llFirstFingerPrint.setClickable(false);
@@ -114,13 +122,13 @@ public class WorkerDetailActivity extends BaseActivity implements IWorkerDetailV
                                         @Override
                                         public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                             if (checkNotNull()) {
-                                                if (!workerDetailPresenter.isDuplicate(etWorkerCode.getText().toString())) {
+                                                if (!workerDetailPresenter.isDuplicate("abc-" + etWorkerCode.getText().toString())) {
                                                     Toasty.error(WorkerDetailActivity.this, "员工编号重复", 0, true).show();
                                                 } else {
                                                     Config config = (Config) EscortApp.getInstance().get(StaticVariable.CONFIG);
                                                     WorkerBean opUser = (WorkerBean) EscortApp.getInstance().get(StaticVariable.WORKER);
                                                     workerBean.setDeptno(config.getOrgCode());
-                                                    workerBean.setWorkno(etWorkerCode.getText().toString());
+                                                    workerBean.setWorkno("abc-" + etWorkerCode.getText().toString());
                                                     workerBean.setName(etWorkerName.getText().toString());
                                                     workerBean.setFinger0(finger1);
                                                     workerBean.setFinger1(finger2);
@@ -173,7 +181,12 @@ public class WorkerDetailActivity extends BaseActivity implements IWorkerDetailV
             tvFirstCollect.setText("已采集");
             tvSecondCollect.setText("已采集");
             etWorkerCode.setEnabled(false);
-            etWorkerCode.setText(workerBean.getWorkno());
+            int worknoLength = workerBean.getWorkno().length();
+            if (worknoLength > 4) {
+                etWorkerCode.setText(workerBean.getWorkno().substring(worknoLength - 4, worknoLength));
+            } else {
+                etWorkerCode.setText(workerBean.getWorkno());
+            }
             etWorkerName.setEnabled(false);
             etWorkerName.setText(workerBean.getName());
             btnAddWorkerFinish.setText("删除");

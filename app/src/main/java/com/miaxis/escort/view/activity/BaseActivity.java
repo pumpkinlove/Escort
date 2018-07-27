@@ -2,7 +2,9 @@ package com.miaxis.escort.view.activity;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.MotionEvent;
 
+import com.miaxis.escort.ScreenListener;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 import butterknife.ButterKnife;
@@ -23,6 +25,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         bind = ButterKnife.bind(this);
         initData();
         initView();
+
     }
 
     protected abstract int setContentView();
@@ -37,4 +40,8 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         bind.unbind();
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return super.onTouchEvent(event);
+    }
 }

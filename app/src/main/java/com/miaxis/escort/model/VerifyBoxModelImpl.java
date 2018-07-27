@@ -5,6 +5,7 @@ import com.miaxis.escort.model.entity.BoxBean;
 import com.miaxis.escort.model.entity.TaskBean;
 import com.miaxis.escort.model.entity.TaskBoxBean;
 import com.miaxis.escort.model.entity.TaskExeBean;
+import com.miaxis.escort.model.entity.TaskExeLog;
 import com.miaxis.escort.model.local.greenDao.gen.TaskBeanDao;
 import com.miaxis.escort.util.DateUtil;
 
@@ -38,6 +39,13 @@ public class VerifyBoxModelImpl implements IVerifyBoxModel{
         taskBean.setStatus("4");
         taskBean.setExetime(taskExeBean.getTasktime().substring(11));
         EscortApp.getInstance().getDaoSession().insertOrReplace(taskBean);
+        TaskExeLog taskExeLog = new TaskExeLog();
+        taskExeLog.setTaskCode(taskBean.getTaskcode());
+        taskExeLog.setWorkerCode(taskExeBean.getWorkno());
+        taskExeLog.setWorkerName(taskExeBean.getWorkname());
+        taskExeLog.setEscortCode(taskExeBean.getEscode1() + "," + taskExeBean.getEscode2());
+        taskExeLog.setEscortName(taskExeBean.getEsname1() + "," + taskExeBean.getEsname2());
+        EscortApp.getInstance().getDaoSession().getTaskExeLogDao().insertOrReplace(taskExeLog);
     }
 
     @Override

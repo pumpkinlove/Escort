@@ -5,19 +5,20 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Message;
 import android.speech.tts.TextToSpeech;
+import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.miaxis.escort.R;
 import com.miaxis.escort.app.EscortApp;
+import com.miaxis.escort.model.entity.BankBean;
 import com.miaxis.escort.model.entity.WorkerBean;
 import com.miaxis.escort.presenter.ILoginPresenter;
 import com.miaxis.escort.presenter.LoginPresenterImpl;
@@ -30,6 +31,7 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import es.dmoral.toasty.Toasty;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
@@ -46,6 +48,12 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
     Button btnLogin;
     @BindView(R.id.tv_version)
     TextView tvVersion;
+    @BindView(R.id.tv_bank_code)
+    TextView tvBankCode;
+    @BindView(R.id.tv_bank_name)
+    TextView tvBankName;
+    @BindView(R.id.cv_device_info)
+    CardView cvDeviceInfo;
 
     private MaterialDialog materialDialog;
 
@@ -60,7 +68,7 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
     protected void initData() {
         //TODO:网点员工默认图片更换
         //TODO:主界面按返回键退出
-        loginPresenter = new LoginPresenterImpl(this,this);
+        loginPresenter = new LoginPresenterImpl(this, this);
         loginPresenter.getPermissions(this);
         ttsRef = new WeakReference<TextToSpeech>(new TextToSpeech(this, this));
     }
@@ -92,7 +100,7 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
                     @Override
                     public void accept(Object o) throws Exception {
                         if (loginPresenter.loadWorkerSize() == 0) {
-                            Toasty.error(EscortApp.getInstance().getApplicationContext(), "未找到员工信息，请尝试重新设置IP和端口",1, true).show();
+                            Toasty.error(EscortApp.getInstance().getApplicationContext(), "未找到员工信息，请尝试重新设置IP和端口", 1, true).show();
                         } else {
                             playVoiceMessage("请按手指");
                             loginPresenter.login();
@@ -119,7 +127,7 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
         //Toasty.error(this, message,0, true).show();
         playVoiceMessage("登录失败，请重试");
         //Toasty.error(this, "登录失败，请重试",0, true).show();
-        Toasty.error(this, message,0, true).show();
+        Toasty.error(this, message, 0, true).show();
     }
 
     private String getVersion() {
@@ -140,6 +148,8 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
     public void showLoginView() {
         ivConfig.setVisibility(View.VISIBLE);
         btnLogin.setVisibility(View.VISIBLE);
+        cvDeviceInfo.setVisibility(View.VISIBLE);
+        loginPresenter.loadBank();
         flConfig.setVisibility(View.GONE);
     }
 
@@ -147,6 +157,8 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
     public void showConfigView() {
         ivConfig.setVisibility(View.INVISIBLE);
         btnLogin.setVisibility(View.GONE);
+        cvDeviceInfo.setVisibility(View.GONE);
+        loginPresenter.loadBank();
         flConfig.setVisibility(View.VISIBLE);
         getSupportFragmentManager().beginTransaction().replace(R.id.fl_config, ConfigFragment.newInstance()).commit();
     }
@@ -183,6 +195,7 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
     public void getPermissionsSuccess() {
         EscortApp.getInstance().initDbHelp();
         loginPresenter.loadConfig();
+        loginPresenter.loadBank();
     }
 
     @Override
@@ -194,12 +207,22 @@ public class LoginActivity extends BaseActivity implements ILoginView, ConfigFra
     @Override
     public void onInit(int status) {
         if (status == TextToSpeech.SUCCESS) {
-        ttsRef.get().setLanguage(Locale.CHINESE);
+            ttsRef.get().setLanguage(Locale.CHINESE);
+        }
     }
-}
 
     public void playVoiceMessage(String message) {
         ttsRef.get().speak(message, TextToSpeech.QUEUE_FLUSH, null, "login");
     }
 
+    @Override
+    public void loadBank(BankBean bankBean) {
+        Log.e("LoginActivity", "loadBank bankBean is null = " + (bankBean == null));
+        if (bankBean != null) {
+            tvBankName.setText("网点名称：" + bankBean.getBankname());
+            tvBankCode.setText("网点编号：" + bankBean.getBankcode());
+        } else {
+            cvDeviceInfo.setVisibility(View.GONE);
+        }
+    }
 }

@@ -42,7 +42,7 @@ public class WorkerDetailPresenter extends BaseActivityPresenter implements IWor
     }
 
     @Override
-    public void addWorker(WorkerBean workerBean) {
+    public void addWorker(final WorkerBean workerBean) {
         Observable.just(workerBean)
                 .subscribeOn(Schedulers.io())
                 .compose(getProvider().<WorkerBean>bindToLifecycle())
@@ -50,7 +50,6 @@ public class WorkerDetailPresenter extends BaseActivityPresenter implements IWor
                 .flatMap(new Function<WorkerBean, ObservableSource<ResponseEntity>>() {
                     @Override
                     public ObservableSource<ResponseEntity> apply(WorkerBean workerBean) throws Exception {
-                        workerDetailModel.saveLocal(workerBean);
                         Config config = (Config) EscortApp.getInstance().get(StaticVariable.CONFIG);
                         Retrofit retrofit = new Retrofit.Builder()
                                 .addConverterFactory(GsonConverterFactory.create())//请求的结果转为实体类
@@ -76,7 +75,9 @@ public class WorkerDetailPresenter extends BaseActivityPresenter implements IWor
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        workerDetailView.addWorkerFailed(throwable.getMessage());
+                        //网络错误才SaveLocal
+                        workerDetailModel.saveLocal(workerBean);
+                        workerDetailView.addWorkerFailed("网络错误");
                     }
                 });
     }
@@ -124,7 +125,7 @@ public class WorkerDetailPresenter extends BaseActivityPresenter implements IWor
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         if (workerDetailView != null) {
-                            workerDetailView.delWorkerFailed(throwable.getMessage());
+                            workerDetailView.delWorkerFailed("网络错误");
                         }
                     }
                 });
